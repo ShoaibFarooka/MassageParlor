@@ -6,6 +6,7 @@ import CompanyDashboard from '../pages/company/Dashboard/Dashboard.jsx';
 import CompanyCampaigns from '../pages/company/Campaigns/Campaigns.jsx';
 import Redirect from '../pages/common/Redirect/Redirect.jsx';
 import NotFound from '../pages/common/NotFound/NotFound.jsx';
+import Home from '../pages/common/Home/Home.jsx';
 
 const routes = [
   //user
@@ -33,6 +34,7 @@ const routes = [
   //common
   { path: "/", element: <Redirect />, protected: true, authRedirect: false, showSidebar: false },
   { path: "/login", element: <Login />, protected: false, authRedirect: true, showSidebar: false },
+  { path: "/home", element: <Home />, protected: false, authRedirect: true, showSidebar: false },
   { path: "/register", element: <Register />, protected: false, authRedirect: true, showSidebar: false },
   { path: "/forgot-password", element: <ForgotPassword />, protected: false, authRedirect: true, showSidebar: false },
   { path: "/reset-password", element: <ResetPassword />, protected: false, authRedirect: true, showSidebar: false },
