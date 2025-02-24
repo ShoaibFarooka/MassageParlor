@@ -7,6 +7,8 @@ import CompanyCampaigns from '../pages/company/Campaigns/Campaigns.jsx';
 import Redirect from '../pages/common/Redirect/Redirect.jsx';
 import NotFound from '../pages/common/NotFound/NotFound.jsx';
 import Home from '../pages/common/Home/Home.jsx';
+import UserHome from '../pages/user/Home/Home.jsx';
+import UserBooking from '../pages/user/booking/Booking.jsx';
 
 const routes = [
   //user
@@ -19,9 +21,12 @@ const routes = [
   // { path: "/success", element: <Success />, protected: true, showSidebar: false },
   // { path: "/settings", element: <Settings />, protected: true, showSidebar: true },
   // { path: "/", element: <Redirect />, protected: true, showSidebar: true },
+  { path: "/user/home", element: <UserHome />, protected: false, authRedirect: false, showSidebar: true },
+  { path: "/user/booking", element: <UserBooking />, protected: false, authRedirect: false, showSidebar: true },
+
 
   //company
-  { path: "/company/dashboard", element: <CompanyDashboard />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/company/dashboard", element: <CompanyDashboard />, protected: false, authRedirect: false, showSidebar: true },
   { path: "/company/campaigns", element: <CompanyCampaigns />, protected: true, authRedirect: false, showSidebar: true },
   // { path: "/company", element: <Redirect />, protected: true, showSidebar: true },
 

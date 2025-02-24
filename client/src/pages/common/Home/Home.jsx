@@ -90,7 +90,7 @@ const providers = [
 
 function Home() {
     return (
-        <div className="bg-gray-100 min-h-screen">
+        <div className=" min-h-screen">
             <header className="flex justify-between items-center p-4 bg-white shadow-md">
 
                 <div className="flex items-center space-x-4">
