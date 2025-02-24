@@ -1,6 +1,7 @@
 import React from 'react';
 // React Icons (Font Awesome set)
 import { FaSearch, FaSlidersH, FaMedal } from 'react-icons/fa';
+import ServiceCard from '../../../components/serviceProvider/ServiceCard';
 
 // Example data array. In a real app, you'd fetch this from an API.
 const providers = [
@@ -127,46 +128,7 @@ function Home() {
             <main className="p-8">
                 <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-4 gap-6">
                     {providers.map((provider) => (
-                        <div
-                            key={provider.id}
-                            className="bg-white p-6 rounded-lg shadow-md text-center "
-                        >
-                            {/* Profile Image */}
-                            <img
-                                src={provider.image}
-                                alt={`Profile of ${provider.name}`}
-                                className="w-24 h-24 rounded-full mx-auto mb-4"
-                            />
-
-                            {/* Name */}
-                            <h2 className="text-xl font-semibold">{provider.name}</h2>
-                            <p className="text-gray-500">
-                                Age {provider.age} | Located in {provider.location}
-                            </p>
-
-                            {/* Stats: Years + Clients + Medal */}
-                            <div className="flex justify-center items-center space-x-2 my-4">
-                                <div className="text-center">
-                                    <p className="text-lg font-bold">{provider.years}</p>
-                                    <p className="text-gray-500 text-sm">Years</p>
-                                </div>
-                                <div className="text-center">
-                                    <p className="text-lg font-bold">{provider.clients}</p>
-                                    <p className="text-gray-500 text-sm">Clients</p>
-                                </div>
-                                <div className="text-center">
-                                    <FaMedal className="text-yellow-500 text-xl" />
-                                </div>
-                            </div>
-
-                            {/* Specialization */}
-                            <p className="text-gray-500 mb-4">{provider.specialization}</p>
-
-                            {/* Book Now Button */}
-                            <button className="px-4 py-2 bg-purple-600 text-white rounded-full">
-                                BOOK NOW
-                            </button>
-                        </div>
+                        <ServiceCard key={provider.id} provider={provider} />
                     ))}
                 </div>
             </main>
