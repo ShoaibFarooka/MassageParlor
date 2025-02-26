@@ -1,25 +1,28 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { IoEyeOff } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
     return (
         <div>
             <div className="flex min-h-screen items-center justify-center bg-gray-100">
                 {/* Container */}
-                <div className="w-full max-w-sm p-8 bg-white rounded-lg shadow">
-                    <h1 className="text-2xl font-bold text-gray-800">Sign In</h1>
-                    <p className="mt-1 text-sm text-gray-500">
+                <div className="w-full max-w-sm p-8 bg-white rounded-[24px] shadow">
+                    <h1 className="text-[30px] font-bold text-center">Sign In</h1>
+                    <p className=" text-[12px] text-gray-500 text-center">
                         Enter your details to continue
                     </p>
 
                     {/* Form */}
-                    <form className="mt-6 space-y-4">
+                    <form className="mt-6">
                         {/* Email Field */}
                         <div>
                             <label
                                 htmlFor="email"
-                                className="block mb-1 text-sm font-medium text-gray-700"
+                                className=""
                             >
                                 Email
                             </label>
@@ -27,7 +30,7 @@ const Login = () => {
                                 type="email"
                                 id="email"
                                 placeholder="john@email.com"
-                                className="w-full px-4 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-violet-500"
+                                className="w-full "
                             />
                         </div>
 
@@ -35,38 +38,24 @@ const Login = () => {
                         <div>
                             <label
                                 htmlFor="password"
-                                className="block mb-1 text-sm font-medium text-gray-700"
+                                className=""
                             >
                                 Password
                             </label>
                             <div className="relative">
                                 <input
-                                    type="password"
+                                      type={showPassword ? "text" : "password"}
                                     id="password"
                                     placeholder="••••••••"
-                                    className="w-full px-4 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-violet-500"
+                                    className="w-full"
                                 />
-                                {/* 
-                If you want a toggle button for password visibility,
-                you can place an icon button here.
-              */}
+
                                 <button
                                     type="button"
-                                    className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-4 top-4"
                                 >
-                                    {/* Example eye icon (you can swap with your own) */}
-                                    <svg
-                                        className="w-5 h-5"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    >
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                        <circle cx="12" cy="12" r="3" />
-                                    </svg>
+                                    {showPassword ? <FaEyeSlash size={18} color='#858FAD' /> : <FaEye size={18} color='#858FAD' />}
                                 </button>
                             </div>
                         </div>
@@ -75,7 +64,7 @@ const Login = () => {
                         <div className="flex justify-end">
                             <a
                                 href="#"
-                                className="text-sm text-violet-600 hover:underline"
+                                className="text-sm text-[#5E50BF] hover:underline mb-[24px] font-semibold"
                             >
                                 Forgot password?
                             </a>
@@ -83,18 +72,18 @@ const Login = () => {
 
                         {/* Sign In Button */}
                         <button
-                        onClick={()=>navigate('/home')}
+                            onClick={() => navigate('/home')}
                             type="submit"
-                            className="w-full cursor-pointer py-2 text-sm font-medium text-white bg-violet-600 rounded hover:bg-violet-700"
+                            className="w-full h-[48px] cursor-pointer py-2 text-sm font-medium text-white bg-[#5E50BF] rounded-full rounded-tr-none"
                         >
                             Sign in
                         </button>
                     </form>
 
                     {/* Sign Up Link */}
-                    <p className="mt-4 text-sm text-center text-gray-600">
+                    <p className="text-sm text-center text-[#858FAD] mt-[24px] flex flex-col">
                         Don’t have an account?{' '}
-                        <span onClick={() => navigate('/register')} className="text-violet-600 cursor-pointer hover:underline">
+                        <span onClick={() => navigate('/register')} className="text-[#5E50BF] cursor-pointer hover:underline font-semibold">
                             Sign up
                         </span>
                     </p>
