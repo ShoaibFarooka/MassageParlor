@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { FaMedal } from 'react-icons/fa'
+import { FaCalendarCheck, FaClock, FaMedal } from 'react-icons/fa'
 import CustomModal from '../CustomModal/CustomModal';
 import service from '../../assets/images/service.png'
 
 const ServiceCard = ({ key, provider }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [bookingOpen, setBookingOpen] = useState(false);
 
   return (
     <div className='flex justify-center items-center p-4'>
@@ -135,35 +136,70 @@ const ServiceCard = ({ key, provider }) => {
                 <span className='text-sm font-semibold pb-[5px]'>Swedish Massage</span>
                 <p className='text-[12px]'>A relaxing massage using gentle techniques to soothe muscles and improve circulation.</p>
 
-                <span className='bg-[#5E50BF] rounded-full rounded-tr-none w-[212px] h-[44px] flex justify-center items-center text-white text-sm font-semibold absolute right-0 bottom-[-22px]'>BOOK NOW</span>
+                <span onClick={() => setBookingOpen(true)} className='bg-[#5E50BF] rounded-full rounded-tr-none w-[212px] h-[44px] flex justify-center items-center text-white text-sm font-semibold absolute right-0 bottom-[-22px]'>BOOK NOW</span>
               </div>
             </div>
-
-            <div className='pt-[48px] relative'>
-              <h3 className='text-lg font-semibold items-start'>Available services</h3>
-
-              <div className='bg-white rounded-3xl px-[21px] pt-[17px] mt-5 pb-[41px]'>
-                <span className='text-sm font-semibold pb-[5px]'>Swedish Massage</span>
-                <p className='text-[12px]'>A relaxing massage using gentle techniques to soothe muscles and improve circulation.</p>
-
-                <span className='bg-[#5E50BF] rounded-full rounded-tr-none w-[212px] h-[44px] flex justify-center items-center text-white text-sm font-semibold absolute right-0 bottom-[-22px]'>BOOK NOW</span>
-              </div>
-            </div>
-
-            <div className='pt-[48px] relative'>
-              <h3 className='text-lg font-semibold items-start'>Available services</h3>
-
-              <div className='bg-white rounded-3xl px-[21px] pt-[17px] mt-5 pb-[41px]'>
-                <span className='text-sm font-semibold pb-[5px]'>Swedish Massage</span>
-                <p className='text-[12px]'>A relaxing massage using gentle techniques to soothe muscles and improve circulation.</p>
-
-                <span className='bg-[#5E50BF] rounded-full rounded-tr-none w-[212px] h-[44px] flex justify-center items-center text-white text-sm font-semibold absolute right-0 bottom-[-22px]'>BOOK NOW</span>
-              </div>
-            </div>
-
-
           </div>
 
+        </div>
+      </CustomModal>
+
+      <CustomModal isOpen={bookingOpen} onRequestClose={() => setBookingOpen(false)} contentLabel="Modal" width='400px'>
+        <div className="px-9 pb-32">
+          <div className=''>
+
+            <div className="w-full flex flex-col items-center">
+
+              <img
+                src={provider.image}
+                alt={`Profile of ${provider.name}`}
+                className="w-[108px] h-[108px] object-cover rounded-full mx-auto mt-[100px]"
+              />
+
+              <div className="flex justify-between items-center mt-[17px]">
+                <h2 className="text-[22px] font-semibold">{provider.name}</h2>
+              </div>
+
+              <p className="text-[#858FAD] text-[12.74px] mt-[8px]">
+                Age {provider.age} | Located in {provider.location}
+              </p>
+            </div>
+          </div>
+
+          <div className='bg-white rounded-3xl px-[21px] py-[17px]  mt-5'>
+            <span className='text-sm font-semibold pb-[5px]'>Phone Number</span>
+            <span className='text-[#5E50BF] text-[12px] font-bold block pb-[5px]'>R980.00</span>
+            <p className=' text-[12px]'>A relaxing massage using gentle techniques to soothe muscles and improve circulation.</p>
+          </div>
+
+          <div className='mt-6'>
+            <label className=" label  text-black">
+            Booking date and time
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Feb, 28 2025"
+                className="w-full input"
+              />
+              {/* Calendar Icon */}
+              <div className="absolute right-4 top-4 text-[#858FAD]">
+                <FaCalendarCheck />
+              </div>
+            </div>
+
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="14:00 pm"
+                className="w-full input"
+              />
+              {/* Calendar Icon */}
+              <div className="absolute right-4 top-4 text-[#858FAD]">
+                <FaClock />
+              </div>
+            </div>
+          </div>
         </div>
       </CustomModal>
     </div>
