@@ -21,7 +21,7 @@ const Register = () => {
         <div className="flex items-center justify-center mt-6 space-x-[24px]">
           <button
             onClick={() => setActiveTab('user')}
-            className={`pb-2 text-sm font-medium focus:outline-none ${activeTab === 'user'
+            className={`pb-2 text-sm font-medium cursor-pointer focus:outline-none ${activeTab === 'user'
                 ? 'border-b-2 border-violet-600 text-violet-600'
                 : 'text-gray-500'
               }`}
@@ -30,7 +30,7 @@ const Register = () => {
           </button>
           <button
             onClick={() => setActiveTab('provider')}
-            className={`pb-2 text-sm font-medium focus:outline-none ${activeTab === 'provider'
+            className={`pb-2 text-sm font-medium cursor-pointer focus:outline-none ${activeTab === 'provider'
                 ? 'border-b-2 border-violet-600 text-violet-600'
                 : 'text-gray-500'
               }`}
@@ -63,26 +63,26 @@ function UserSignUpForm() {
     <form className="mt-6">
       {/* Full Name */}
       <div>
-        <label className="">
+        <label className=" label">
           Full Name
         </label>
         <input
           type="text"
           placeholder="John Doe"
-          className="w-full "
+          className="w-full input "
         />
       </div>
 
       {/* Date of Birth */}
       <div>
-        <label className="">
+        <label className=" label">
           Date of birth
         </label>
         <div className="relative">
           <input
             type="text"
             placeholder="Jan 12 1980"
-            className="w-full"
+            className="w-full input"
           />
           {/* Calendar Icon */}
           <div className="absolute right-4 top-4 text-[#858FAD]">
@@ -93,26 +93,26 @@ function UserSignUpForm() {
 
       {/* Email */}
       <div>
-        <label className="">
+        <label className=" label">
           Email
         </label>
         <input
           type="email"
           placeholder="john@email.com"
-          className="w-full "
+          className="w-full input "
         />
       </div>
 
       {/* Password */}
       <div>
-        <label className="">
+        <label className=" label">
           Password
         </label>
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
             placeholder="••••••••"
-            className="w-full"
+            className="w-full input"
           />
           {/* Eye Icon */}
           <button
@@ -127,14 +127,14 @@ function UserSignUpForm() {
 
       {/* Confirm Password */}
       <div>
-        <label className="">
+        <label className=" label">
           Confirm Password
         </label>
         <div className="relative">
           <input
            type={showConfirmPassword ? "text" : "password"}
             placeholder="••••••••"
-            className="w-full"
+            className="w-full input"
           />
 
           <button
@@ -203,71 +203,71 @@ function ProviderSignUpForm() {
       {/* Name and Surname (side by side) */}
       <div className="grid grid-cols-2 gap-4 mt-6">
         <div>
-          <label className="">
+          <label className=" label">
             Name
           </label>
           <input
             type="text"
             placeholder="John"
-            className="w-full"
+            className="w-full input"
           />
         </div>
         <div>
-          <label className="">
+          <label className=" label">
             Surname
           </label>
           <input
             type="text"
             placeholder="Doe"
-            className="w-full"
+            className="w-full input"
           />
         </div>
       </div>
 
       {/* Email */}
       <div className="">
-        <label className="">
+        <label className=" label">
           Email
         </label>
         <input
           type="email"
           placeholder="email@email.com"
-          className="w-full "
+          className="w-full input "
         />
       </div>
 
       {/* Contact Number */}
       <div className="">
-        <label className="">
+        <label className=" label">
           Contact Number
         </label>
         <input
           type="tel"
           placeholder="0710000000"
-          className="w-full "
+          className="w-full input "
         />
       </div>
 
       {/* Ethnicity and Location (side by side) */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="">
+          <label className=" label">
             Ethnicity
           </label>
           <input
             type="text"
             placeholder="Black"
-            className="w-full"
+            className="w-full input"
           />
         </div>
         <div>
-          <label className="">
+          <label className=" label">
             Location
           </label>
           <input
             type="text"
             placeholder="Bramley"
-            className="w-full"
+            className="w-full input"
           />
         </div>
       </div>
@@ -275,36 +275,36 @@ function ProviderSignUpForm() {
       {/* Height and Hair color (side by side) */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="">
+          <label className=" label">
             Height (cm)
           </label>
           <input
             type="number"
             placeholder="165"
-            className="w-full"
+            className="w-full input"
           />
         </div>
         <div>
-          <label className="">
+          <label className=" label">
             Hair color
           </label>
           <input
             type="text"
             placeholder="Brown"
-            className="w-full"
+            className="w-full input"
           />
         </div>
       </div>
 
       {/* Call-out Type */}
       <div className="">
-        <label className="">
+        <label className=" label">
           Call-out Type
         </label>
         <input
           type="text"
           placeholder="In-call"
-          className="w-full "
+          className="w-full input "
         />
       </div>
 

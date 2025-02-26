@@ -1,4 +1,4 @@
-label{
+.label{
     font-weight: 600 !important;
     font-size: 12px !important;
     line-height: 15px !important;
@@ -8,7 +8,7 @@ label{
     display: block;
 }
 
-input{
+.input{
     height: 48px !important;
     border-radius: 12px !important;
     background: #F3F2F8 !important;
@@ -17,7 +17,7 @@ input{
     margin-bottom: 24px;
 }
 
-input:focus{
+.input:focus{
     border: 2px solid #5E50BF !important;
     outline: none !important;
 }

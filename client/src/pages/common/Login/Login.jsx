@@ -22,7 +22,7 @@ const Login = () => {
                         <div>
                             <label
                                 htmlFor="email"
-                                className=""
+                                className="label"
                             >
                                 Email
                             </label>
@@ -30,7 +30,7 @@ const Login = () => {
                                 type="email"
                                 id="email"
                                 placeholder="john@email.com"
-                                className="w-full "
+                                className="w-full input "
                             />
                         </div>
 
@@ -38,7 +38,7 @@ const Login = () => {
                         <div>
                             <label
                                 htmlFor="password"
-                                className=""
+                                className="label"
                             >
                                 Password
                             </label>
@@ -47,7 +47,7 @@ const Login = () => {
                                       type={showPassword ? "text" : "password"}
                                     id="password"
                                     placeholder="••••••••"
-                                    className="w-full"
+                                    className="w-full input"
                                 />
 
                                 <button
