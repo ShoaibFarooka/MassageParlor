@@ -92,34 +92,31 @@ const providers = [
 const UserHome = () => {
     return (
         <div>
-            <div className="bg-gray-100 min-h-screen">
+            <div className="min-h-screen">
                 <header className="flex justify-between items-center py-2 px-4">
 
                     <div className="flex items-center space-x-4">
                         <div className="relative">
-
                             <input
                                 type="text"
                                 placeholder="Search"
-                                className="pl-10 pr-4 py-2 bg-white rounded-full border border-gray-300 
-                         focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                className="pl-6 pr-4 py-2 text-lg rounded-full h-[56px] w-[400px] bg-white"
                             />
 
-                            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                            <FaSearch className="absolute right-6 top-1/2 transform -translate-y-1/2 text-black" fontSize={24} />
                         </div>
 
                         <button
-                            className="p-2 rounded-full bg-white border border-gray-300 
-                       focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            className="p-2 rounded-full bg-white h-[50px] w-[50px] flex justify-center items-center cursor-pointer"
                         >
-                            <FaSlidersH className="text-gray-400" />
+                            <FaSlidersH className="text-black" fontSize={24} />
                         </button>
                     </div>
 
                     <div className="flex space-x-4 items-center">
 
                         <div className='flex items-center space-x-2 border border-[#858FAD] rounded-[12px] px-4 py-2'>
-                            <IoLocationOutline fontSize={24} className='p-0 m-0'/>
+                            <IoLocationOutline fontSize={24} className='p-0 m-0' />
 
                             <div className='flex flex-col pl-6'>
                                 <span className='text-[11px] font-semibold'>

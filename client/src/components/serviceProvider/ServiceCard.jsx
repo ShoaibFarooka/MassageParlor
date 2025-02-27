@@ -136,7 +136,7 @@ const ServiceCard = ({ key, provider }) => {
                 <span className='text-sm font-semibold pb-[5px]'>Swedish Massage</span>
                 <p className='text-[12px]'>A relaxing massage using gentle techniques to soothe muscles and improve circulation.</p>
 
-                <span onClick={() => setBookingOpen(true)} className='bg-[#5E50BF] rounded-full rounded-tr-none w-[212px] h-[44px] flex justify-center items-center text-white text-sm font-semibold absolute right-0 bottom-[-22px]'>BOOK NOW</span>
+                <span onClick={() => setBookingOpen(true)} className='bg-[#5E50BF] rounded-full rounded-tr-none w-[212px] h-[44px] flex justify-center items-center text-white text-sm font-semibold absolute right-0 bottom-[-22px] cursor-pointer'>BOOK NOW</span>
               </div>
             </div>
           </div>
@@ -174,7 +174,7 @@ const ServiceCard = ({ key, provider }) => {
 
           <div className='mt-6'>
             <label className=" label  text-black">
-            Booking date and time
+              Booking date and time
             </label>
             <div className="relative">
               <input

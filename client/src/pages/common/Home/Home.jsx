@@ -4,6 +4,7 @@ import { FaSearch, FaSlidersH, FaMedal } from 'react-icons/fa';
 import ServiceCard from '../../../components/serviceProvider/ServiceCard';
 import profile from '../../../assets/images/profile.png';
 import CustomModal from '../../../components/CustomModal/CustomModal';
+import { useNavigate } from 'react-router-dom';
 
 // Example data array. In a real app, you'd fetch this from an API.
 const providers = [
@@ -92,9 +93,11 @@ const providers = [
 function Home() {
     const [isOpen, setIsOpen] = useState(false);
     const [condition, setCondition] = useState(false);
+    const navigate = useNavigate();
+    
     return (
         <div className=" min-h-screen">
-            <header className="flex justify-between items-center p-4 bg-white shadow-md">
+            <header className="flex justify-between items-center p-4">
 
                 <div className="flex items-center space-x-4">
                     <div className='px-16'>
@@ -102,28 +105,25 @@ function Home() {
                     </div>
 
                     <div className="relative">
-
                         <input
                             type="text"
                             placeholder="Search"
-                            className="pl-10 pr-4 py-2 rounded-full border border-gray-300 
-                         focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            className="pl-6 pr-4 py-2 text-lg rounded-full h-[56px] w-[400px] bg-white"
                         />
 
-                        <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <FaSearch className="absolute right-6 top-1/2 transform -translate-y-1/2 text-black" fontSize={24} />
                     </div>
 
                     <button
-                        className="p-2 rounded-full bg-white border border-gray-300 
-                       focus:outline-none focus:ring-2 focus:ring-purple-600"
+                        className="p-2 rounded-full bg-white h-[50px] w-[50px] flex justify-center items-center cursor-pointer"
                     >
-                        <FaSlidersH className="text-gray-400" />
+                        <FaSlidersH className="text-black" fontSize={24} />
                     </button>
                 </div>
 
-                <div className="flex space-x-4">
-                    <button className="text-gray-600">Sign Up</button>
-                    <button className="px-4 py-2 bg-[#5E50BF] w-[145px] h-[51px] text-white rounded-full rounded-tr-none ">
+                <div className="flex">
+                    <button className="font-semibold mr-[30px]">Sign Up</button>
+                    <button onClick={() => navigate('/user/home')} className="px-4 py-2 bg-[#5E50BF] w-[145px] h-[51px] text-white font-semibold rounded-full rounded-tr-none ">
                         Sign in
                     </button>
                 </div>
