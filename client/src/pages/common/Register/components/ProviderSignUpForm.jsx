@@ -113,10 +113,12 @@ function ProviderSignUpForm() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
         <div className='mb-6'>
-          <label className=" label">
+          <label htmlFor="name" className=" label">
             Name
           </label>
           <input
+            name='name'
+            id='name'
             autoComplete="off"
             type="text"
             placeholder="John"
@@ -128,10 +130,12 @@ function ProviderSignUpForm() {
         </div>
 
         <div className='mb-6'>
-          <label className=" label">
+          <label htmlFor="sur" className=" label">
             Surname
           </label>
           <input
+            name='sur'
+            id='sur'
             autoComplete="off"
             type="text"
             placeholder="Doe"
@@ -145,10 +149,12 @@ function ProviderSignUpForm() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
         <div className='mb-6'>
-          <label className=" label">
+          <label htmlFor="email" className=" label">
             Email
           </label>
           <input
+            name='email'
+            id='email'
             autoComplete="off"
             type="email"
             placeholder="email@email.com"
@@ -160,10 +166,12 @@ function ProviderSignUpForm() {
         </div>
 
         <div className='mb-6'>
-          <label className=" label">
+          <label htmlFor="num" className=" label">
             Contact Number
           </label>
           <input
+            name='num'
+            id='num'
             autoComplete="off"
             type="tel"
             placeholder="0710000000"
@@ -177,10 +185,12 @@ function ProviderSignUpForm() {
 
       <div className="grid grid-cols-2 gap-4">
         <div className='mb-6'>
-          <label className=" label">
+          <label htmlFor="eth" className="label">
             Ethnicity
           </label>
           <input
+            name='eth'
+            id='eth'
             autoComplete="off"
             type="text"
             placeholder="Black"
@@ -190,10 +200,12 @@ function ProviderSignUpForm() {
           />
         </div>
         <div className='mb-6'>
-          <label className=" label">
+          <label htmlFor="loc" className=" label">
             Location
           </label>
           <input
+            id='loc'
+            name='loc'
             autoComplete="off"
             type="text"
             placeholder="Bramley"
@@ -206,10 +218,12 @@ function ProviderSignUpForm() {
 
       <div className="grid grid-cols-2 gap-4">
         <div className='mb-6'>
-          <label className=" label">
+          <label htmlFor="height" className="label">
             Height (cm)
           </label>
           <input
+            name='height'
+            id='height'
             autoComplete="off"
             type="number"
             placeholder="165"
@@ -219,10 +233,12 @@ function ProviderSignUpForm() {
           />
         </div>
         <div className='mb-6'>
-          <label className=" label">
+          <label htmlFor="hc" className=" label">
             Hair color
           </label>
           <input
+            name='hc'
+            id='hc'
             autoComplete="off"
             type="text"
             placeholder="Brown"
@@ -234,10 +250,12 @@ function ProviderSignUpForm() {
       </div>
 
       <div className='mb-6'>
-        <label className=" label">
+        <label htmlFor="cot" className=" label">
           Call-out Type
         </label>
         <input
+          name='cot'
+          id='cot'
           autoComplete="off"
           type="text"
           placeholder="In-call"
@@ -249,9 +267,11 @@ function ProviderSignUpForm() {
 
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
         <div className='mb-6'>
-          <label className="label">Password</label>
+          <label htmlFor="pass" className="label">Password</label>
           <div className="relative">
             <input
+              name='pass'
+              id='pass'
               autoComplete="off"
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
@@ -279,9 +299,11 @@ function ProviderSignUpForm() {
         </div>
 
         <div>
-          <label className="label">Confirm Password</label>
+          <label htmlFor="cp" className="label">Confirm Password</label>
           <div className="relative mb-6">
             <input
+              name='cp'
+              id='cp'
               autoComplete="off"
               type={showConfirmPassword ? "text" : "password"}
               placeholder="••••••••"

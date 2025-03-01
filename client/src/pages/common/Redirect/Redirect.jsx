@@ -6,11 +6,11 @@ const Redirect = () => {
     console.log('User: ', user);
 
     if (user.role === 'admin') {
-        return <Navigate to="/company/admin/dashboard" />;
-    } else if (user.role === 'company') {
-        return <Navigate to="/company/dashboard" />;
+        return <Navigate to="/admin/home" />;
+    } else if (user.role === 'service-provider') {
+        return <Navigate to="/service-provider/home" />;
     } else if (user.role === 'user') {
-        return <Navigate to="/billing" />;
+        return <Navigate to="/user/home" />;
     }
 };
 

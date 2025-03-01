@@ -115,8 +115,10 @@ function UserSignUpForm() {
             {/* Full Name */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                 <div className='mb-6'>
-                    <label className="label">Name</label>
+                    <label htmlFor="name" className="label">Name</label>
                     <input
+                        name='name'
+                        id='name'
                         type="text"
                         placeholder="John"
                         className="w-full input"
@@ -129,8 +131,10 @@ function UserSignUpForm() {
                 </div>
 
                 <div className='mb-6'>
-                    <label className="label">Surname</label>
+                    <label htmlFor="surname" className="label">Surname</label>
                     <input
+                        name='surname'
+                        id='surname'
                         type="text"
                         placeholder="Doe"
                         className="w-full input"
@@ -145,9 +149,11 @@ function UserSignUpForm() {
 
             {/* Date of Birth */}
             <div className='mb-6'>
-                <label className="label">Date of birth</label>
+                <label htmlFor="db" className="label">Date of birth</label>
                 <div className="relative">
                     <input
+                        name='bd'
+                        id='bd'
                         type="text"
                         placeholder="Jan 12 1980"
                         className="w-full input"
@@ -166,8 +172,10 @@ function UserSignUpForm() {
 
                 {/* Email */}
                 <div className='mb-6'>
-                    <label className="label">Email</label>
+                    <label htmlFor="email" className="label">Email</label>
                     <input
+                        name='email'
+                        id='email'
                         type="email"
                         placeholder="john@email.com"
                         className="w-full input"
@@ -180,15 +188,17 @@ function UserSignUpForm() {
                 </div>
 
                 <div className='mb-6'>
-                    <label className="label">Contact Number</label>
+                    <label htmlFor="num" className="label">Contact Number</label>
                     <input
+                        name='num'
+                        id='num'
                         type="text"
                         placeholder="0710000000"
                         className="w-full input"
                         value={user.number}
                         onChange={(e) => setUser({ ...user, number: e.target.value })}
                     />
-                {error.number && <div className="text-red-500 text-sm">{error.number}</div>}
+                    {error.number && <div className="text-red-500 text-sm">{error.number}</div>}
                 </div>
             </div>
 
@@ -196,9 +206,11 @@ function UserSignUpForm() {
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                 {/* Password */}
                 <div className='mb-6'>
-                    <label className="label">Password</label>
+                    <label htmlFor="pass" className="label">Password</label>
                     <div className="relative">
                         <input
+                            name='pass'
+                            id='pass'
                             type={showPassword ? "text" : "password"}
                             placeholder="••••••••"
                             className="w-full input"
@@ -226,9 +238,11 @@ function UserSignUpForm() {
 
                 {/* Confirm Password */}
                 <div className='mb-6'>
-                    <label className="label">Confirm Password</label>
+                    <label htmlFor="cp" className="label">Confirm Password</label>
                     <div className="relative">
                         <input
+                            name='cp'
+                            id='cp'
                             type={showConfirmPassword ? "text" : "password"}
                             placeholder="••••••••"
                             className="w-full input"

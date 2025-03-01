@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import profile from '../../../assets/images/profile.png'
 import { FaSearch, FaSlidersH } from 'react-icons/fa'
 import ServiceCard from '../../../components/serviceProvider/ServiceCard';
 import { CiBellOn } from "react-icons/ci";
 import { IoLocationOutline } from "react-icons/io5";
-
 
 const providers = [
     {
@@ -90,6 +89,25 @@ const providers = [
 ];
 
 const UserHome = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const toggleDropdown = () => {
+        setIsOpen((prev) => !prev);
+    };
+
     return (
         <div>
             <div className="min-h-screen">
@@ -106,11 +124,36 @@ const UserHome = () => {
                             <FaSearch className="absolute right-6 top-1/2 transform -translate-y-1/2 text-black " fontSize={24} />
                         </div>
 
-                        <button
-                            className="p-2 rounded-full bg-white h-[50px] w-[50px] flex justify-center items-center cursor-pointer shadow"
-                        >
-                            <FaSlidersH className="text-black" fontSize={24} />
-                        </button>
+                        <div className='relative'>
+                            <button
+                                onClick={toggleDropdown}
+                                className="p-2 rounded-full bg-white h-[50px] w-[50px] flex justify-center items-center cursor-pointer shadow"
+                            >
+                                <FaSlidersH className="text-black" fontSize={24} />
+                            </button>
+                            {isOpen && (
+                                <div className="absolute right-0 mt-2 w-64 rounded-lg shadow-lg bg-white p-4 z-50">
+                                    <h2 className="text-lg font-semibold mb-4">Filters</h2>
+                                    {/* Example content – replace or extend as needed */}
+                                    <div className="mb-4">
+                                        <label className="label">Option 1</label>
+                                        <input
+                                            type="text"
+                                            className="inout"
+                                            placeholder="Enter value "
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <label className="label">Option 2</label>
+                                        <select className="inout">
+                                            <option>Value 1</option>
+                                            <option>Value 2</option>
+                                            <option>Value 3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     <div className="flex space-x-4 items-center">
