@@ -7,9 +7,9 @@ import userService from '../../../../services/userService';
 function ProviderSignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState({});
+  const navigate = useNavigate();
   const [user, setUser] = useState({
     name: "",
     surname: "",
@@ -23,35 +23,32 @@ function ProviderSignUpForm() {
     callOutType: ""
   });
 
-  let errors = {};
-
-  if (!user.name) {
-    errors.name = "Name is required";
-  }
-  if (!user.surname) {
-    errors.surname = "Surname is required";
-  }
-  if (!user.email) {
-    errors.email = "Email is required";
-  }
-  if (!user.number) {
-    errors.number = "Contact number is required";
-  }
-  if (!user.password) {
-    errors.password = "Password is required";
-  }
-  if (user.password && user.password !== confirmPassword) {
-    errors.confirmPassword = "Passwords do not match";
-  }
-
-
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (user.password !== confirmPassword) {
-      setError({ password: "Passwords do not match" });
+    let errors = {};
+    if (!user.name) {
+      errors.name = "Name is required";
+    }
+    if (!user.surname) {
+      errors.surname = "Surname is required";
+    }
+    if (!user.email) {
+      errors.email = "Email is required";
+    }
+    if (!user.number) {
+      errors.number = "Contact number is required";
+    }
+    if (!user.password) {
+      errors.password = "Password is required";
+    }
+    if (user.password && user.password !== confirmPassword) {
+      errors.confirmPassword = "Passwords do not match";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setError(errors);
       return;
     }
 
@@ -59,9 +56,8 @@ function ProviderSignUpForm() {
 
     const payload = {
       ...user,
-      name: `${user.name} ${user.surname}`
+      name: `${user.name} ${user.surname}`,
     };
-
     delete payload.surname;
 
     try {
@@ -77,6 +73,7 @@ function ProviderSignUpForm() {
       setError({ form: "An error occurred. Please try again later." });
     }
   };
+
 
   return (
     <form onSubmit={handleSubmit} autoComplete="off" className="mt-6">
@@ -115,7 +112,7 @@ function ProviderSignUpForm() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-        <div>
+        <div className='mb-6'>
           <label className=" label">
             Name
           </label>
@@ -127,9 +124,10 @@ function ProviderSignUpForm() {
             value={user.name}
             onChange={(e) => setUser({ ...user, name: e.target.value })}
           />
-          {error.name && <div className="text-red-500 text-sm mt-1">{error.name}</div>}
+          {error.name && <div className="text-red-500 text-sm">{error.name}</div>}
         </div>
-        <div>
+
+        <div className='mb-6'>
           <label className=" label">
             Surname
           </label>
@@ -141,12 +139,12 @@ function ProviderSignUpForm() {
             value={user.surname}
             onChange={(e) => setUser({ ...user, surname: e.target.value })}
           />
-          {error.surname && <div className="text-red-500 text-sm mt-1">{error.surname}</div>}
+          {error.surname && <div className="text-red-500 text-sm">{error.surname}</div>}
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-        <div className="">
+        <div className='mb-6'>
           <label className=" label">
             Email
           </label>
@@ -158,10 +156,10 @@ function ProviderSignUpForm() {
             value={user.email}
             onChange={(e) => setUser({ ...user, email: e.target.value })}
           />
-          {error.email && <div className="text-red-500 text-sm mt-1">{error.email}</div>}
+          {error.email && <div className="text-red-500 text-sm">{error.email}</div>}
         </div>
 
-        <div className="">
+        <div className='mb-6'>
           <label className=" label">
             Contact Number
           </label>
@@ -173,12 +171,12 @@ function ProviderSignUpForm() {
             value={user.number}
             onChange={(e) => setUser({ ...user, number: e.target.value })}
           />
-          {error.number && <div className="text-red-500 text-sm mt-1">{error.number}</div>}
+          {error.number && <div className="text-red-500 text-sm">{error.number}</div>}
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div>
+        <div className='mb-6'>
           <label className=" label">
             Ethnicity
           </label>
@@ -191,7 +189,7 @@ function ProviderSignUpForm() {
             onChange={(e) => setUser({ ...user, ethnicity: e.target.value })}
           />
         </div>
-        <div>
+        <div className='mb-6'>
           <label className=" label">
             Location
           </label>
@@ -207,7 +205,7 @@ function ProviderSignUpForm() {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div>
+        <div className='mb-6'>
           <label className=" label">
             Height (cm)
           </label>
@@ -220,7 +218,7 @@ function ProviderSignUpForm() {
             onChange={(e) => setUser({ ...user, height: e.target.value })}
           />
         </div>
-        <div>
+        <div className='mb-6'>
           <label className=" label">
             Hair color
           </label>
@@ -235,7 +233,7 @@ function ProviderSignUpForm() {
         </div>
       </div>
 
-      <div className="">
+      <div className='mb-6'>
         <label className=" label">
           Call-out Type
         </label>
@@ -250,7 +248,7 @@ function ProviderSignUpForm() {
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-        <div className=''>
+        <div className='mb-6'>
           <label className="label">Password</label>
           <div className="relative">
             <input
@@ -282,7 +280,7 @@ function ProviderSignUpForm() {
 
         <div>
           <label className="label">Confirm Password</label>
-          <div className="relative">
+          <div className="relative mb-6">
             <input
               autoComplete="off"
               type={showConfirmPassword ? "text" : "password"}
@@ -302,15 +300,15 @@ function ProviderSignUpForm() {
                 <FaEye size={18} color="#858FAD" />
               )}
             </button>
+            {error.confirmPassword && <div className="text-red-500 text-sm">{error.confirmPassword}</div>}
           </div>
 
-          {error.confirmPassword && <div className="text-red-500 text-sm mt-1">{error.confirmPassword}</div>}
         </div>
       </div>
 
       <button
         type="submit"
-        className="w-full h-[48px] mt-6 cursor-pointer py-2 text-sm font-medium text-white bg-[#5E50BF] rounded-full rounded-tr-none"
+        className="w-full h-[48px] cursor-pointer py-2 text-sm font-medium text-white bg-[#5E50BF] rounded-full rounded-tr-none"
       >
         Sign up
       </button>

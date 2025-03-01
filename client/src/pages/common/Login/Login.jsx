@@ -87,7 +87,7 @@ const Login = () => {
                     )}
 
                     {/* Email Field */}
-                    <div>
+                    <div className='mb-6'>
                         <label htmlFor="email" className="label">
                             Email
                         </label>
@@ -105,7 +105,7 @@ const Login = () => {
                     </div>
 
                     {/* Password Field */}
-                    <div>
+                    <div className='mb-6'>
                         <label htmlFor="password" className="label">
                             Password
                         </label>

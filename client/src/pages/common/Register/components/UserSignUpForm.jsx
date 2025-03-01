@@ -16,30 +16,44 @@ function UserSignUpForm() {
     });
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState({});
-
     const navigate = useNavigate();
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!user.name || !user.surname || !user.dateOfBirth || !user.email || !user.password) {
-            setError({ form: "Please fill in all required fields" });
-            return;
+        let errors = {};
+        if (!user.name) {
+            errors.name = "Name is required";
+        }
+        if (!user.surname) {
+            errors.surname = "Surname is required";
+        }
+        if (!user.email) {
+            errors.email = "Email is required";
+        }
+        if (!user.number) {
+            errors.number = "Contact number is required";
+        }
+        if (!user.password) {
+            errors.password = "Password is required";
+        }
+        if (user.password && user.password !== confirmPassword) {
+            errors.confirmPassword = "Passwords do not match";
         }
 
-        if (user.password !== confirmPassword) {
-            setError({ password: "Passwords do not match" });
+        if (Object.keys(errors).length > 0) {
+            setError(errors);
             return;
         }
 
         setError({});
 
-        // Combine name and surname into a single "name" field for the payload
         const payload = {
             ...user,
-            name: `${user.name} ${user.surname}` // Combining both fields
+            name: `${user.name} ${user.surname}`
         };
-        // Remove the surname property since it's now merged
+
         delete payload.surname;
 
         try {
@@ -100,7 +114,7 @@ function UserSignUpForm() {
 
             {/* Full Name */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                <div>
+                <div className='mb-6'>
                     <label className="label">Name</label>
                     <input
                         type="text"
@@ -111,8 +125,10 @@ function UserSignUpForm() {
                             setUser({ ...user, name: e.target.value })
                         }
                     />
+                    {error.name && <div className="text-red-500 text-sm">{error.name}</div>}
                 </div>
-                <div>
+
+                <div className='mb-6'>
                     <label className="label">Surname</label>
                     <input
                         type="text"
@@ -123,11 +139,12 @@ function UserSignUpForm() {
                             setUser({ ...user, surname: e.target.value })
                         }
                     />
+                    {error.surname && <div className="text-red-500 text-sm">{error.surname}</div>}
                 </div>
             </div>
 
             {/* Date of Birth */}
-            <div>
+            <div className='mb-6'>
                 <label className="label">Date of birth</label>
                 <div className="relative">
                     <input
@@ -148,7 +165,7 @@ function UserSignUpForm() {
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
 
                 {/* Email */}
-                <div>
+                <div className='mb-6'>
                     <label className="label">Email</label>
                     <input
                         type="email"
@@ -159,9 +176,10 @@ function UserSignUpForm() {
                             setUser({ ...user, email: e.target.value })
                         }
                     />
+                    {error.email && <div className="text-red-500 text-sm">{error.email}</div>}
                 </div>
 
-                <div>
+                <div className='mb-6'>
                     <label className="label">Contact Number</label>
                     <input
                         type="text"
@@ -170,13 +188,14 @@ function UserSignUpForm() {
                         value={user.number}
                         onChange={(e) => setUser({ ...user, number: e.target.value })}
                     />
+                {error.number && <div className="text-red-500 text-sm">{error.number}</div>}
                 </div>
             </div>
 
 
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                 {/* Password */}
-                <div>
+                <div className='mb-6'>
                     <label className="label">Password</label>
                     <div className="relative">
                         <input
@@ -206,7 +225,7 @@ function UserSignUpForm() {
                 </div>
 
                 {/* Confirm Password */}
-                <div>
+                <div className='mb-6'>
                     <label className="label">Confirm Password</label>
                     <div className="relative">
                         <input
@@ -227,6 +246,9 @@ function UserSignUpForm() {
                                 <FaEye size={18} color="#858FAD" />
                             )}
                         </button>
+
+                        {error.confirmPassword && <div className="text-red-500 text-sm">{error.confirmPassword}</div>}
+
                     </div>
                 </div>
             </div>
@@ -234,7 +256,7 @@ function UserSignUpForm() {
             {/* Sign Up Button */}
             <button
                 type="submit"
-                className="w-full h-[48px] mt-6 cursor-pointer py-2 text-sm font-medium text-white bg-[#5E50BF] rounded-full rounded-tr-none"
+                className="w-full h-[48px] cursor-pointer py-2 text-sm font-medium text-white bg-[#5E50BF] rounded-full rounded-tr-none"
             >
                 Sign up
             </button>
