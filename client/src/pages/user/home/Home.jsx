@@ -4,6 +4,17 @@ import { FaSearch, FaSlidersH } from 'react-icons/fa'
 import ServiceCard from '../../../components/serviceProvider/ServiceCard';
 import { CiBellOn } from "react-icons/ci";
 import { IoLocationOutline } from "react-icons/io5";
+import { CgProfile } from "react-icons/cg";
+import { IoMdCard } from "react-icons/io";
+import { CiSettings } from "react-icons/ci";
+import { MdOutlineLogout } from "react-icons/md";
+import userService from '../../../services/userService';
+import { useDispatch } from 'react-redux';
+import { setLoggedOut } from '../../../redux/logoutSlice';
+import { clearUser } from '../../../redux/userSlice';
+import { HideLoading, ShowLoading } from '../../../redux/loaderSlice';
+import Cookies from 'js-cookie';
+
 
 const providers = [
     {
@@ -91,6 +102,15 @@ const providers = [
 const UserHome = () => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
+    const [height, setHeight] = useState(165);
+    const minVal = 100;
+    const maxVal = 200;
+    const fillPercentage = ((height - minVal) / (maxVal - minVal)) * 100;
+    // New dropdown state & ref for the profile image
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const profileDropdownRef = useRef(null);
+    const dispatch = useDispatch();
+
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -104,9 +124,45 @@ const UserHome = () => {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+
+            if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+                setIsProfileOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+
     const toggleDropdown = () => {
         setIsOpen((prev) => !prev);
     };
+
+    const toggleProfileDropdown = () => {
+        setIsProfileOpen((prev) => !prev);
+    };
+
+    const handleLogout = async () => {
+        dispatch(ShowLoading());
+        try {
+            await userService.logoutUser({});
+            Cookies.remove('adstatixx-jwt-token');
+            dispatch(setLoggedOut());
+            dispatch(clearUser());
+        } catch (error) {
+            message.error(error.response.data);
+        }
+        dispatch(HideLoading());
+    };
+
 
     return (
         <div>
@@ -132,25 +188,59 @@ const UserHome = () => {
                                 <FaSlidersH className="text-black" fontSize={24} />
                             </button>
                             {isOpen && (
-                                <div className="absolute right-0 mt-2 w-64 rounded-lg shadow-lg bg-white p-4 z-50">
-                                    <h2 className="text-lg font-semibold mb-4">Filters</h2>
-                                    {/* Example content – replace or extend as needed */}
-                                    <div className="mb-4">
-                                        <label className="label">Option 1</label>
-                                        <input
-                                            type="text"
-                                            className="inout"
-                                            placeholder="Enter value "
-                                        />
+                                <div ref={dropdownRef} className="absolute right-0 w-[234px] mt-2 rounded-2xl shadow-lg bg-white z-50">
+                                    <h2 className="text-base font-semibold mb-4 mt-4 text-center">Filters</h2>
+
+                                    <div className='px-4'>
+                                        <div className="mb-2">
+                                            <label className="block text-[10px] font-medium ">Location</label>
+                                            <input
+                                                type="text"
+                                                className="w-full h-[30px] text-[10px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]"
+                                                placeholder="Enter value"
+                                            />
+                                        </div>
+
+                                        <div className="mb-2">
+                                            <label className="block text-[10px] font-medium ">Ethnicity</label>
+                                            <select className="w-full h-[30px] text-[10px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]">
+                                                <option>Value 1</option>
+                                                <option>Value 2</option>
+                                                <option>Value 3</option>
+                                            </select>
+                                        </div>
+
+                                        <div className="mb-2">
+                                            <label className="block text-[10px] font-medium ">Location</label>
+                                            <div className='flex mt-2'>
+                                                <span className='w-4 h-4 bg-[#DCC792] rounded-full mr-[10px] cursor-pointer'></span>
+                                                <span className='w-4 h-4 bg-[#824238] rounded-full mr-[10px] cursor-pointer'></span>
+                                                <span className='w-4 h-4 bg-[#000000] rounded-full mr-[10px] cursor-pointer'></span>
+                                                <span className='w-4 h-4 bg-[#80624E] rounded-full mr-[10px] cursor-pointer'></span>
+                                            </div>
+                                        </div>
+
+                                        <div className="mb-2">
+                                            <label className="block text-[10px] font-medium ">Height - ({height}cm)</label>
+                                            <div className=' mt-2'>
+                                                <input
+                                                    type="range"
+                                                    min={minVal}
+                                                    max={maxVal}
+                                                    value={height}
+                                                    onChange={(e) => setHeight(e.target.value)}
+                                                    className="range-slider w-full"
+                                                    style={{
+                                                        background: `linear-gradient(to right, #000 0%, #000 ${fillPercentage}%, #ddd ${fillPercentage}%, #ddd 100%)`
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="mb-4">
-                                        <label className="label">Option 2</label>
-                                        <select className="inout">
-                                            <option>Value 1</option>
-                                            <option>Value 2</option>
-                                            <option>Value 3</option>
-                                        </select>
-                                    </div>
+
+                                    <button className='text-sm font-semibold rounded-b-3xl mt-2 text-white bg-[#5E50BF] py-3 w-full'>
+                                        Filter
+                                    </button>
                                 </div>
                             )}
                         </div>
@@ -176,11 +266,29 @@ const UserHome = () => {
                             <CiBellOn fontSize={24} />
                         </div>
 
-                        <img
-                            src={profile}
-                            alt={`Profile`}
-                            className="w-[60px] min-h-[60px] object-cover rounded-full border-[2px] border-[#858FAD]"
-                        />
+                        <div className="relative" ref={profileDropdownRef}>
+                            <img
+                                src={profile}
+                                alt="Profile"
+                                className="w-[60px] min-h-[60px] object-cover rounded-full border-[2px] border-[#858FAD] cursor-pointer"
+                                onClick={toggleProfileDropdown}
+                            />
+                            {isProfileOpen && (
+                                <div className="absolute right-0 mt-2 w-[200px] bg-white border border-gray-200 rounded shadow-lg p-4 z-50">
+                                    <p className="font-bold mb-2">My Account</p>
+                                    <ul>
+                                        <li className="py-1 text-sm cursor-pointer flex items-center"><CgProfile className='mr-2' /> Profile</li>
+                                        <li className="py-1 text-sm cursor-pointer flex items-center"><IoMdCard className='mr-2' />                                        Billing</li>
+                                        <li className="py-1 text-sm cursor-pointer flex items-center"><CiSettings className='mr-2' />                                        Settings</li>
+                                        <li onClick={handleLogout} className="py-1 text-sm cursor-pointer flex items-center text-red-500">
+                                            <MdOutlineLogout className='mr-2' />
+                                            Log out
+                                        </li>
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+
                     </div>
                 </header>
 

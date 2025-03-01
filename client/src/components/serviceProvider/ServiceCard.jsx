@@ -1,18 +1,55 @@
-import React, { useState } from 'react'
+import React, { useState, forwardRef } from 'react';
 import { FaCalendarCheck, FaClock, FaMedal } from 'react-icons/fa'
 import CustomModal from '../CustomModal/CustomModal';
 import service from '../../assets/images/service.png'
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
+const CustomDateInput = forwardRef(({ value, onClick, placeholder }, ref) => (
+  <div className="relative" onClick={onClick}>
+    <input
+      type="text"
+      value={value}
+      placeholder={placeholder}
+      readOnly
+      className="w-full input mb-6"
+      ref={ref}
+    />
+    <div className="absolute right-4 top-4 text-[#858FAD] pointer-events-none">
+      <FaCalendarCheck />
+    </div>
+  </div>
+));
+
+const CustomTimeInput = forwardRef(({ value, onClick, placeholder }, ref) => (
+  <div className="relative" onClick={onClick}>
+    <input
+      type="text"
+      value={value}
+      placeholder={placeholder}
+      readOnly
+      className="w-full input"
+      ref={ref}
+    />
+    <div className="absolute right-4 top-4 text-[#858FAD] pointer-events-none">
+      <FaClock />
+    </div>
+  </div>
+));
+
 
 const ServiceCard = ({ key, provider }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [bookingOpen, setBookingOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState(new Date());
 
   return (
     <div className='flex justify-center items-center p-4'>
       <div
         onClick={() => setIsOpen(true)}
         key={key}
-        className="bg-white cursor-pointer relative pt-[59px] rounded-[24px] shadow-md text-center w-[260px] flex flex-col items-center"
+        className="bg-white cursor-pointer relative pt-[59px] rounded-[24px] shadow-md text-center max-w-[260px] flex flex-col items-center"
       >
         <img
           src={provider.image}
@@ -57,7 +94,7 @@ const ServiceCard = ({ key, provider }) => {
       </div>
 
       <CustomModal isOpen={isOpen} onRequestClose={() => setIsOpen(false)} contentLabel="Modal" height='90%' >
-        <div className="grid md:grid-cols-2 px-9 pb-32">
+        <div className="grid grid-cols-1 md:grid-cols-2 px-4 md:px-9 pb-20 md:pb-32">
           <div className=''>
 
             <div className="w-full flex flex-col items-center">
@@ -76,7 +113,7 @@ const ServiceCard = ({ key, provider }) => {
                 Age {provider.age} | Located in {provider.location}
               </p>
 
-              <div className="flex justify-center items-center space-x-2 mt-[19px] mb-[22px]">
+              <div className="hidden sm:flex justify-center items-center space-x-2 mt-[19px] mb-[22px]">
                 <div className="text-center  w-[118px]">
                   <p className="text-[18.7px] font-bold">{provider.years}</p>
                   <p className="text-[#858FAD] text-[10.86px]">Years</p>
@@ -99,22 +136,22 @@ const ServiceCard = ({ key, provider }) => {
                 </div>
               </div>
 
-              <div className='w-[260px] mx-auto mb-[22px] text-center'>
+              <div className='hidden sm:flex w-[260px] mx-auto mb-[22px] text-center'>
                 <p className="text-[#858FAD] text-[14px] mb-[22px]">{provider.specialization}</p>
               </div>
             </div>
 
-            <h3 className='text-lg font-semibold items-start'>Gallery</h3>
+            <h3 className='text-lg font-semibold items-start mt-10 sm:mt-0'>Gallery</h3>
 
-            <div className=' flex'>
-              <img src={service} alt="service" className='w-[124px] h-[124px] m-4' />
-              <img src={service} alt="service" className='w-[124px] h-[124px] m-4' />
-              <img src={service} alt="service" className='w-[124px] h-[124px] m-4' />
+            <div className='grid grid-cols-2 md:flex'>
+              <img src={service} alt="service" className='w-[100px] sm:w-[124px] h-[100px] sm:h-[124px] m-2 sm:m-4' />
+              <img src={service} alt="service" className='w-[100px] sm:w-[124px] h-[100px] sm:h-[124px] m-2 sm:m-4' />
+              <img src={service} alt="service" className='w-[100px] sm:w-[124px] h-[100px] sm:h-[124px] m-2 sm:m-4' />
             </div>
 
-            <div className=' flex opacity-50'>
-              <img src={service} alt="service" className='w-[124px] h-[124px] m-4' />
-              <img src={service} alt="service" className='w-[124px] h-[124px] m-4' />
+            <div className='grid grid-cols-2  md:flex opacity-50'>
+              <img src={service} alt="service" className='w-[100px] sm:w-[124px] h-[100px] sm:h-[124px] m-2 sm:m-4' />
+              <img src={service} alt="service" className='w-[100px] sm:w-[124px] h-[100px] sm:h-[124px] m-2 sm:m-4' />
             </div>
 
           </div>
@@ -145,7 +182,7 @@ const ServiceCard = ({ key, provider }) => {
       </CustomModal>
 
       <CustomModal isOpen={bookingOpen} onRequestClose={() => setBookingOpen(false)} contentLabel="Modal" width='400px'>
-        <div className="px-9 pb-32">
+        <div className="px-4 md:px-6 ">
           <div className=''>
 
             <div className="w-full flex flex-col items-center">
@@ -168,37 +205,40 @@ const ServiceCard = ({ key, provider }) => {
 
           <div className='bg-white rounded-3xl px-[21px] py-[17px]  mt-5'>
             <span className='text-sm font-semibold pb-[5px]'>Phone Number</span>
-            <span className='text-[#5E50BF] text-[12px] font-bold block pb-[5px]'>R980.00</span>
+            <span className='text-[#5E50BF] text-[12px] font-bold block pb-[5px]'>Rs980.00</span>
             <p className=' text-[12px]'>A relaxing massage using gentle techniques to soothe muscles and improve circulation.</p>
           </div>
 
-          <div className='mt-6'>
+          <div className='mt-6 pb-20 md:pb-32'>
             <label className=" label  text-black">
               Booking date and time
             </label>
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Feb, 28 2025"
-                className="w-full input"
+            <div className="">
+              {/* Date Picker */}
+              <DatePicker
+                selected={selectedDate}
+                onChange={(date) => setSelectedDate(date)}
+                customInput={<CustomDateInput placeholder="Feb, 28 2025" />}
+                dateFormat="MMM, dd yyyy"
               />
-              {/* Calendar Icon */}
-              <div className="absolute right-4 top-4 text-[#858FAD]">
-                <FaCalendarCheck />
-              </div>
-            </div>
 
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="14:00 pm"
-                className="w-full input"
+              {/* Time Picker */}
+              <DatePicker
+                selected={selectedTime}
+                onChange={(time) => setSelectedTime(time)}
+                customInput={<CustomTimeInput placeholder="14:00 pm" />}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={15}
+                timeCaption="Time"
+                dateFormat="h:mm aa"
               />
-              {/* Calendar Icon */}
-              <div className="absolute right-4 top-4 text-[#858FAD]">
-                <FaClock />
-              </div>
             </div>
+          </div>
+
+          <div className='flex pb-8'>
+            <span className='border border-[#5E50BF] mr-2 h-[46px] rounded-full rounded-tr-none flex justify-center items-center w-full text-[#5E50BF] text-sm font-semibold cursor-pointer'>Cancel</span>
+            <span className='bg-[#5E50BF] rounded-full h-[46px] rounded-tr-none flex justify-center items-center w-full text-white text-sm font-semibold cursor-pointer'>Confirm</span>
           </div>
         </div>
       </CustomModal>

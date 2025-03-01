@@ -7,6 +7,7 @@ import Cookies from 'js-cookie';
 import { message } from 'antd';
 import { isValidEmail } from '../../../utils/validationUtils';
 import { HideLoading, ShowLoading } from '../../../redux/loaderSlice';
+import toast from 'react-hot-toast';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -61,11 +62,12 @@ const Login = () => {
                 });
                 const from = location.state?.from?.pathname;
                 navigate(from || '/');
+                toast.success('Successfully Login')
             } else {
-                message.error(response.message || "Login failed");
+                toast.error(response.message || "Login failed");
             }
         } catch (err) {
-            message.error(err.response?.data?.error || "An error occurred during login");
+            toast.error(err.response?.data?.error || "An error occurred during login");
         } finally {
             dispatch(HideLoading());
         }

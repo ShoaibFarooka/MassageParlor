@@ -1,4 +1,4 @@
-.label{
+.label {
     font-weight: 600 !important;
     font-size: 12px !important;
     line-height: 15px !important;
@@ -8,15 +8,77 @@
     display: block;
 }
 
-.input{
+.input {
     height: 48px !important;
     border-radius: 12px !important;
     background: #F3F2F8 !important;
     font-size: 12px !important;
-    padding-left:19px ;
+    padding-left: 19px;
 }
 
-.input:focus{
+.input:focus {
     border: 2px solid #5E50BF !important;
     outline: none !important;
+}
+
+.range-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 9999px;
+    cursor: pointer;
+    outline: none;
+}
+
+.range-slider::-webkit-slider-runnable-track {
+    background: transparent;
+    border-radius: 9999px;
+}
+
+.range-slider::-moz-range-track {
+    background: transparent;
+    border-radius: 9999px;
+}
+
+/* IE track */
+.range-slider::-ms-track {
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+}
+
+.range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 16px;
+    width: 16px;
+    background: #fff;
+    /* White thumb */
+    border: 2px solid #000;
+    /* Black border */
+    border-radius: 50%;
+    margin-top: 0px;
+    cursor: pointer;
+}
+
+.range-slider::-moz-range-thumb {
+    height: 16px;
+    width: 16px;
+    background: #fff;
+    border: 2px solid #000;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.range-slider::-ms-thumb {
+    height: 16px;
+    width: 16px;
+    background: #fff;
+    border: 10px solid #000;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.react-datepicker-wrapper{
+    width: 100% !important;
 }

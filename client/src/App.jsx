@@ -2,6 +2,7 @@ import './App.css';
 import Loader from "./components/Loader/Loader.jsx";
 import { useSelector } from "react-redux";
 import Router from './router/Router.jsx';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   const { counter } = useSelector((state) => state.loader);
@@ -11,6 +12,7 @@ function App() {
     <div className="App">
       {loading && <Loader />}
       <Router />
+      <Toaster />
     </div>
   )
 };

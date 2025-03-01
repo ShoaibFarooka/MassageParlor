@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaCalendarCheck, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import userService from '../../../../services/userService';
+import toast from 'react-hot-toast';
 
 function UserSignUpForm() {
     const [showPassword, setShowPassword] = useState(false);
@@ -60,13 +61,14 @@ function UserSignUpForm() {
             const response = await userService.registerUser(payload, 'user');
 
             const data = await response.json();
-            if (response.ok) {
+            if (response) {
                 navigate("/login");
+                toast.success('New User Registered')
             } else {
                 setError({ form: data.message || "Registration failed" });
             }
         } catch (err) {
-            console.error("Registration error", err);
+            toast.error("Registration error", err);
             setError({ form: "An error occurred. Please try again later." });
         }
     };
