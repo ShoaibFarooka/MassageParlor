@@ -1,6 +1,7 @@
 .sidebar-wrapper {
     display: flex;
     flex-direction: column;
+    background-color: white;
 }
 
 .sidebar-wrapper .hamburger-container {
@@ -8,7 +9,7 @@
 }
 
 .sidebar {
-    width: 225px;
+    width: 277px;
     height: 100vh;
     position: fixed;
     display: flex;
@@ -42,6 +43,7 @@
     flex-direction: column;
     gap: 20px;
     width: 100%;
+    padding: 0px 15px;
 }
 
 .sidebar .menu .item {
@@ -50,27 +52,38 @@
 
 .sidebar .menu .active-item {
     background-color: #5E50BF;
+    border-radius: 20px;
+    border-top-right-radius: 0px;
     color: white;
 }
 
 .sidebar .menu .non-active-item:hover {
-    background-color: aliceblue;
+    background-color: #5E50BF;
+    border-radius: 20px;
+    border-top-right-radius: 0px;
+    color: black !important;
 }
 
 .sidebar .menu .item-link {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     cursor: pointer;
-    padding: 5px 0 4px 0;
-    padding-left: 12.5%;
+    height: 47px;
     box-sizing: border-box;
 }
 
-.sidebar .menu .item-label {
-    font-size: 21px;
-    font-weight: 700;
-    color: var(--secondary-color-3);
+.sidebar .menu .active-item-label {
+    font-size: 16.94px;
+    font-weight: 600;
+    color: white;
+}
+
+.sidebar .menu .non-active-item-label {
+    font-size: 16.94px;
+    font-weight: 600;
+    color: black;
 }
 
 .sidebar .menu .disabled-label {
@@ -81,14 +94,14 @@
     .sidebar-wrapper .hamburger-container {
         position: fixed;
         width: 100%;
-        background-color: aliceblue;
+        background-color: white;
         display: flex;
         align-items: center;
         padding: 10px 15px;
     }
 
     .sidebar {
-        background-color: aliceblue;
+        background-color: white;
         z-index: 1;
         transition: width 0.4s ease, opacity 0.4s ease;
     }

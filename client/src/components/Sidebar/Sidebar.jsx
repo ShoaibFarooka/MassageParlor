@@ -66,7 +66,7 @@ const Sidebar = () => {
                     />
                 </div>
             }
-            <div ref={sidebarRef} className={`sidebar ${isOpen ? 'sidebar-opened' : 'sidebar-closed'}`}>
+            <div ref={sidebarRef} className={`sidebar bg-white ${isOpen ? 'sidebar-opened' : 'sidebar-closed'}`}>
                 <div className='hamburger-close-container'>
                     <BiMenuAltRight
                         size={30}
@@ -84,14 +84,14 @@ const Sidebar = () => {
                                 <>
                                     <div className='item-link'>
                                         {/* {React.cloneElement(item.icon, { width: 30, height: 30, opacity: item.disabled ? 0.3 : 1 })} */}
-                                        <div className='item-label disabled-label'>{item.label}</div>
+                                        <div className={`${location.pathname === item.path ? 'active-item-label' : 'non-active-item-label'} disabled-label`}>{item.label}</div>
                                     </div>
                                 </>
                                 :
                                 <>
-                                    <Link to={item.path} className='item-link' onClick={handlePageChange}>
+                                    <Link to={item.path} className='item-link ' onClick={handlePageChange}>
                                         {/* {React.cloneElement(item.icon, { width: 30, height: 30, opacity: item.disabled ? 0.3 : 1 })} */}
-                                        <div className='item-label'>{item.label}</div>
+                                        <div className={`${location.pathname === item.path ? 'active-item-label' : 'non-active-item-label'}`}>{item.label}</div>
                                     </Link>
                                 </>
                             }
@@ -99,8 +99,8 @@ const Sidebar = () => {
                     ))}
                     <div className={`item non-active-item`} onClick={handleLogout}>
                         <div className='item-link'>
-                            <LogoutIcon width='30' height='30' />
-                            <div className='item-label'>Log out</div>
+                            {/* <LogoutIcon width='30' height='30' /> */}
+                            <div className='non-active-item-label'>Log out</div>
                         </div>
                     </div>
                 </div>

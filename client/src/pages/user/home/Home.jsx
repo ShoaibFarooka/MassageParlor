@@ -100,14 +100,14 @@ const UserHome = () => {
                             <input
                                 type="text"
                                 placeholder="Search"
-                                className="pl-6 pr-4 py-2 text-lg rounded-full h-[56px] w-[400px] bg-white"
+                                className="pl-6 pr-4 py-2 text-lg rounded-full h-[56px] w-[400px] bg-white shadow outline-0"
                             />
 
-                            <FaSearch className="absolute right-6 top-1/2 transform -translate-y-1/2 text-black" fontSize={24} />
+                            <FaSearch className="absolute right-6 top-1/2 transform -translate-y-1/2 text-black " fontSize={24} />
                         </div>
 
                         <button
-                            className="p-2 rounded-full bg-white h-[50px] w-[50px] flex justify-center items-center cursor-pointer"
+                            className="p-2 rounded-full bg-white h-[50px] w-[50px] flex justify-center items-center cursor-pointer shadow"
                         >
                             <FaSlidersH className="text-black" fontSize={24} />
                         </button>
@@ -129,7 +129,7 @@ const UserHome = () => {
                             </div>
                         </div>
 
-                        <div className='bg-white rounded-full h-[50px] w-[50px] flex items-center justify-center'>
+                        <div className='bg-white rounded-full h-[50px] w-[50px] flex items-center justify-center shadow'>
                             <CiBellOn fontSize={24} />
                         </div>
 
