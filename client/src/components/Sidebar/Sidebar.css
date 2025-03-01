@@ -49,7 +49,8 @@
 }
 
 .sidebar .menu .active-item {
-    background-color: var(--accent-color-1);
+    background-color: #5E50BF;
+    color: white;
 }
 
 .sidebar .menu .non-active-item:hover {

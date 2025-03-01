@@ -141,8 +141,8 @@ const UserHome = () => {
                     </div>
                 </header>
 
-                <main className="p-8 py-16">
-                    <div className="grid grid-cols-4 justify-center sm:grid-cols-3 lg:grid-cols-4 gap-6">
+                <main className=" py-16">
+                    <div className="grid grid-cols-3 justify-center sm:grid-cols-3 lg:grid-cols-4 gap-8">
                         {providers.map((provider) => (
                             <ServiceCard key={provider.id} provider={provider} />
                         ))}

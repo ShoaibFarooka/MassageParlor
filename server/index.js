@@ -22,14 +22,16 @@ const corsOptions = {
     credentials: true,
 };
 
-//Express Middlewares
-app.use((req, res, next) => {
-    if (req.originalUrl.startsWith('/api/stripe/webhooks')) {
-        express.raw({ type: 'application/json' })(req, res, next);
-    } else {
-        express.json()(req, res, next);
-    }
-});
+// //Express Middlewares
+// app.use((req, res, next) => {
+//     if (req.originalUrl.startsWith('/api/stripe/webhooks')) {
+//         express.raw({ type: 'application/json' })(req, res, next);
+//     } else {
+//         express.json()(req, res, next);
+//     }
+// });
+
+app.use(express.json())
 app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use(trimMiddleware);

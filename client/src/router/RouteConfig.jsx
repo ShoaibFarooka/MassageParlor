@@ -21,8 +21,8 @@ const routes = [
   // { path: "/success", element: <Success />, protected: true, showSidebar: false },
   // { path: "/settings", element: <Settings />, protected: true, showSidebar: true },
   // { path: "/", element: <Redirect />, protected: true, showSidebar: true },
-  { path: "/user/home", element: <UserHome />, protected: false, authRedirect: false, showSidebar: true },
-  { path: "/user/booking", element: <UserBooking />, protected: false, authRedirect: false, showSidebar: true },
+  { path: "/user/home", element: <UserHome />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/user/booking", element: <UserBooking />, protected: true, authRedirect: false, showSidebar: true },
 
 
   //company

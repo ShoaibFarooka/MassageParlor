@@ -18,6 +18,7 @@ const createUser = async (userData, role) => {
     error.code = 409;
     throw error;
   }
+  
   let passwordDigest = await authUtils.hashPassword(password);
   const user = await User.create({
     name,

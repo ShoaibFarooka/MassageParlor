@@ -7,11 +7,7 @@ const registerSchema = yup.object().shape({
   name: yup.string().trim().required('Name is required'),
   email: yup.string().trim().email('Invalid email address').required('Email is required'),
   number: yup.string().trim().required('Number is required'),
-  totalContacts: yup.number(),
   dateOfBirth: yup.string().trim(),
-  address: yup.string().trim().required('Address is required'),
-  city: yup.string().trim().required('City is required'),
-  zip: yup.string().trim().required('Zip is required'),
   password: yup.string().trim().required('Password is required'),
 });
 
@@ -25,7 +21,7 @@ const forgotPasswordSchema = yup.object().shape({
 });
 
 const userTypeSchema = yup.object().shape({
-  userType: yup.string().oneOf(['user', 'company'], 'Invalid user type').required('User type is required')
+  userType: yup.string().oneOf(['user', 'service-provider'], 'Invalid user type').required('User type is required')
 });
 
 const resetPasswordSchema = yup.object().shape({

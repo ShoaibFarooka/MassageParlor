@@ -5,65 +5,81 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
     email: {
       type: String,
       required: true,
       unique: true,
-      trim: true
+      trim: true,
     },
     number: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
-    totalContacts: {
-      type: Number,
-      default: 0
+    isActive: {
+      type: Boolean,
+      required: true,
+      default: true,
     },
     dateOfBirth: {
       type: String,
       default: null,
-      trim: true
+      trim: true,
     },
     address: {
       type: String,
-      required: true,
-      trim: true
-    },
-    city: {
-      type: String,
-      required: true,
-      trim: true
-    },
-    zip: {
-      type: String,
-      required: true,
-      trim: true
+      required: false,
+      trim: true,
     },
     password: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
     role: {
       type: String,
-      default: 'user',
-      enum: ['admin', 'company', 'user']
+      default: "user",
+      enum: ["admin", "service-provider", "user"],
+    },
+    ethnicity: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    location: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    height: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    hair_color: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    call_out_type: {
+      type: String,
+      required: false,
+      trim: true,
     },
     refreshToken: {
       type: String,
-      default: null
+      default: null,
     },
     resetToken: {
       type: String,
-      default: null
+      default: null,
     },
     resetTokenExpiry: {
       type: Date,
-      default: null
-    }
+      default: null,
+    },
   },
   { timestamps: true }
 );

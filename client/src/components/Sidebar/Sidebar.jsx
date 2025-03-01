@@ -83,14 +83,14 @@ const Sidebar = () => {
                             {item.disabled ?
                                 <>
                                     <div className='item-link'>
-                                        {React.cloneElement(item.icon, { width: 30, height: 30, opacity: item.disabled ? 0.3 : 1 })}
+                                        {/* {React.cloneElement(item.icon, { width: 30, height: 30, opacity: item.disabled ? 0.3 : 1 })} */}
                                         <div className='item-label disabled-label'>{item.label}</div>
                                     </div>
                                 </>
                                 :
                                 <>
                                     <Link to={item.path} className='item-link' onClick={handlePageChange}>
-                                        {React.cloneElement(item.icon, { width: 30, height: 30, opacity: item.disabled ? 0.3 : 1 })}
+                                        {/* {React.cloneElement(item.icon, { width: 30, height: 30, opacity: item.disabled ? 0.3 : 1 })} */}
                                         <div className='item-label'>{item.label}</div>
                                     </Link>
                                 </>

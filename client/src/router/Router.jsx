@@ -14,7 +14,7 @@ const Router = () => {
             route.protected ?
               <ProtectedRoute showSidebar={route.showSidebar}>{route.element}</ProtectedRoute>
               : route.authRedirect ?
-                <AuthenticatedRedirect>
+                <AuthenticatedRedirect showSidebar={route.showSidebar}>
                   {route.element}
                 </AuthenticatedRedirect>
                 :

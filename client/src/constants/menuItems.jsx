@@ -41,5 +41,7 @@ export const menuItems = {
         // { path: '/statistics', label: 'Statistics', icon: <StatisticsIcon />, disabled: true },
         // { path: '/activities', label: 'Activities', icon: <ActivitiesIcon />, disabled: true },
         // { path: '/settings', label: 'Settings', icon: <SettingsIcon />, disabled: false },
+        { path: '/user/home', label: 'Home', icon: <DashboardIcon />, disabled: false },
+        { path: '/user/booking', label: 'Bookings', icon: <CampaignsIcon />, disabled: false },
     ],
 };
