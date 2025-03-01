@@ -28,11 +28,6 @@ const userSchema = new mongoose.Schema(
       default: null,
       trim: true,
     },
-    address: {
-      type: String,
-      required: false,
-      trim: true,
-    },
     password: {
       type: String,
       required: true,
@@ -58,12 +53,12 @@ const userSchema = new mongoose.Schema(
       required: false,
       trim: true,
     },
-    hair_color: {
+    hairColor: {
       type: String,
       required: false,
       trim: true,
     },
-    call_out_type: {
+    callOutType: {
       type: String,
       required: false,
       trim: true,

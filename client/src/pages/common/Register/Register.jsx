@@ -10,9 +10,9 @@ const Register = () => {
 
 
   return (
-    <div className="flex min-h-screen py-10 items-center justify-center bg-gray-100">
+    <div className="flex min-h-screen py-10 items-center justify-center bg-gray-100 ">
       {/* Outer Container */}
-      <div className="w-full max-w-lg p-8 bg-white rounded-xl shadow-lg">
+      <div className="w-full max-w-lg p-8 bg-white rounded-xl mx-4 shadow-lg">
         {/* Page Heading */}
         <h1 className="text-[30px] font-bold text-center">Sign Up</h1>
         <p className=" text-[12px] text-[#858FAD] text-center">

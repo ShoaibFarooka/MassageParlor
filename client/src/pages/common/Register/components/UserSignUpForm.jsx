@@ -21,19 +21,19 @@ function UserSignUpForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         if (!user.name || !user.surname || !user.dateOfBirth || !user.email || !user.password) {
             setError({ form: "Please fill in all required fields" });
             return;
         }
-    
+
         if (user.password !== confirmPassword) {
             setError({ password: "Passwords do not match" });
             return;
         }
-    
+
         setError({});
-    
+
         // Combine name and surname into a single "name" field for the payload
         const payload = {
             ...user,
@@ -41,10 +41,10 @@ function UserSignUpForm() {
         };
         // Remove the surname property since it's now merged
         delete payload.surname;
-    
+
         try {
             const response = await userService.registerUser(payload, 'user');
-    
+
             const data = await response.json();
             if (response.ok) {
                 navigate("/login");
@@ -56,10 +56,10 @@ function UserSignUpForm() {
             setError({ form: "An error occurred. Please try again later." });
         }
     };
-    
+
 
     return (
-        <form className="mt-6" onSubmit={handleSubmit}>
+        <form className="mt-6" autoComplete="off" onSubmit={handleSubmit}>
             <div className="flex justify-center">
                 <div className="relative w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center">
                     <svg
@@ -99,7 +99,7 @@ function UserSignUpForm() {
             )}
 
             {/* Full Name */}
-            <div className="grid grid-cols-2 gap-4 mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                 <div>
                     <label className="label">Name</label>
                     <input
@@ -145,90 +145,96 @@ function UserSignUpForm() {
                 </div>
             </div>
 
-            {/* Email */}
-            <div>
-                <label className="label">Email</label>
-                <input
-                    type="email"
-                    placeholder="john@email.com"
-                    className="w-full input"
-                    value={user.email}
-                    onChange={(e) =>
-                        setUser({ ...user, email: e.target.value })
-                    }
-                />
-            </div>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
 
-            <div>
-                <label className="label">Contact Number</label>
-                <input
-                    type="text"
-                    placeholder="0710000000"
-                    className="w-full input"
-                    value={user.number}
-                    onChange={(e) => setUser({ ...user, number: e.target.value })}
-                />
-            </div>
-
-            {/* Password */}
-            <div>
-                <label className="label">Password</label>
-                <div className="relative">
+                {/* Email */}
+                <div>
+                    <label className="label">Email</label>
                     <input
-                        type={showPassword ? "text" : "password"}
-                        placeholder="••••••••"
+                        type="email"
+                        placeholder="john@email.com"
                         className="w-full input"
-                        value={user.password}
+                        value={user.email}
                         onChange={(e) =>
-                            setUser({ ...user, password: e.target.value })
+                            setUser({ ...user, email: e.target.value })
                         }
                     />
-                    <button
-                        type="button"
-                        className="absolute right-4 top-4 text-[#858FAD]"
-                        onClick={() => setShowPassword(!showPassword)}
-                    >
-                        {showPassword ? (
-                            <FaEyeSlash size={18} color="#858FAD" />
-                        ) : (
-                            <FaEye size={18} color="#858FAD" />
-                        )}
-                    </button>
                 </div>
-                {error.password && (
-                    <div className="text-red-500 mt-2 text-sm">{error.password}</div>
-                )}
+
+                <div>
+                    <label className="label">Contact Number</label>
+                    <input
+                        type="text"
+                        placeholder="0710000000"
+                        className="w-full input"
+                        value={user.number}
+                        onChange={(e) => setUser({ ...user, number: e.target.value })}
+                    />
+                </div>
             </div>
 
-            {/* Confirm Password */}
-            <div>
-                <label className="label">Confirm Password</label>
-                <div className="relative">
-                    <input
-                        type={showConfirmPassword ? "text" : "password"}
-                        placeholder="••••••••"
-                        className="w-full input"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
-                    <button
-                        type="button"
-                        className="absolute right-4 top-4 text-[#858FAD]"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    >
-                        {showConfirmPassword ? (
-                            <FaEyeSlash size={18} color="#858FAD" />
-                        ) : (
-                            <FaEye size={18} color="#858FAD" />
-                        )}
-                    </button>
+
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                {/* Password */}
+                <div>
+                    <label className="label">Password</label>
+                    <div className="relative">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="••••••••"
+                            className="w-full input"
+                            value={user.password}
+                            onChange={(e) =>
+                                setUser({ ...user, password: e.target.value })
+                            }
+                        />
+                        <button
+                            type="button"
+                            className="absolute right-4 top-4 text-[#858FAD]"
+                            onClick={() => setShowPassword(!showPassword)}
+                        >
+                            {showPassword ? (
+                                <FaEyeSlash size={18} color="#858FAD" />
+                            ) : (
+                                <FaEye size={18} color="#858FAD" />
+                            )}
+                        </button>
+                    </div>
+                    {error.password && (
+                        <div className="text-red-500 mt-2 text-sm">{error.password}</div>
+                    )}
+                </div>
+
+                {/* Confirm Password */}
+                <div>
+                    <label className="label">Confirm Password</label>
+                    <div className="relative">
+                        <input
+                            type={showConfirmPassword ? "text" : "password"}
+                            placeholder="••••••••"
+                            className="w-full input"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                        <button
+                            type="button"
+                            className="absolute right-4 top-4 text-[#858FAD]"
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        >
+                            {showConfirmPassword ? (
+                                <FaEyeSlash size={18} color="#858FAD" />
+                            ) : (
+                                <FaEye size={18} color="#858FAD" />
+                            )}
+                        </button>
+                    </div>
                 </div>
             </div>
 
             {/* Sign Up Button */}
             <button
                 type="submit"
-                className="w-full mt-6 h-[48px] cursor-pointer py-2 text-sm font-medium text-white bg-[#5E50BF] rounded-full"
+                className="w-full h-[48px] mt-6 cursor-pointer py-2 text-sm font-medium text-white bg-[#5E50BF] rounded-full rounded-tr-none"
             >
                 Sign up
             </button>

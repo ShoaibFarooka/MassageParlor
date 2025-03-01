@@ -8,6 +8,11 @@ const registerSchema = yup.object().shape({
   email: yup.string().trim().email('Invalid email address').required('Email is required'),
   number: yup.string().trim().required('Number is required'),
   dateOfBirth: yup.string().trim(),
+  ethnicity: yup.string().trim(),
+  location: yup.string().trim(),
+  height: yup.string().trim(),
+  hairColor: yup.string().trim(),
+  callOutType: yup.string().trim(),
   password: yup.string().trim().required('Password is required'),
 });
 
