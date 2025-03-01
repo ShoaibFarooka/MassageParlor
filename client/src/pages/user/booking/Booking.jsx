@@ -17,6 +17,32 @@ import { setLoggedOut } from '../../../redux/logoutSlice';
 import { clearUser } from '../../../redux/userSlice';
 import { HideLoading, ShowLoading } from '../../../redux/loaderSlice';
 import Cookies from 'js-cookie';
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+
+const CustomToolbar = ({ label, onNavigate }) => {
+  return (
+    <div className="flex items-center justify-center space-x-4 py-2">
+      {/* Left Arrow */}
+      <button
+        onClick={() => onNavigate("PREV")}
+        className="text-[#0E1323] text-2xl"
+      >
+        <FaChevronLeft />
+      </button>
+
+      {/* Month/Year Label */}
+      <span className="text-lg font-bold text-[#0E1323]">{label}</span>
+
+      {/* Right Arrow */}
+      <button
+        onClick={() => onNavigate("NEXT")}
+        className="text-[#0E1323] text-2xl"
+      >
+        <FaChevronRight />
+      </button>
+    </div>
+  );
+};
 
 const localizer = momentLocalizer(moment);
 
@@ -80,38 +106,39 @@ const UserBooking = () => {
       dispatch(clearUser());
     } catch (error) {
       message.error(error.response.data);
-    }finally{
+    } finally {
       dispatch(HideLoading());
     }
   };
 
-
+  const [currentView, setCurrentView] = useState("month");
   const [events, setEvents] = useState([
     {
       title: 'Another Person',
-      start: new Date(2024, 9, 2), // Oct 2, 2024
-      end: new Date(2024, 9, 2),
-      color: 'bg-purple-300'
+      start: new Date(2025, 2, 2),
+      end: new Date(2025, 2, 5),
+      color: '#6B46C1' // Purple
     },
     {
       title: 'Weekend Festival',
-      start: new Date(2024, 9, 16), // Oct 16, 2024
-      end: new Date(2024, 9, 16),
-      color: 'bg-pink-300'
+      start: new Date(2025, 2, 6),
+      end: new Date(2025, 2, 6),
+      color: '#D53F8C' // Pink
     },
     {
       title: 'Training',
-      start: new Date(2024, 9, 24), // Oct 24, 2024
-      end: new Date(2024, 9, 24),
-      color: 'bg-blue-300'
+      start: new Date(2025, 2, 4),
+      end: new Date(2025, 2, 4),
+      color: '#3182CE' // Blue
     },
     {
       title: 'Some Booking',
-      start: new Date(2024, 9, 26),
-      end: new Date(2024, 9, 28),
-      color: 'bg-orange-300'
+      start: new Date(2025, 2, 6),
+      end: new Date(2025, 2, 8),
+      color: '#DD6B20' // Orange
     }
   ]);
+
 
   return (
     <div>
@@ -241,14 +268,25 @@ const UserBooking = () => {
       </header>
 
       <div className="bg-white shadow-md rounded-md my-6 p-6">
-        <Calendar
-          localizer={localizer}
-          events={events}
-          startAccessor="start"
-          endAccessor="end"
-          style={{ height: 500, border: 'none' }}
-          className="border rounded-md"
-        />
+      <Calendar
+  localizer={localizer}
+  events={events}
+  startAccessor="start"
+  endAccessor="end"
+  style={{ height: 500, border: 'none' }}
+  className="border rounded-md"
+  eventPropGetter={(event) => ({
+    style: {
+      backgroundColor: event.color || "#5E50BF",
+      color: "#fff",
+      borderRadius: "8px",
+      border: "none",
+      padding: "5px"
+    },
+  })}
+  view={currentView}
+  onView={(view) => setCurrentView(view)}
+/>
       </div>
     </div>
   );

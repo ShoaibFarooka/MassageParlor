@@ -1,19 +1,29 @@
-.rbc-event {
-    background-color: rgba(59, 130, 246, 0.7); /* Blue */
-    border-radius: 4px;
-    padding: 5px;
-    font-size: 14px;
-    text-align: center;
-  }
-  
-  .rbc-toolbar button {
-    background: #3b82f6; /* Tailwind Blue */
-    color: white;
-    border-radius: 4px;
-    padding: 5px 10px;
-  }
-  
-  .rbc-toolbar button:hover {
-    background: #2563eb;
-  }
-  
+.rbc-toolbar button {
+  background-color: #5E50BF !important; /* Purple background */
+  color: white !important; /* White text */
+  padding: 8px 12px !important;
+  font-weight: bold;
+  border: none !important;
+  cursor: pointer;
+}
+
+.rbc-toolbar button:hover {
+  background-color: #4a3baa !important; /* Darker purple on hover */
+}
+
+/* Style active view buttons (Month, Week, Day, Agenda) */
+.rbc-toolbar button.rbc-active {
+  background-color: #5E50BF !important; /* Active button */
+  color: white !important;
+}
+
+/* Disable button (for views that are not available) */
+.rbc-toolbar button:disabled {
+  background-color: #ccc !important;
+  color: #666 !important;
+  cursor: not-allowed;
+}
+
+.rbc-toolbar {
+  border-radius: 10px;
+}
