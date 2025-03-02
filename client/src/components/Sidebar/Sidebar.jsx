@@ -97,12 +97,11 @@ const Sidebar = () => {
                             }
                         </div>
                     ))}
-                    <div className={`item non-active-item`} onClick={handleLogout}>
+                    {/* <div className={`item non-active-item`} onClick={handleLogout}>
                         <div className='item-link'>
-                            {/* <LogoutIcon width='30' height='30' /> */}
                             <div className='non-active-item-label'>Log out</div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

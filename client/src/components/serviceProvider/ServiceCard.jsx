@@ -210,7 +210,7 @@ const ServiceCard = ({ key, provider }) => {
           </div>
 
           <div className='mt-6 pb-20 md:pb-32'>
-            <label className=" label  text-black">
+            <label className=" label mb-6 text-black">
               Booking date and time
             </label>
             <div className="">

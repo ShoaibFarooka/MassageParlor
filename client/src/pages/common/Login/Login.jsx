@@ -82,11 +82,6 @@ const Login = () => {
                 </p>
 
                 <form className="mt-6" onSubmit={handleSubmit}>
-                    {(error.email || error.password) && (
-                        <div className="text-red-500 text-center mb-4">
-                            {error.email || error.password}
-                        </div>
-                    )}
 
                     {/* Email Field */}
                     <div className='mb-6'>
@@ -104,6 +99,7 @@ const Login = () => {
                                 setCredentials({ ...credentials, email: e.target.value })
                             }
                         />
+                        {error.email && <div className="text-red-500 text-sm">{error.email}</div>}
                     </div>
 
                     {/* Password Field */}
@@ -134,6 +130,8 @@ const Login = () => {
                                     <FaEye size={18} color="#858FAD" />
                                 )}
                             </button>
+                        {error.password && <div className="text-red-500 text-sm">{error.password}</div>}
+
                         </div>
                     </div>
 
