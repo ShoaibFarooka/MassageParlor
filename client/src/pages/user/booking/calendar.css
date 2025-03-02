@@ -27,3 +27,14 @@
 .rbc-toolbar {
   border-radius: 10px;
 }
+
+
+.rbc-header{
+  height: 43px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #F1F4F9;
+  color: #0E1E40;
+  font-size: 13px;
+}

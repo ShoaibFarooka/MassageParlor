@@ -19,27 +19,48 @@ import { HideLoading, ShowLoading } from '../../../redux/loaderSlice';
 import Cookies from 'js-cookie';
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-const CustomToolbar = ({ label, onNavigate }) => {
+const CustomToolbar = ({ label, onNavigate, onView, view }) => {
   return (
-    <div className="flex items-center justify-center space-x-4 py-2">
-      {/* Left Arrow */}
-      <button
-        onClick={() => onNavigate("PREV")}
-        className="text-[#0E1323] text-2xl"
-      >
-        <FaChevronLeft />
-      </button>
+    <div className="flex justify-between items-center bg-white p-4 rounded-lg ">
+      <div className="flex items-center space-x-4">
+        <button
+          onClick={() => onNavigate("TODAY")}
+          className="text-sm font-medium text-[#0E1E40]"
+        >
+          Today
+        </button>
+      </div>
 
-      {/* Month/Year Label */}
-      <span className="text-lg font-bold text-[#0E1323]">{label}</span>
+      <div className="flex items-center space-x-4">
+        <button
+          onClick={() => onNavigate("PREV")}
+          className=" cursor-pointer"
+        >
+          <FaChevronLeft />
+        </button>
 
-      {/* Right Arrow */}
-      <button
-        onClick={() => onNavigate("NEXT")}
-        className="text-[#0E1323] text-2xl"
-      >
-        <FaChevronRight />
-      </button>
+        <span className="text-lg font-bold text-gray-800">{label}</span>
+
+        <button
+          onClick={() => onNavigate("NEXT")}
+          className=" cursor-pointer"
+        >
+          <FaChevronRight />
+        </button>
+      </div>
+
+      <div className="flex rounded-xl border border-[#979797]">
+        {["day", "week", "month"].map((v) => (
+          <button
+            key={v}
+            onClick={() => onView(v)}
+            className={`px-4 py-2 cursor-pointer text-sm font-medium transition-all ${v === 'week' ? 'border-l border-r border-[#979797]' : ''} ${v === 'day' && 'rounded-l-xl'} ${v === 'month' && 'rounded-r-xl'} ${view === v ? "bg-[#5E50BF] text-white" : "bg-transparent text-black"
+              }`}
+          >
+            {v.charAt(0).toUpperCase() + v.slice(1)}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
@@ -111,6 +132,7 @@ const UserBooking = () => {
     }
   };
 
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [currentView, setCurrentView] = useState("month");
   const [events, setEvents] = useState([
     {
@@ -268,25 +290,34 @@ const UserBooking = () => {
       </header>
 
       <div className="bg-white shadow-md rounded-md my-6 p-6">
-      <Calendar
-  localizer={localizer}
-  events={events}
-  startAccessor="start"
-  endAccessor="end"
-  style={{ height: 500, border: 'none' }}
-  className="border rounded-md"
-  eventPropGetter={(event) => ({
-    style: {
-      backgroundColor: event.color || "#5E50BF",
-      color: "#fff",
-      borderRadius: "8px",
-      border: "none",
-      padding: "5px"
-    },
-  })}
-  view={currentView}
-  onView={(view) => setCurrentView(view)}
-/>
+        <Calendar
+          localizer={localizer}
+          events={events}
+          startAccessor="start"
+          endAccessor="end"
+          style={{ height: 700, border: "none" }}
+          className="border rounded-md"
+          eventPropGetter={(event) => ({
+            style: {
+              backgroundColor: event.color || "#5E50BF",
+              color: "#fff",
+              borderRadius: "8px",
+              border: "none",
+              padding: "5px",
+            },
+          })}
+          date={currentDate}
+          onNavigate={(newDate) => {
+            // newDate is the date RBC wants to show after Next/Prev/Today
+            setCurrentDate(newDate);
+          }}
+          view={currentView}
+          onView={(view) => setCurrentView(view)}
+          components={{
+            toolbar: (props) => <CustomToolbar {...props} view={currentView} />,
+          }}
+        />
+
       </div>
     </div>
   );
