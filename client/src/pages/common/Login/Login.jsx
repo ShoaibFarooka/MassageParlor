@@ -56,7 +56,7 @@ const Login = () => {
         try {
             const response = await userService.loginUser(credentials);
             if (response.token) {
-                Cookies.set('adstatixx-jwt-token', response.token, {
+                Cookies.set('parlor-jwt-token', response.token, {
                     secure: true,
                     sameSite: 'Lax'
                 });

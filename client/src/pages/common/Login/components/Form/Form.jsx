@@ -75,7 +75,7 @@ const Form = () => {
         try {
             const response = await userService.loginUser(user);
             if (response.token) {
-                Cookies.set('adstatixx-jwt-token', response.token, {
+                Cookies.set('parlor-jwt-token', response.token, {
                     secure: true,
                     sameSite: 'Lax'
                 });

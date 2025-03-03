@@ -154,7 +154,7 @@ const UserHome = () => {
         dispatch(ShowLoading());
         try {
             await userService.logoutUser({});
-            Cookies.remove('adstatixx-jwt-token');
+            Cookies.remove('parlor-jwt-token');
             dispatch(setLoggedOut());
             dispatch(clearUser());
         } catch (error) {
