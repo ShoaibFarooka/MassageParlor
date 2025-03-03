@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { FaCalendarCheck, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import UserSignUpForm from './components/UserSignUpForm';
-import ProviderSignUpForm from './components/ProviderSignUpForm';
+import UserSignUpForm from './components/User/UserSignUpForm';
+import ProviderSignUpForm from './components/ServiceProvider/ProviderSignUpForm';
 
 const Register = () => {
   const [activeTab, setActiveTab] = useState('user');
