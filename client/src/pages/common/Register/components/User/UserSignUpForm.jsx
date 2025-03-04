@@ -1,12 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, forwardRef } from 'react';
 import { FaCalendarCheck, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import userService from '../../../../../services/userService';
 import toast from 'react-hot-toast';
+import DatePicker from 'react-datepicker';
+
+
+const CustomDateInput = forwardRef(({ value, onClick }, ref) => (
+    <div className="relative" onClick={onClick}>
+        <input
+            type="text"
+            value={value}
+            placeholder={'Feb, 28 2025'}
+            readOnly
+            className="w-full input mb-6"
+            ref={ref}
+        />
+        <div className="absolute right-4 top-4 text-[#858FAD] pointer-events-none">
+            <FaCalendarCheck />
+        </div>
+    </div>
+));
 
 function UserSignUpForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(null);
     const [user, setUser] = useState({
         name: "",
         surname: "",
@@ -52,23 +71,25 @@ function UserSignUpForm() {
 
         const payload = {
             ...user,
-            name: `${user.name} ${user.surname}`
+            name: `${user.name} ${user.surname}`,
+            dateOfBirth: selectedDate ? selectedDate.toISOString().split('T')[0] : "",
         };
 
         delete payload.surname;
 
         try {
             const response = await userService.registerUser(payload, 'user');
-
-            const data = await response.json();
-            if (response) {
-                navigate("/login");
-                toast.success('New User Registered')
-            } else {
+    
+            if (!response) { 
+                const data = await response.json();
                 setError({ form: data.message || "Registration failed" });
+                return;
             }
+    
+            navigate("/login");
+            toast.success('New User Registered');
         } catch (err) {
-            toast.error("Registration error", err);
+            toast.error("Registration error: " + err.message); // ✅ Fixed toast error handling
             setError({ form: "An error occurred. Please try again later." });
         }
     };
@@ -153,20 +174,12 @@ function UserSignUpForm() {
             <div className='mb-6'>
                 <label htmlFor="db" className="label">Date of birth</label>
                 <div className="relative">
-                    <input
-                        name='bd'
-                        id='bd'
-                        type="text"
-                        placeholder="Jan 12 1980"
-                        className="w-full input"
-                        value={user.dateOfBirth}
-                        onChange={(e) =>
-                            setUser({ ...user, dateOfBirth: e.target.value })
-                        }
+                    <DatePicker
+                        selected={selectedDate}
+                        onChange={(date) => setSelectedDate(date)}
+                        customInput={<CustomDateInput  />}
+                        dateFormat="MMM, dd yyyy"
                     />
-                    <div className="absolute right-4 top-4 text-[#858FAD]">
-                        <FaCalendarCheck />
-                    </div>
                 </div>
             </div>
 
