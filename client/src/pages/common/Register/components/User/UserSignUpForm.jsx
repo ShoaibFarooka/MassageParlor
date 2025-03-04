@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from 'react';
+import React, { useState, forwardRef, useRef } from 'react';
 import { FaCalendarCheck, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import userService from '../../../../../services/userService';
@@ -37,30 +37,29 @@ function UserSignUpForm() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState({});
     const navigate = useNavigate();
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [imageFile, setImageFile] = useState(null);
+    const fileInputRef = useRef(null);
+
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setImageFile(file);
+            setSelectedImage(URL.createObjectURL(file)); // Show preview
+        }
+    };
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         let errors = {};
-        if (!user.name) {
-            errors.name = "Name is required";
-        }
-        if (!user.surname) {
-            errors.surname = "Surname is required";
-        }
-        if (!user.email) {
-            errors.email = "Email is required";
-        }
-        if (!user.number) {
-            errors.number = "Contact number is required";
-        }
-        if (!user.password) {
-            errors.password = "Password is required";
-        }
-        if (user.password && user.password !== confirmPassword) {
-            errors.confirmPassword = "Passwords do not match";
-        }
+        if (!user.name) errors.name = "Name is required";
+        if (!user.surname) errors.surname = "Surname is required";
+        if (!user.email) errors.email = "Email is required";
+        if (!user.number) errors.number = "Contact number is required";
+        if (!user.password) errors.password = "Password is required";
+        if (user.password && user.password !== confirmPassword) errors.confirmPassword = "Passwords do not match";
 
         if (Object.keys(errors).length > 0) {
             setError(errors);
@@ -69,27 +68,27 @@ function UserSignUpForm() {
 
         setError({});
 
-        const payload = {
-            ...user,
-            name: `${user.name} ${user.surname}`,
-            dateOfBirth: selectedDate ? selectedDate.toISOString().split('T')[0] : "",
-        };
-
-        delete payload.surname;
+        const formData = new FormData();
+        formData.append('name', `${user.name} ${user.surname}`);
+        formData.append('dateOfBirth', selectedDate ? selectedDate.toISOString().split('T')[0] : "");
+        formData.append('number', user.number);
+        formData.append('email', user.email);
+        formData.append('password', user.password);
+        if (imageFile) formData.append('file', imageFile); // ✅ Append Image
 
         try {
-            const response = await userService.registerUser(payload, 'user');
-    
-            if (!response) { 
+            const response = await userService.registerUser(formData, 'user');
+
+            if (!response) {
                 const data = await response.json();
                 setError({ form: data.message || "Registration failed" });
                 return;
             }
-    
+
             navigate("/login");
             toast.success('New User Registered');
         } catch (err) {
-            toast.error("Registration error: " + err.message); // ✅ Fixed toast error handling
+            toast.error("Registration error: " + err.message);
             setError({ form: "An error occurred. Please try again later." });
         }
     };
@@ -99,19 +98,16 @@ function UserSignUpForm() {
         <form className="mt-6" autoComplete="off" onSubmit={handleSubmit}>
             <div className="flex justify-center">
                 <div className="relative w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center">
-                    <svg
-                        className="w-10 h-10 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M12 12c2.21 0 4-1.79 4-4S14.21 4 12 4 8 5.79 8 8s1.79 4 4 4z" />
-                        <path d="M12 14c-4.42 0-8 1.79-8 4v1h16v-1c0-2.21-3.58-4-8-4z" />
-                    </svg>
+                    {selectedImage ? (
+                        <img src={selectedImage} alt="Profile" className="w-full h-full object-cover rounded-full" />
+                    ) : (
+                        <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                            <path d="M12 12c2.21 0 4-1.79 4-4S14.21 4 12 4 8 5.79 8 8s1.79 4 4 4z" />
+                            <path d="M12 14c-4.42 0-8 1.79-8 4v1h16v-1c0-2.21-3.58-4-8-4z" />
+                        </svg>
+                    )}
                     <button
+                        onClick={() => fileInputRef.current.click()}
                         type="button"
                         className="absolute bottom-0 right-0 w-6 h-6 bg-violet-600 rounded-full flex items-center justify-center text-white"
                     >
@@ -127,6 +123,14 @@ function UserSignUpForm() {
                             <path d="M12 5v14M5 12h14" />
                         </svg>
                     </button>
+
+                    <input
+                        type="file"
+                        accept="image/*"
+                        ref={fileInputRef}
+                        className="hidden"
+                        onChange={handleImageChange} // ✅ Handle Image Select
+                    />
                 </div>
             </div>
 
@@ -177,7 +181,7 @@ function UserSignUpForm() {
                     <DatePicker
                         selected={selectedDate}
                         onChange={(date) => setSelectedDate(date)}
-                        customInput={<CustomDateInput  />}
+                        customInput={<CustomDateInput />}
                         dateFormat="MMM, dd yyyy"
                     />
                 </div>

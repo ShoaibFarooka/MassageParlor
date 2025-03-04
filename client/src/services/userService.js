@@ -11,14 +11,23 @@ const userService = {
             throw error;
         }
     },
-    registerUser: async (payload, userType) => {
+    registerUser: async (formData, userType) => {
         try {
-            const response = await axiosInstance.post(`${BASE_URL}/${userType}-register`, payload, { withCredentials: true, skipAuthRefresh: true });
+            const response = await axiosInstance.post(
+                `${BASE_URL}/${userType}-register`,
+                formData, 
+                {
+                    withCredentials: true,
+                    skipAuthRefresh: true,
+                    headers: { 'Content-Type': 'multipart/form-data' } 
+                }
+            );
             return response.data;
         } catch (error) {
             throw error;
         }
     },
+    
     forgotPassword: async (payload) => {
         try {
             const response = await axiosInstance.post(`${BASE_URL}/forgot-password`, payload, { withCredentials: true, skipAuthRefresh: true });

@@ -2,20 +2,31 @@ const path = require('path');
 const userService = require('../services/userService');
 const emailService = require('../services/emailService');
 const templateUtils = require('../utils/templateUtils');
+const userSchemas =require('../validationSchemas/userSchemas')
 
 const Register = async (req, res, next) => {
   try {
-    const data = { ...req.body };
+
+    await userSchemas.registerSchema.validate(req.body, { abortEarly: false });
+
+    const imagePath = req.file ? req.file.filename : null;
+
+    const data = { ...req.body, image: imagePath };
     const { userType } = req.params;
-    
-    console.log(req.body,userType,'test123')
 
     const user = await userService.createUser(data, userType);
-    res.status(201).json({ message: "User registered successfully!" });
+    res.status(201).json({ message: "User registered successfully!", user });
   } catch (error) {
-    next(error)
+    console.error("Validation or Registration error:", error);
+    
+    if (error.name === "ValidationError") {
+      return res.status(400).json({ error: error.errors }); 
+    }
+
+    next(error);
   }
 };
+
 
 const Login = async (req, res, next) => {
   try {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { FaCalendarCheck, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import userService from '../../../../../services/userService';
@@ -23,30 +23,30 @@ function ProviderSignUpForm() {
     hairColor: "",
     callOutType: ""
   });
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setSelectedImage(URL.createObjectURL(file)); // ✅ Show preview
+    }
+  };
+
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     let errors = {};
-    if (!user.name) {
-      errors.name = "Name is required";
-    }
-    if (!user.surname) {
-      errors.surname = "Surname is required";
-    }
-    if (!user.email) {
-      errors.email = "Email is required";
-    }
-    if (!user.number) {
-      errors.number = "Contact number is required";
-    }
-    if (!user.password) {
-      errors.password = "Password is required";
-    }
-    if (user.password && user.password !== confirmPassword) {
-      errors.confirmPassword = "Passwords do not match";
-    }
+    if (!user.name) errors.name = "Name is required";
+    if (!user.surname) errors.surname = "Surname is required";
+    if (!user.email) errors.email = "Email is required";
+    if (!user.number) errors.number = "Contact number is required";
+    if (!user.password) errors.password = "Password is required";
+    if (user.password && user.password !== confirmPassword) errors.confirmPassword = "Passwords do not match";
 
     if (Object.keys(errors).length > 0) {
       setError(errors);
@@ -55,48 +55,54 @@ function ProviderSignUpForm() {
 
     setError({});
 
-    const payload = {
-      ...user,
-      name: `${user.name} ${user.surname}`,
-    };
-    delete payload.surname;
+    const formData = new FormData();
+    formData.append('name', `${user.name} ${user.surname}`);
+    formData.append('number', user.number);
+    formData.append('email', user.email);
+    formData.append('password', user.password);
+    formData.append('ethnicity', user.ethnicity);
+    formData.append('location', user.location);
+    formData.append('height', user.height);
+    formData.append('hairColor', user.hairColor);
+    formData.append('callOutType', user.callOutType);
+
+    if (imageFile) formData.append('file', imageFile); // ✅ Append Image
 
     try {
-      const response = await userService.registerUser(payload, 'service-provider');
-      const data = await response.json();
-      if (response) {
-        navigate("/login");
-        toast.success('New Service Provider Registered')
-      } else {
+      const response = await userService.registerUser(formData, 'service-provider');
+      if (!response) {
+        const data = await response.json();
         setError({ form: data.message || "Registration failed" });
+        return;
       }
+
+      navigate("/login");
+      toast.success('New Service Provider Registered');
     } catch (err) {
-      toast.error("Registration error", err);
+      console.log(err,'qwqw')
+      toast.error(err.response.data.error);
       setError({ form: "An error occurred. Please try again later." });
     }
   };
+
 
 
   return (
     <form onSubmit={handleSubmit} autoComplete="off" className="mt-6">
       <div className="flex justify-center">
         <div className="relative w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center">
-          <svg
-            className="w-10 h-10 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M12 12c2.21 0 4-1.79 4-4S14.21 4 12 4 8 5.79 8 8s1.79 4 4 4z" />
-            <path d="M12 14c-4.42 0-8 1.79-8 4v1h16v-1c0-2.21-3.58-4-8-4z" />
-          </svg>
+          {selectedImage ? (
+            <img src={selectedImage} alt="Profile" className="w-full h-full object-cover rounded-full" />
+          ) : (
+            <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+              <path d="M12 12c2.21 0 4-1.79 4-4S14.21 4 12 4 8 5.79 8 8s1.79 4 4 4z" />
+              <path d="M12 14c-4.42 0-8 1.79-8 4v1h16v-1c0-2.21-3.58-4-8-4z" />
+            </svg>
+          )}
           <button
+            onClick={() => fileInputRef.current.click()}
             type="button"
-            className="absolute bottom-0 right-0 w-6 h-6 bg-violet-600 
-                         rounded-full flex items-center justify-center text-white"
+            className="absolute bottom-0 right-0 w-6 h-6 bg-violet-600 rounded-full flex items-center justify-center text-white"
           >
             <svg
               className="w-4 h-4"
@@ -110,8 +116,17 @@ function ProviderSignUpForm() {
               <path d="M12 5v14M5 12h14" />
             </svg>
           </button>
+
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            className="hidden"
+            onChange={handleImageChange} // ✅ Handle Image Select
+          />
         </div>
       </div>
+
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
         <div className='mb-6'>
@@ -190,16 +205,20 @@ function ProviderSignUpForm() {
           <label htmlFor="eth" className="label">
             Ethnicity
           </label>
-          <input
-            name='eth'
-            id='eth'
-            autoComplete="off"
-            type="text"
-            placeholder="Black"
+          <select
+            id="ethnicity"
+            name="ethnicity"
             className="w-full input"
             value={user.ethnicity}
             onChange={(e) => setUser({ ...user, ethnicity: e.target.value })}
-          />
+          >
+            <option disabled value="">Select One</option>
+            <option value="Black">Black</option>
+            <option value="White">White</option>
+            <option value="Asian">Asian</option>
+            <option value="Hispanic">Hispanic</option>
+            <option value="Other">Other</option>
+          </select>
         </div>
         <div className='mb-6'>
           <label htmlFor="loc" className=" label">
@@ -238,16 +257,20 @@ function ProviderSignUpForm() {
           <label htmlFor="hc" className=" label">
             Hair color
           </label>
-          <input
-            name='hc'
-            id='hc'
-            autoComplete="off"
-            type="text"
-            placeholder="Brown"
+          <select
+            id="hairColor"
+            name="hairColor"
             className="w-full input"
             value={user.hairColor}
             onChange={(e) => setUser({ ...user, hairColor: e.target.value })}
-          />
+          >
+            <option disabled value="">Select One</option>
+            <option value="Blonde">Blonde</option>
+            <option value="Brown">Brown</option>
+            <option value="Black">Black</option>
+            <option value="Red">Red</option>
+          </select>
+
         </div>
       </div>
 
@@ -255,16 +278,18 @@ function ProviderSignUpForm() {
         <label htmlFor="cot" className=" label">
           Call-out Type
         </label>
-        <input
-          name='cot'
-          id='cot'
-          autoComplete="off"
-          type="text"
-          placeholder="In-call"
-          className="w-full input "
+        <select
+          id="callOutType"
+          name="callOutType"
+          className="w-full input"
           value={user.callOutType}
           onChange={(e) => setUser({ ...user, callOutType: e.target.value })}
-        />
+        >
+          <option disabled value="">Select One</option>
+          <option value="In-call">In-call</option>
+          <option value="Out-call">Out-call</option>
+          <option value="Both">Both</option>
+        </select>
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>

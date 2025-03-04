@@ -13,12 +13,16 @@ const createUser = async (userData, role) => {
     location,
     city,
     zip,
+    image,
     password,
     ethnicity,
     hairColor,
     height,
     callOutType,
   } = userData;
+
+  console.log(image,'image123')
+
   let existingUser = await User.findOne({ email });
   if (existingUser) {
     const error = new Error(
@@ -47,6 +51,7 @@ const createUser = async (userData, role) => {
       number,
       dateOfBirth,
       city,
+      image,
       zip,
       password: passwordDigest,
       role,
@@ -59,6 +64,7 @@ const createUser = async (userData, role) => {
       location,
       ethnicity,
       hairColor,
+      image,
       height,
       callOutType,
       password: passwordDigest,
