@@ -21,7 +21,8 @@ const getServices = async (req, res, next) => {
 const getServiceById = async (req, res, next) => {
   try {
     const service = await serviceService.getServiceById(req.params.id);
-    if (!service) return res.status(404).json({ message: "Service not found!" });
+    if (!service)
+      return res.status(404).json({ message: "Service not found!" });
     res.status(200).json(service);
   } catch (error) {
     next(error);
@@ -30,22 +31,50 @@ const getServiceById = async (req, res, next) => {
 
 const getServicesByProviderId = async (req, res, next) => {
   try {
-    const services = await serviceService.getServicesByProviderId(req.params.providerId);
+    const services = await serviceService.getServicesByProviderId(
+      req.params.providerId
+    );
+
     if (!services || services.length === 0) {
-      return res.status(404).json({ message: "No services found for this provider!" });
+      return res
+        .status(404)
+        .json({ message: "No services found for this provider!" });
     }
+
     res.status(200).json(services);
   } catch (error) {
     next(error);
   }
 };
 
+const getGalleryById = async (req, res, next) => {
+  try {
+    let gallery = null;
+    try {
+      gallery = await serviceService.getGallery(req.params.providerId);
+      console.log(gallery,'gallery123')
+    } catch (error) {
+      console.error("Error fetching gallery:", error.message);
+    }
+
+    // Send response with services and gallery
+    res.status(200).json(gallery);
+  } catch (error) {
+    next(error);
+  }
+};
 
 const updateService = async (req, res, next) => {
   try {
-    const updatedService = await serviceService.updateService(req.params.id, req.body);
-    if (!updatedService) return res.status(404).json({ message: "Service not found!" });
-    res.status(200).json({ message: "Service updated successfully!", updatedService });
+    const updatedService = await serviceService.updateService(
+      req.params.id,
+      req.body
+    );
+    if (!updatedService)
+      return res.status(404).json({ message: "Service not found!" });
+    res
+      .status(200)
+      .json({ message: "Service updated successfully!", updatedService });
   } catch (error) {
     next(error);
   }
@@ -54,7 +83,8 @@ const updateService = async (req, res, next) => {
 const deleteService = async (req, res, next) => {
   try {
     const deletedService = await serviceService.deleteService(req.params.id);
-    if (!deletedService) return res.status(404).json({ message: "Service not found!" });
+    if (!deletedService)
+      return res.status(404).json({ message: "Service not found!" });
     res.status(200).json({ message: "Service deleted successfully!" });
   } catch (error) {
     next(error);
@@ -68,4 +98,5 @@ module.exports = {
   getServiceById,
   updateService,
   deleteService,
+  getGalleryById,
 };

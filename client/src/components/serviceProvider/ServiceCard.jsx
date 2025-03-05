@@ -5,7 +5,7 @@ import service from '../../assets/images/service.png'
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import serviceService from '../../services/serviceService';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { HideLoading, ShowLoading } from '../../redux/loaderSlice';
 
 const CustomDateInput = forwardRef(({ value, onClick, placeholder }, ref) => (
@@ -47,15 +47,12 @@ const ServiceCard = ({ key, provider }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(new Date());
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
 
   const [services, setServices] = useState([]);
-  const [error, setError] = useState(null);
+  const [galleries, setGalleries] = useState([]);
 
   const fetchServicesForServiceProvider = async () => {
-    if (!provider?._id) {
-      setError("Provider ID is missing!");
-      return;
-    }
 
     dispatch(ShowLoading());
     try {
@@ -63,7 +60,16 @@ const ServiceCard = ({ key, provider }) => {
       setServices(response);
     } catch (error) {
       console.error("Error fetching services:", error);
-      setError("Failed to fetch services.");
+    } finally {
+      dispatch(HideLoading());
+    }
+
+    try {
+      dispatch(ShowLoading());
+      const gallery = await serviceService.getGalleryByProvider(provider?._id)
+      setGalleries(gallery[0])
+    } catch (error) {
+      console.error("Error fetching services:", error);
     } finally {
       dispatch(HideLoading());
     }
@@ -175,17 +181,23 @@ const ServiceCard = ({ key, provider }) => {
             </div>
 
             <h3 className='text-lg font-semibold items-start mt-10 sm:mt-0'>Gallery</h3>
+            {galleries?.images?.length > 0 ? (
+              <div className="grid grid-cols-2 md::grid-cols-3 lg:grid-cols-3 gap-4">
+                {galleries.images.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`Gallery Image ${index + 1}`}
+                    className={`w-[100px] sm:w-[124px] h-[100px] sm:h-[124px] m-2 sm:m-4 
+                      ${!user && index >= 3 ? "opacity-50 blur-sm" : ""}`}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p>No images available.</p>
+            )}
 
-            <div className='grid grid-cols-2 md:flex'>
-              <img src={service} alt="service" className='w-[100px] sm:w-[124px] h-[100px] sm:h-[124px] m-2 sm:m-4' />
-              <img src={service} alt="service" className='w-[100px] sm:w-[124px] h-[100px] sm:h-[124px] m-2 sm:m-4' />
-              <img src={service} alt="service" className='w-[100px] sm:w-[124px] h-[100px] sm:h-[124px] m-2 sm:m-4' />
-            </div>
 
-            <div className='grid grid-cols-2  md:flex opacity-50'>
-              <img src={service} alt="service" className='w-[100px] sm:w-[124px] h-[100px] sm:h-[124px] m-2 sm:m-4' />
-              <img src={service} alt="service" className='w-[100px] sm:w-[124px] h-[100px] sm:h-[124px] m-2 sm:m-4' />
-            </div>
 
           </div>
 
@@ -206,7 +218,7 @@ const ServiceCard = ({ key, provider }) => {
                 <div key={index} className='relative mb-10' >
                   <div className='bg-white rounded-3xl px-[21px] pt-[17px] mt-5 pb-[41px]'>
                     <span className='text-sm font-semibold pb-[5px]'>{data?.name}</span>
-                    <p className='text-[12px]'>A relaxing massage using gentle techniques to soothe muscles and improve circulation.</p>
+                    <p className='text-[12px]'>{data?.description}</p>
 
                     <span onClick={() => setBookingOpen(true)} className='bg-[#5E50BF] rounded-full rounded-tr-none w-[212px] h-[44px] flex justify-center items-center text-white text-sm font-semibold absolute right-0 bottom-[-22px] cursor-pointer'>BOOK NOW</span>
                   </div>

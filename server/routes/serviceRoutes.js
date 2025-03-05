@@ -17,6 +17,7 @@ router.get("/", controller.getServices);
 router.get("/:id", controller.getServiceById);
 
 router.get("/provider/:providerId", controller.getServicesByProviderId);
+router.get("/gallery/:providerId", controller.getGalleryById);
 
 router.patch(
   "/:id",

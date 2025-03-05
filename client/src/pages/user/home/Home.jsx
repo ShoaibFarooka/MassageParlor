@@ -12,12 +12,12 @@ import userService from '../../../services/userService';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoggedOut } from '../../../redux/logoutSlice';
 import { clearUser } from '../../../redux/userSlice';
-import { HideLoading, ShowLoading } from '../../../redux/loaderSlice';
 import Cookies from 'js-cookie';
+import { HideLoading, ShowLoading } from '../../../redux/loaderSlice';
 
 
 const providers = [
-];
+];  
 
 const UserHome = () => {
     const [isOpen, setIsOpen] = useState(false);

@@ -39,6 +39,15 @@ const serviceService = {
         }
     },
 
+    getGalleryByProvider: async (providerId) => {
+        try {
+            const response = await axiosInstance.get(`${BASE_URL}/gallery/${providerId}`);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
+
     updateService: async (serviceId, payload) => {
         try {
             const response = await axiosInstance.patch(`${BASE_URL}/${serviceId}`, payload);

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const galleryModel = require("../models/galleryModel");
+const Gallery = require("../models/galleryModel"); // ✅ Ensure correct model import
 require("dotenv").config();
 
 async function seedGallery(serviceProviderId, images) {
@@ -10,19 +10,21 @@ async function seedGallery(serviceProviderId, images) {
         process.exit(1);
     }
 
-    console.log("Connecting to MongoDB...");
-    await mongoose.connect(DB, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    });
-    console.log("Connected to MongoDB");
-
     try {
-        await galleryModel.deleteMany({ serviceProvider: serviceProviderId }); // Delete existing gallery for provider
+        console.log("Connecting to MongoDB...");
+        await mongoose.connect(DB, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log("Connected to MongoDB");
+
+        // Delete existing gallery for the provider
+        await Gallery.deleteMany({ serviceProvider: serviceProviderId });
         console.log("Deleted existing gallery images for this provider");
 
+        // Create a new gallery entry
         console.log("Seeding new gallery images...");
-        const galleryEntry = new galleryModel({
+        const galleryEntry = new Gallery({
             serviceProvider: serviceProviderId,
             images: images,
         });
@@ -37,8 +39,8 @@ async function seedGallery(serviceProviderId, images) {
     }
 }
 
-// Replace this with a real serviceProvider ID from your database
-const serviceProviderId = "67c79e7460a12718c68a4d13";
+// ✅ Replace with a real serviceProvider ID from your database
+const serviceProviderId = "67c79db760a12718c68a4d07";
 
 const images = [
     "https://example.com/images/massage1.jpg",
@@ -47,5 +49,5 @@ const images = [
     "https://example.com/images/massage4.jpg",
 ];
 
-// Run the seeder
+// ✅ Run the seeder
 seedGallery(serviceProviderId, images);

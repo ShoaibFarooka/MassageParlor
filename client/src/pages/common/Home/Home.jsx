@@ -5,7 +5,9 @@ import ServiceCard from '../../../components/serviceProvider/ServiceCard';
 import profile from '../../../assets/images/profile.png';
 import CustomModal from '../../../components/CustomModal/CustomModal';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { HideLoading, ShowLoading } from '../../../redux/loaderSlice';
+import userService from '../../../services/userService';
 
 // Example data array. In a real app, you'd fetch this from an API.
 const providers = [
@@ -212,7 +214,7 @@ function Home() {
                             >
                                 <FaSlidersH className="text-black" fontSize={24} />
                             </button>
-                            {isOpen && (
+                            {isOpenFilter && (
                                 <div ref={dropdownRef} className="absolute right-0 w-[234px] mt-2 rounded-2xl shadow-lg bg-white z-50">
                                     <h2 className="text-base font-semibold mb-4 mt-4 text-center">Filters</h2>
 
