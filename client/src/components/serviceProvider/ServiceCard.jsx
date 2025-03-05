@@ -7,6 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import serviceService from '../../services/serviceService';
 import { useDispatch, useSelector } from 'react-redux';
 import { HideLoading, ShowLoading } from '../../redux/loaderSlice';
+import { useNavigate } from 'react-router-dom';
 
 const CustomDateInput = forwardRef(({ value, onClick, placeholder }, ref) => (
   <div className="relative" onClick={onClick}>
@@ -47,6 +48,7 @@ const ServiceCard = ({ key, provider }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(new Date());
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const user = useSelector((state) => state.user.user);
 
   const [services, setServices] = useState([]);
@@ -74,14 +76,6 @@ const ServiceCard = ({ key, provider }) => {
       dispatch(HideLoading());
     }
   };
-
-  // useEffect(() => {
-  //   fetchServicesForServiceProvider();
-  // }, [isOpen]);
-
-  console.log(provider, 'provider123')
-
-  console.log(services, 'services123')
 
   return (
     <div className='flex justify-center items-center p-4'>
@@ -213,14 +207,14 @@ const ServiceCard = ({ key, provider }) => {
 
             <div className='pt-[48px] relative'>
               <h3 className='text-lg font-semibold items-start'>Available services</h3>
-
+              {!provider?.isActive && <p className='text-sm text-red-500'>This Service Provider is not Active</p>}
               {services?.map((data, index) => (
                 <div key={index} className='relative mb-10' >
                   <div className='bg-white rounded-3xl px-[21px] pt-[17px] mt-5 pb-[41px]'>
                     <span className='text-sm font-semibold pb-[5px]'>{data?.name}</span>
                     <p className='text-[12px]'>{data?.description}</p>
 
-                    <span onClick={() => setBookingOpen(true)} className='bg-[#5E50BF] rounded-full rounded-tr-none w-[212px] h-[44px] flex justify-center items-center text-white text-sm font-semibold absolute right-0 bottom-[-22px] cursor-pointer'>BOOK NOW</span>
+                    <button disabled={!provider?.isActive} onClick={() => { user ? setBookingOpen(true) : navigate('/login') }} className={`bg-[#5E50BF] rounded-full rounded-tr-none w-[212px] h-[44px] flex justify-center items-center text-white text-sm font-semibold absolute right-0 bottom-[-22px] cursor-pointer ${!provider?.isActive && 'opacity-85'}`}>BOOK NOW</button>
                   </div>
                 </div>
               ))}
