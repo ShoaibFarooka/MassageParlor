@@ -17,9 +17,9 @@ const getServicesByProviderId = async (providerId) => {
   return await Service.find({ serviceProvider: providerId }).populate("serviceProvider");
 };
 
-const getGallery = async (providerId) => {
-  return await galleryModel.find({ serviceProvider: providerId });
-};
+// const getGallery = async (providerId) => {
+//   return await galleryModel.find({ serviceProvider: providerId });
+// };
 
 
 const updateService = async (serviceId, updatedData) => {
@@ -37,5 +37,5 @@ module.exports = {
   getServiceById,
   updateService,
   deleteService,
-  getGallery,
+  // getGallery,
 };

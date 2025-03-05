@@ -69,9 +69,9 @@ const ServiceCard = ({ key, provider }) => {
     }
   };
 
-  if (isOpen === true) {
-    fetchServicesForServiceProvider();
-  }
+  // useEffect(() => {
+  //   fetchServicesForServiceProvider();
+  // }, [isOpen]);
 
   console.log(provider, 'provider123')
 
@@ -80,7 +80,7 @@ const ServiceCard = ({ key, provider }) => {
   return (
     <div className='flex justify-center items-center p-4'>
       <div
-        onClick={() => setIsOpen(true)}
+        onClick={() => { setIsOpen(true); fetchServicesForServiceProvider(); }}
         key={key}
         className="bg-white cursor-pointer relative pt-[59px] rounded-[24px] shadow-md text-center max-w-[260px] flex flex-col items-center"
       >
@@ -202,7 +202,7 @@ const ServiceCard = ({ key, provider }) => {
             <div className='pt-[48px] relative'>
               <h3 className='text-lg font-semibold items-start'>Available services</h3>
 
-              {/* {services?.map((data, index) => (
+              {services?.map((data, index) => (
                 <div key={index} className='relative mb-10' >
                   <div className='bg-white rounded-3xl px-[21px] pt-[17px] mt-5 pb-[41px]'>
                     <span className='text-sm font-semibold pb-[5px]'>{data?.name}</span>
@@ -211,7 +211,7 @@ const ServiceCard = ({ key, provider }) => {
                     <span onClick={() => setBookingOpen(true)} className='bg-[#5E50BF] rounded-full rounded-tr-none w-[212px] h-[44px] flex justify-center items-center text-white text-sm font-semibold absolute right-0 bottom-[-22px] cursor-pointer'>BOOK NOW</span>
                   </div>
                 </div>
-              ))} */}
+              ))}
             </div>
           </div>
 
