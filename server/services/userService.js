@@ -300,7 +300,7 @@ const searchServiceProviders = async (pageIndex, limit, filters) => {
 
   // Fetch users based on query
   const users = await User.find(query)
-    .select("name email number location ethnicity hairColor height callOutType image createdAt")
+    .select("name email number location ethnicity hairColor height callOutType image createdAt isActive _id")
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit);

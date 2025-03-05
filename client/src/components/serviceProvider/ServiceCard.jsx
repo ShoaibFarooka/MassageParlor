@@ -54,7 +54,7 @@ const ServiceCard = ({ key, provider }) => {
         <img
           src={provider.image}
           alt={`Profile of ${provider.name}`}
-          className="w-[88px] min-h-[88px] object-cover rounded-full mx-auto mb-4 absolute top-[-44px]"
+          className="w-[88px] h-[88px] object-cover rounded-full mx-auto mb-4 absolute top-[-44px]"
         />
 
         <h2 className="text-[22px] font-semibold">{provider.name}</h2>
