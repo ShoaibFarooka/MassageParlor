@@ -3,8 +3,8 @@ const serviceModel = require("../models/serviceModel");
 require("dotenv").config();
 
 async function seedServices(providerId, servicesData) {
-  const DB =
-    "mongodb+srv://shoaibfarooka:Welcome5home.@cluster0.hrpczac.mongodb.net/MassageParlor?retryWrites=true&w=majority";
+  // const DB =
+  //   "mongodb+srv://shoaibfarooka:Welcome5home.@cluster0.hrpczac.mongodb.net/MassageParlor?retryWrites=true&w=majority";
   console.log("Connecting to MongoDB...");
   await mongoose.connect(DB);
   console.log("Connected to MongoDB");

@@ -69,9 +69,9 @@ const ServiceCard = ({ key, provider }) => {
     }
   };
 
-  useEffect(() => {
+  if (isOpen === true) {
     fetchServicesForServiceProvider();
-  }, [isOpen]);
+  }
 
   console.log(provider, 'provider123')
 
@@ -202,16 +202,16 @@ const ServiceCard = ({ key, provider }) => {
             <div className='pt-[48px] relative'>
               <h3 className='text-lg font-semibold items-start'>Available services</h3>
 
-              {services.map((data, index) => (
-               <div key={index} className='relative mb-10' >
-                 <div  className='bg-white rounded-3xl px-[21px] pt-[17px] mt-5 pb-[41px]'>
-                  <span className='text-sm font-semibold pb-[5px]'>{data?.name}</span>
-                  <p className='text-[12px]'>A relaxing massage using gentle techniques to soothe muscles and improve circulation.</p>
+              {/* {services?.map((data, index) => (
+                <div key={index} className='relative mb-10' >
+                  <div className='bg-white rounded-3xl px-[21px] pt-[17px] mt-5 pb-[41px]'>
+                    <span className='text-sm font-semibold pb-[5px]'>{data?.name}</span>
+                    <p className='text-[12px]'>A relaxing massage using gentle techniques to soothe muscles and improve circulation.</p>
 
-                  <span onClick={() => setBookingOpen(true)} className='bg-[#5E50BF] rounded-full rounded-tr-none w-[212px] h-[44px] flex justify-center items-center text-white text-sm font-semibold absolute right-0 bottom-[-22px] cursor-pointer'>BOOK NOW</span>
+                    <span onClick={() => setBookingOpen(true)} className='bg-[#5E50BF] rounded-full rounded-tr-none w-[212px] h-[44px] flex justify-center items-center text-white text-sm font-semibold absolute right-0 bottom-[-22px] cursor-pointer'>BOOK NOW</span>
+                  </div>
                 </div>
-               </div>
-              ))}
+              ))} */}
             </div>
           </div>
 

@@ -1,3 +1,4 @@
+const galleryModel = require("../models/galleryModel");
 const Service = require("../models/serviceModel");
 
 const createService = async (serviceData) => {
@@ -16,6 +17,10 @@ const getServicesByProviderId = async (providerId) => {
   return await Service.find({ serviceProvider: providerId }).populate("serviceProvider");
 };
 
+const getGallery = async (providerId) => {
+  return await galleryModel.find({ serviceProvider: providerId });
+};
+
 
 const updateService = async (serviceId, updatedData) => {
   return await Service.findByIdAndUpdate(serviceId, updatedData, { new: true });
@@ -32,4 +37,5 @@ module.exports = {
   getServiceById,
   updateService,
   deleteService,
+  getGallery,
 };
