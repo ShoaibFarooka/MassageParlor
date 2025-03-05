@@ -70,6 +70,12 @@ router.get(
 );
 
 router.get(
+  "/search-service-providers",
+  controller.SearchServiceProviders
+);
+
+
+router.get(
   "/search-users",
   authMiddleware.authenticateRequest,
   authMiddleware.verifyRole(['admin', 'employee']),

@@ -148,6 +148,15 @@ const userService = {
             throw error;
         }
     },
+    searchServiceProviders: async (query) => {
+        try {
+            const response = await axiosInstance.get(`${BASE_URL}/search-service-providers`, { params: query });
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
+    
 };
 
 export default userService;

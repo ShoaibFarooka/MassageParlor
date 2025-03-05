@@ -254,6 +254,70 @@ const searchUsers = async (pageIndex, limit, searchQuery, role) => {
   };
 };
 
+const searchServiceProviders = async (pageIndex, limit, filters) => {
+  const skip = (pageIndex - 1) * limit;
+  let query = { role: "service-provider" }; // Fetch only service providers
+
+  // Apply search query (name, email, phone)
+  if (filters.searchQuery) {
+    query.$or = [
+      { name: { $regex: filters.searchQuery, $options: "i" } },
+      { email: { $regex: filters.searchQuery, $options: "i" } },
+      { number: { $regex: filters.searchQuery, $options: "i" } },
+    ];
+  }
+
+  // Apply location filter
+  if (filters.location) {
+    query.location = { $regex: filters.location, $options: "i" };
+  }
+
+  // Apply ethnicity filter
+  if (filters.ethnicity) {
+    query.ethnicity = filters.ethnicity;
+  }
+
+  // Apply hair color filter
+  if (filters.hairColor) {
+    query.hairColor = filters.hairColor;
+  }
+
+  // Apply height range filter
+  if (filters.minHeight || filters.maxHeight) {
+    query.height = {};
+    if (filters.minHeight) query.height.$gte = parseInt(filters.minHeight);
+    if (filters.maxHeight) query.height.$lte = parseInt(filters.maxHeight);
+  }
+
+  // Apply call out type filter
+  if (filters.callOutType) {
+    query.callOutType = filters.callOutType;
+  }
+
+  // Get total count for pagination
+  const totalCount = await User.countDocuments(query);
+  const totalPages = Math.ceil(totalCount / limit);
+
+  // Fetch users based on query
+  const users = await User.find(query)
+    .select("name email number location ethnicity hairColor height callOutType image createdAt")
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  if (!users || users.length === 0) {
+    const error = new Error("No service providers found!");
+    error.code = 404;
+    throw error;
+  }
+
+  return {
+    users,
+    totalPages,
+    totalCount,
+  };
+};
+
 const updateUser = async (userId, updateData, role = null) => {
   const userToUpdate = await User.findById(userId);
 
@@ -398,5 +462,6 @@ module.exports = {
   deleteUser,
   changeUserPassword,
   fetchUserStripeCustomerId,
+  searchServiceProviders,
   // fetchUserId
 };

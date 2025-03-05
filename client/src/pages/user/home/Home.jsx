@@ -110,6 +110,39 @@ const UserHome = () => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const profileDropdownRef = useRef(null);
     const dispatch = useDispatch();
+    const [serviceProviders, setServiceProviders] = useState([]);
+    const [filters, setFilters] = useState({
+        searchQuery: "",
+        location: "",
+        ethnicity: "",
+        hairColor: "",
+        minHeight: "",
+        maxHeight: "",
+        callOutType: "",
+    });
+
+    const fetchServiceProviders = async () => {
+        dispatch(ShowLoading());
+        try {
+            const response = await userService.searchServiceProviders(filters);
+            setServiceProviders(response.result.users);
+        } catch (error) {
+            console.error("Error fetching service providers:", error);
+        }
+        dispatch(HideLoading());
+    };
+
+    useEffect(() => {
+        fetchServiceProviders();
+    }, []);
+
+    const handleFilterChange = (e) => {
+        setFilters({ ...filters, [e.target.name]: e.target.value });
+    };
+    
+    const applyFilters = () => {
+        fetchServiceProviders();
+    };    
 
 
     // Close dropdown when clicking outside
@@ -163,6 +196,7 @@ const UserHome = () => {
         dispatch(HideLoading());
     };
 
+    console.log(serviceProviders,'serviceProviders')
 
     return (
         <div>
@@ -238,7 +272,7 @@ const UserHome = () => {
                                         </div>
                                     </div>
 
-                                    <button className='text-sm font-semibold rounded-b-3xl mt-2 text-white bg-[#5E50BF] py-3 w-full'>
+                                    <button onClick={applyFilters} className='text-sm font-semibold rounded-b-3xl mt-2 text-white bg-[#5E50BF] py-3 w-full'>
                                         Filter
                                     </button>
                                 </div>
