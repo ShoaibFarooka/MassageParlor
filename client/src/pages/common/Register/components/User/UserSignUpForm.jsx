@@ -13,7 +13,7 @@ const CustomDateInput = forwardRef(({ value, onClick }, ref) => (
             value={value}
             placeholder={'Feb, 28 2025'}
             readOnly
-            className="w-full input mb-6"
+            className="w-full input"
             ref={ref}
         />
         <div className="absolute right-4 top-4 text-[#858FAD] pointer-events-none">
