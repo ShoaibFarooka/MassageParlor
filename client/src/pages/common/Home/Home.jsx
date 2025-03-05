@@ -5,6 +5,7 @@ import ServiceCard from '../../../components/serviceProvider/ServiceCard';
 import profile from '../../../assets/images/profile.png';
 import CustomModal from '../../../components/CustomModal/CustomModal';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 // Example data array. In a real app, you'd fetch this from an API.
 const providers = [
@@ -94,12 +95,76 @@ function Home() {
     const [isOpen, setIsOpen] = useState(true);
     const [isOpenFilter, setIsOpenFilter] = useState(false);
     const dropdownRef = useRef(null);
+    const user = useSelector((state) => state.user.user);
     const [condition, setCondition] = useState(false);
     const navigate = useNavigate();
     const [height, setHeight] = useState(165);
     const minVal = 100;
     const maxVal = 200;
     const fillPercentage = ((height - minVal) / (maxVal - minVal)) * 100;
+
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const profileDropdownRef = useRef(null);
+    const dispatch = useDispatch();
+    const [serviceProviders, setServiceProviders] = useState([]);
+    const [filters, setFilters] = useState({
+        searchQuery: "",
+        location: "",
+        ethnicity: "",
+        hairColor: "",
+        minHeight: "",
+        maxHeight: "",
+        callOutType: "",
+    });
+
+    const fetchServiceProviders = async () => {
+        dispatch(ShowLoading());
+        try {
+            const response = await userService.searchServiceProviders(filters);
+            let fetchedProviders = response.result.users;
+
+            // Apply local filtering in case the API doesn't support it
+            fetchedProviders = fetchedProviders.filter((provider) => {
+                const searchQuery = filters.searchQuery.toLowerCase();
+                return (
+                    provider.name.toLowerCase().includes(searchQuery) ||
+                    provider.location.toLowerCase().includes(searchQuery)
+                );
+            });
+
+            // Add static data if missing
+            fetchedProviders = fetchedProviders.map((provider) => ({
+                ...provider,
+                age: provider.age || 25,
+                years: provider.years || 3,
+                clients: provider.clients || 24,
+                specialization: provider.specialization || "Specializes in Hot Stone and Sports massage.",
+                image: provider.image ? `http://localhost:5777/static/images/${provider.image}` : profile,
+            }));
+
+            setServiceProviders(fetchedProviders);
+        } catch (error) {
+            console.error("Error fetching service providers:", error);
+            setServiceProviders([]);
+        }
+        dispatch(HideLoading());
+    };
+
+    useEffect(() => {
+        fetchServiceProviders();
+    }, [filters.searchQuery]);
+
+    const handleFilterChange = (e) => {
+        setFilters((prevFilters) => ({
+            ...prevFilters,
+            [e.target.name]: e.target.value,
+        }));
+    };
+
+
+    const applyFilters = async () => {
+        fetchServiceProviders()
+    };
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -130,6 +195,9 @@ function Home() {
                         <div className="relative">
                             <input
                                 type="text"
+                                name="searchQuery"
+                                value={filters.searchQuery}
+                                onChange={handleFilterChange}
                                 placeholder="Search"
                                 className="pl-6 pr-4 py-2 text-lg rounded-full h-[56px] w-[220px] sm:w-[400px] bg-white shadow outline-0"
                             />
@@ -144,7 +212,7 @@ function Home() {
                             >
                                 <FaSlidersH className="text-black" fontSize={24} />
                             </button>
-                            {isOpenFilter && (
+                            {isOpen && (
                                 <div ref={dropdownRef} className="absolute right-0 w-[234px] mt-2 rounded-2xl shadow-lg bg-white z-50">
                                     <h2 className="text-base font-semibold mb-4 mt-4 text-center">Filters</h2>
 
@@ -153,49 +221,69 @@ function Home() {
                                             <label className="block text-[10px] font-medium ">Location</label>
                                             <input
                                                 type="text"
+                                                name="location"
+                                                value={filters.location}
+                                                onChange={handleFilterChange}
                                                 className="w-full h-[30px] text-[10px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]"
-                                                placeholder="Enter value"
+                                                placeholder="Enter location"
                                             />
                                         </div>
 
                                         <div className="mb-2">
                                             <label className="block text-[10px] font-medium ">Ethnicity</label>
-                                            <select className="w-full h-[30px] text-[10px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]">
-                                                <option>Value 1</option>
-                                                <option>Value 2</option>
-                                                <option>Value 3</option>
+                                            <select
+                                                name="ethnicity"
+                                                value={filters.ethnicity}
+                                                onChange={handleFilterChange}
+                                                className="w-full h-[30px] text-[10px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]"
+                                            >
+                                                <option value="">All</option>
+                                                <option value="Black">Black</option>
+                                                <option value="White">White</option>
+                                                <option value="Asian">Asian</option>
+                                                <option value="Hispanic">Hispanic</option>
+                                                <option value="Other">Other</option>
                                             </select>
                                         </div>
 
                                         <div className="mb-2">
-                                            <label className="block text-[10px] font-medium ">Location</label>
-                                            <div className='flex mt-2'>
-                                                <span className='w-4 h-4 bg-[#DCC792] rounded-full mr-[10px] cursor-pointer'></span>
-                                                <span className='w-4 h-4 bg-[#824238] rounded-full mr-[10px] cursor-pointer'></span>
-                                                <span className='w-4 h-4 bg-[#000000] rounded-full mr-[10px] cursor-pointer'></span>
-                                                <span className='w-4 h-4 bg-[#80624E] rounded-full mr-[10px] cursor-pointer'></span>
+                                            <label className="block text-[10px] font-medium">Hair Color</label>
+                                            <div className="flex mt-2">
+                                                {["Blonde", "Brown", "Black", "Red"].map((color, index) => (
+                                                    <span
+                                                        key={index}
+                                                        className={`w-4 h-4 rounded-full mr-[10px] cursor-pointer ${filters.hairColor === color ? "border-2 border-black" : ""}`}
+                                                        style={{ backgroundColor: color }}
+                                                        onClick={() => setFilters((prev) => ({ ...prev, hairColor: color }))}
+                                                    ></span>
+                                                ))}
                                             </div>
                                         </div>
 
                                         <div className="mb-2">
-                                            <label className="block text-[10px] font-medium ">Height - ({height}cm)</label>
-                                            <div className=' mt-2'>
+                                            <label className="block text-[10px] font-medium">Height - ({height}cm)</label>
+                                            <div className="mt-2">
                                                 <input
                                                     type="range"
                                                     min={minVal}
                                                     max={maxVal}
                                                     value={height}
-                                                    onChange={(e) => setHeight(e.target.value)}
+                                                    onChange={(e) => {
+                                                        const newHeight = e.target.value;
+                                                        setHeight(newHeight);
+                                                        setFilters((prev) => ({ ...prev, maxHeight: newHeight }));
+                                                    }}
                                                     className="range-slider w-full"
                                                     style={{
-                                                        background: `linear-gradient(to right, #000 0%, #000 ${fillPercentage}%, #ddd ${fillPercentage}%, #ddd 100%)`
+                                                        background: `linear-gradient(to right, #000 0%, #000 ${fillPercentage}%, #ddd ${fillPercentage}%, #ddd 100%)`,
                                                     }}
                                                 />
                                             </div>
                                         </div>
+
                                     </div>
 
-                                    <button className='text-sm font-semibold rounded-b-3xl mt-2 text-white bg-[#5E50BF] py-3 w-full'>
+                                    <button onClick={applyFilters} className='text-sm cursor-pointer font-semibold rounded-b-3xl mt-2 text-white bg-[#5E50BF] py-3 w-full'>
                                         Filter
                                     </button>
                                 </div>
@@ -220,9 +308,13 @@ function Home() {
 
             <main className="p-8 py-16">
                 <div className="grid grid-cols-1  md:grid-cols-3 justify-center sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {providers.map((provider) => (
-                        <ServiceCard key={provider.id} provider={provider} />
-                    ))}
+                    {serviceProviders.length > 0 ? (
+                        serviceProviders.map((provider) => (
+                            <ServiceCard key={provider._id} provider={provider} />
+                        ))
+                    ) : (
+                        <p className="text-center col-span-3">No service providers found.</p>
+                    )}
                 </div>
             </main>
 

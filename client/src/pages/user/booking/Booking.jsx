@@ -12,7 +12,7 @@ import { IoMdCard } from "react-icons/io";
 import { CiSettings } from "react-icons/ci";
 import { MdOutlineLogout } from "react-icons/md";
 import userService from '../../../services/userService';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setLoggedOut } from '../../../redux/logoutSlice';
 import { clearUser } from '../../../redux/userSlice';
 import { HideLoading, ShowLoading } from '../../../redux/loaderSlice';
@@ -78,7 +78,7 @@ const UserBooking = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileDropdownRef = useRef(null);
   const dispatch = useDispatch();
-
+  const user = useSelector((state) => state.user.user);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -265,7 +265,7 @@ const UserBooking = () => {
 
           <div className="relative" ref={profileDropdownRef}>
             <img
-              src={profile}
+              src={`http://localhost:5777/static/images/${user.image}` || profile}
               alt="Profile"
               className="w-[60px] min-h-[60px] object-cover rounded-full border-[2px] border-[#858FAD] cursor-pointer"
               onClick={toggleProfileDropdown}

@@ -21,7 +21,7 @@ const createUser = async (userData, role) => {
     callOutType,
   } = userData;
 
-  console.log(image,'image123')
+  console.log(image, "image123");
 
   let existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -182,6 +182,7 @@ const fetchUser = async (userId) => {
     Location: 1,
     city: 1,
     zip: 1,
+    image: 1,
     role: 1,
     _id: 0,
   };
@@ -300,7 +301,9 @@ const searchServiceProviders = async (pageIndex, limit, filters) => {
 
   // Fetch users based on query
   const users = await User.find(query)
-    .select("name email number location ethnicity hairColor height callOutType image createdAt isActive _id")
+    .select(
+      "name email number location ethnicity hairColor height callOutType image createdAt isActive _id"
+    )
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit);

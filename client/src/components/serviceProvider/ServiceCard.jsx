@@ -52,30 +52,30 @@ const ServiceCard = ({ key, provider }) => {
         className="bg-white cursor-pointer relative pt-[59px] rounded-[24px] shadow-md text-center max-w-[260px] flex flex-col items-center"
       >
         <img
-          src={provider.image}
-          alt={`Profile of ${provider.name}`}
+          src={provider?.image}
+          alt={`Profile of ${provider?.name}`}
           className="w-[88px] h-[88px] object-cover rounded-full mx-auto mb-4 absolute top-[-44px]"
         />
 
-        <h2 className="text-[22px] font-semibold">{provider.name}</h2>
+        <h2 className="text-[22px] font-semibold">{provider?.name}</h2>
 
         <p className="text-[#858FAD] text-[10px] mt-[5px]">
-          Age {provider.age} | Located in {provider.location}
+          Age {provider?.age} | Located in {provider?.location}
         </p>
 
         <div className="flex justify-center items-center space-x-2 mt-[19px] mb-[22px]">
           <div className="text-center">
-            <p className="text-[16.53px] font-bold">{provider.years}</p>
+            <p className="text-[16.53px] font-bold">{provider?.years}</p>
             <p className="text-[#858FAD] text-[8px]">Years</p>
           </div>
           <div className="text-center">
-            <p className="text-[16.53px] font-bold">{provider.clients}</p>
+            <p className="text-[16.53px] font-bold">{provider?.clients}</p>
             <p className="text-[#858FAD] text-[8px]">Clients</p>
           </div>
           <div className="text-center pt-[5px]">
             <img
-              src={provider.image}
-              alt={`Profile of ${provider.name}`}
+              src={provider?.image}
+              alt={`Profile of ${provider?.name}`}
               className="w-[14px] h-[14px] rounded-full mx-auto mb-1.5"
             />
 
@@ -85,7 +85,7 @@ const ServiceCard = ({ key, provider }) => {
         </div>
 
         <div className='px-8'>
-          <p className="text-[#858FAD] text-[10px] mb-[22px]">{provider.specialization}</p>
+          <p className="text-[#858FAD] text-[10px] mb-[22px]">{provider?.specialization}</p>
         </div>
 
         <button className="px-4 py-2 h-[44px] w-full border-t border-[#E0E3EA]">
@@ -100,34 +100,34 @@ const ServiceCard = ({ key, provider }) => {
             <div className="w-full flex flex-col items-center">
 
               <img
-                src={provider.image}
-                alt={`Profile of ${provider.name}`}
+                src={provider?.image}
+                alt={`Profile of ${provider?.name}`}
                 className="w-[108px] h-[108px] object-cover rounded-full mx-auto mt-[100px]"
               />
 
               <div className="flex justify-between items-center mt-[17px]">
-                <h2 className="text-[22px] font-semibold">{provider.name}</h2>
+                <h2 className="text-[22px] font-semibold">{provider?.name}</h2>
               </div>
 
               <p className="text-[#858FAD] text-[12.74px] mt-[8px]">
-                Age {provider.age} | Located in {provider.location}
+                Age {provider?.age} | Located in {provider?.location}
               </p>
 
               <div className="hidden sm:flex justify-center items-center space-x-2 mt-[19px] mb-[22px]">
                 <div className="text-center  w-[118px]">
-                  <p className="text-[18.7px] font-bold">{provider.years}</p>
+                  <p className="text-[18.7px] font-bold">{provider?.years}</p>
                   <p className="text-[#858FAD] text-[10.86px]">Years</p>
                 </div>
 
                 <div className="text-center border-l border-r border-[#E0E3EA] w-[118px]">
-                  <p className="text-[18.7px] font-bold">{provider.clients}</p>
+                  <p className="text-[18.7px] font-bold">{provider?.clients}</p>
                   <p className="text-[#858FAD] text-[10.86px]">Clients</p>
                 </div>
 
                 <div className="text-center pt-[5px]  w-[118px]">
                   <img
-                    src={provider.image}
-                    alt={`Profile of ${provider.name}`}
+                    src={provider?.image}
+                    alt={`Profile of ${provider?.name}`}
                     className="w-[19px] h-[19px] rounded-full mx-auto mb-1.5"
                   />
 
@@ -137,7 +137,7 @@ const ServiceCard = ({ key, provider }) => {
               </div>
 
               <div className='hidden sm:flex w-[260px] mx-auto mb-[22px] text-center'>
-                <p className="text-[#858FAD] text-[14px] mb-[22px]">{provider.specialization}</p>
+                <p className="text-[#858FAD] text-[14px] mb-[22px]">{provider?.specialization}</p>
               </div>
             </div>
 
@@ -162,7 +162,7 @@ const ServiceCard = ({ key, provider }) => {
 
               <div className='bg-white rounded-3xl px-[21px] pt-[17px] h-[80px] mt-5'>
                 <span className='text-sm font-semibold pb-[5px]'>Phone Number</span>
-                <p className=' text-[12px]'>+1 123 456 7890</p>
+                <p className=' text-[12px]'>{provider?.number}</p>
               </div>
             </div>
 
@@ -188,17 +188,17 @@ const ServiceCard = ({ key, provider }) => {
             <div className="w-full flex flex-col items-center">
 
               <img
-                src={provider.image}
-                alt={`Profile of ${provider.name}`}
+                src={provider?.image}
+                alt={`Profile of ${provider?.name}`}
                 className="w-[108px] h-[108px] object-cover rounded-full mx-auto mt-[100px]"
               />
 
               <div className="flex justify-between items-center mt-[17px]">
-                <h2 className="text-[22px] font-semibold">{provider.name}</h2>
+                <h2 className="text-[22px] font-semibold">{provider?.name}</h2>
               </div>
 
               <p className="text-[#858FAD] text-[12.74px] mt-[8px]">
-                Age {provider.age} | Located in {provider.location}
+                Age {provider?.age} | Located in {provider?.location}
               </p>
             </div>
           </div>

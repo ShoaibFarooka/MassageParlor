@@ -9,7 +9,7 @@ import { IoMdCard } from "react-icons/io";
 import { CiSettings } from "react-icons/ci";
 import { MdOutlineLogout } from "react-icons/md";
 import userService from '../../../services/userService';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setLoggedOut } from '../../../redux/logoutSlice';
 import { clearUser } from '../../../redux/userSlice';
 import { HideLoading, ShowLoading } from '../../../redux/loaderSlice';
@@ -26,6 +26,10 @@ const UserHome = () => {
     const minVal = 100;
     const maxVal = 200;
     const fillPercentage = ((height - minVal) / (maxVal - minVal)) * 100;
+    const user = useSelector((state) => state.user.user);
+
+    console.log(user,'user123')
+
     // New dropdown state & ref for the profile image
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const profileDropdownRef = useRef(null);
@@ -47,7 +51,16 @@ const UserHome = () => {
             const response = await userService.searchServiceProviders(filters);
             let fetchedProviders = response.result.users;
 
-            // Add static data to the response if missing
+            // Apply local filtering in case the API doesn't support it
+            fetchedProviders = fetchedProviders.filter((provider) => {
+                const searchQuery = filters.searchQuery.toLowerCase();
+                return (
+                    provider.name.toLowerCase().includes(searchQuery) ||
+                    provider.location.toLowerCase().includes(searchQuery)
+                );
+            });
+
+            // Add static data if missing
             fetchedProviders = fetchedProviders.map((provider) => ({
                 ...provider,
                 age: provider.age || 25,
@@ -67,7 +80,8 @@ const UserHome = () => {
 
     useEffect(() => {
         fetchServiceProviders();
-    }, []);
+    }, [filters.searchQuery]); // Fetch data when search query changes
+
 
     const handleFilterChange = (e) => {
         setFilters((prevFilters) => ({
@@ -78,28 +92,7 @@ const UserHome = () => {
 
 
     const applyFilters = async () => {
-        dispatch(ShowLoading());
-        try {
-            const response = await userService.searchServiceProviders(filters);
-            let fetchedProviders = response.result.users;
-
-            // Apply filters on the frontend in case backend filtering is incomplete
-            fetchedProviders = fetchedProviders.filter((provider) => {
-                return (
-                    (!filters.location || provider.location?.toLowerCase().includes(filters.location.toLowerCase())) &&
-                    (!filters.ethnicity || provider.ethnicity === filters.ethnicity) &&
-                    (!filters.hairColor || provider.hairColor === filters.hairColor) &&
-                    (!filters.minHeight || parseInt(provider.height) >= parseInt(filters.minHeight)) &&
-                    (!filters.maxHeight || parseInt(provider.height) <= parseInt(filters.maxHeight)) &&
-                    (!filters.callOutType || provider.callOutType === filters.callOutType)
-                );
-            });
-
-            setServiceProviders(fetchedProviders);
-        } catch (error) {
-            console.error("Error fetching filtered service providers:", error);
-        }
-        dispatch(HideLoading());
+        fetchServiceProviders()
     };
 
 
@@ -155,7 +148,6 @@ const UserHome = () => {
         dispatch(HideLoading());
     };
 
-    console.log(serviceProviders, 'serviceProviders')
 
     return (
         <div>
@@ -166,9 +158,13 @@ const UserHome = () => {
                         <div className="relative">
                             <input
                                 type="text"
+                                name="searchQuery"
+                                value={filters.searchQuery}
+                                onChange={handleFilterChange}
                                 placeholder="Search"
                                 className="pl-6 pr-4 py-2 text-lg rounded-full h-[56px] w-[220px] sm:w-[400px] bg-white shadow outline-0"
                             />
+
 
                             <FaSearch className="absolute right-6 top-1/2 transform -translate-y-1/2 text-black " fontSize={24} />
                         </div>
@@ -239,7 +235,7 @@ const UserHome = () => {
                                                     onChange={(e) => {
                                                         const newHeight = e.target.value;
                                                         setHeight(newHeight);
-                                                        setFilters((prev) => ({ ...prev, minHeight: newHeight }));
+                                                        setFilters((prev) => ({ ...prev, maxHeight: newHeight }));
                                                     }}
                                                     className="range-slider w-full"
                                                     style={{
@@ -281,7 +277,7 @@ const UserHome = () => {
 
                         <div className="relative" ref={profileDropdownRef}>
                             <img
-                                src={profile}
+                                src={`http://localhost:5777/static/images/${user.image}` || profile}
                                 alt="Profile"
                                 className="w-[60px] min-h-[60px] object-cover rounded-full border-[2px] border-[#858FAD] cursor-pointer"
                                 onClick={toggleProfileDropdown}
