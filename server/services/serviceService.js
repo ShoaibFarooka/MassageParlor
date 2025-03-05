@@ -12,6 +12,11 @@ const getServiceById = async (serviceId) => {
   return await Service.findById(serviceId).populate("serviceProvider gallery");
 };
 
+const getServicesByProviderId = async (providerId) => {
+  return await Service.find({ serviceProvider: providerId }).populate("serviceProvider");
+};
+
+
 const updateService = async (serviceId, updatedData) => {
   return await Service.findByIdAndUpdate(serviceId, updatedData, { new: true });
 };
@@ -21,6 +26,7 @@ const deleteService = async (serviceId) => {
 };
 
 module.exports = {
+  getServicesByProviderId,
   createService,
   getServices,
   getServiceById,

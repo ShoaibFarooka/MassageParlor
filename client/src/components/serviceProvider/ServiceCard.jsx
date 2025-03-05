@@ -1,9 +1,12 @@
-import React, { useState, forwardRef } from 'react';
+import React, { useState, forwardRef, useEffect } from 'react';
 import { FaCalendarCheck, FaClock, FaMedal } from 'react-icons/fa'
 import CustomModal from '../CustomModal/CustomModal';
 import service from '../../assets/images/service.png'
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import serviceService from '../../services/serviceService';
+import { useDispatch } from 'react-redux';
+import { HideLoading, ShowLoading } from '../../redux/loaderSlice';
 
 const CustomDateInput = forwardRef(({ value, onClick, placeholder }, ref) => (
   <div className="relative" onClick={onClick}>
@@ -43,6 +46,36 @@ const ServiceCard = ({ key, provider }) => {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(new Date());
+  const dispatch = useDispatch();
+
+  const [services, setServices] = useState([]);
+  const [error, setError] = useState(null);
+
+  const fetchServicesForServiceProvider = async () => {
+    if (!provider?._id) {
+      setError("Provider ID is missing!");
+      return;
+    }
+
+    dispatch(ShowLoading());
+    try {
+      const response = await serviceService.getServicesByProvider(provider?._id);
+      setServices(response);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+      setError("Failed to fetch services.");
+    } finally {
+      dispatch(HideLoading());
+    }
+  };
+
+  useEffect(() => {
+    fetchServicesForServiceProvider();
+  }, [isOpen]);
+
+  console.log(provider, 'provider123')
+
+  console.log(services, 'services123')
 
   return (
     <div className='flex justify-center items-center p-4'>
@@ -169,12 +202,16 @@ const ServiceCard = ({ key, provider }) => {
             <div className='pt-[48px] relative'>
               <h3 className='text-lg font-semibold items-start'>Available services</h3>
 
-              <div className='bg-white rounded-3xl px-[21px] pt-[17px] mt-5 pb-[41px]'>
-                <span className='text-sm font-semibold pb-[5px]'>Swedish Massage</span>
-                <p className='text-[12px]'>A relaxing massage using gentle techniques to soothe muscles and improve circulation.</p>
+              {services.map((data, index) => (
+               <div key={index} className='relative mb-10' >
+                 <div  className='bg-white rounded-3xl px-[21px] pt-[17px] mt-5 pb-[41px]'>
+                  <span className='text-sm font-semibold pb-[5px]'>{data?.name}</span>
+                  <p className='text-[12px]'>A relaxing massage using gentle techniques to soothe muscles and improve circulation.</p>
 
-                <span onClick={() => setBookingOpen(true)} className='bg-[#5E50BF] rounded-full rounded-tr-none w-[212px] h-[44px] flex justify-center items-center text-white text-sm font-semibold absolute right-0 bottom-[-22px] cursor-pointer'>BOOK NOW</span>
-              </div>
+                  <span onClick={() => setBookingOpen(true)} className='bg-[#5E50BF] rounded-full rounded-tr-none w-[212px] h-[44px] flex justify-center items-center text-white text-sm font-semibold absolute right-0 bottom-[-22px] cursor-pointer'>BOOK NOW</span>
+                </div>
+               </div>
+              ))}
             </div>
           </div>
 

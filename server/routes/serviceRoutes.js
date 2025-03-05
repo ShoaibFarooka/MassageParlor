@@ -7,14 +7,16 @@ const serviceSchemas = require("../validationSchemas/serviceSchema");
 // CRUD routes
 router.post(
   "/",
-  authMiddleware.authenticateRequest,
-  validationMiddleware.validateRequest(serviceSchemas.createServiceSchema),
+  // authMiddleware.authenticateRequest,
+  // validationMiddleware.validateRequest(serviceSchemas.createServiceSchema),
   controller.createService
 );
 
 router.get("/", controller.getServices);
 
 router.get("/:id", controller.getServiceById);
+
+router.get("/provider/:providerId", controller.getServicesByProviderId);
 
 router.patch(
   "/:id",

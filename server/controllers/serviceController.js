@@ -28,6 +28,19 @@ const getServiceById = async (req, res, next) => {
   }
 };
 
+const getServicesByProviderId = async (req, res, next) => {
+  try {
+    const services = await serviceService.getServicesByProviderId(req.params.providerId);
+    if (!services || services.length === 0) {
+      return res.status(404).json({ message: "No services found for this provider!" });
+    }
+    res.status(200).json(services);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 const updateService = async (req, res, next) => {
   try {
     const updatedService = await serviceService.updateService(req.params.id, req.body);
@@ -49,6 +62,7 @@ const deleteService = async (req, res, next) => {
 };
 
 module.exports = {
+  getServicesByProviderId,
   createService,
   getServices,
   getServiceById,
