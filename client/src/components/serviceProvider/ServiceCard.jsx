@@ -81,11 +81,11 @@ const ServiceCard = ({ key, provider }) => {
   };
 
   return (
-    <div className='flex justify-center items-center p-4'>
+    <div className='flex justify-center items-center'>
       <div
         onClick={() => { setIsOpen(true); fetchServicesForServiceProvider(); }}
         key={key}
-        className="bg-white cursor-pointer relative pt-[59px] rounded-[24px] shadow-md text-center max-w-[260px] flex flex-col items-center"
+        className="bg-white mr-[18px] mt-[90px] cursor-pointer relative pt-[59px] rounded-[24px] shadow-md text-center max-w-[260px] flex flex-col items-center"
       >
         <img
           src={provider?.image}

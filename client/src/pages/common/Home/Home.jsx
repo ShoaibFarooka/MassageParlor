@@ -94,16 +94,15 @@ const providers = [
 ];
 
 function Home() {
-    const [isOpen, setIsOpen] = useState(true);
     const [isOpenFilter, setIsOpenFilter] = useState(false);
     const dropdownRef = useRef(null);
     const user = useSelector((state) => state.user.user);
-    const [condition, setCondition] = useState(false);
     const navigate = useNavigate();
     const [height, setHeight] = useState(165);
     const minVal = 100;
     const maxVal = 200;
     const fillPercentage = ((height - minVal) / (maxVal - minVal)) * 100;
+    const debounceTimer = useRef(null);
 
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const profileDropdownRef = useRef(null);
@@ -153,7 +152,17 @@ function Home() {
     };
 
     useEffect(() => {
-        fetchServiceProviders();
+        // Clear the previous timer if the user types again
+        if (debounceTimer.current) {
+            clearTimeout(debounceTimer.current);
+        }
+
+        // Set a new timer that runs the API call after 500ms of inactivity
+        debounceTimer.current = setTimeout(() => {
+            fetchServiceProviders();
+        }, 500);
+
+        return () => clearTimeout(debounceTimer.current);
     }, [filters.searchQuery]);
 
     const handleFilterChange = (e) => {
@@ -183,9 +192,23 @@ function Home() {
         setIsOpenFilter((prev) => !prev);
     };
 
+    const clearFilters = () => {
+        setFilters({
+            searchQuery: "",
+            location: "",
+            ethnicity: "",
+            hairColor: "",
+            minHeight: "",
+            maxHeight: "",
+            callOutType: "",
+        });
+        setHeight(165); // Reset height slider to default
+        fetchServiceProviders()
+    };
+
     return (
         <div className=" min-h-screen">
-            <header className="flex flex-wrap items-center justify-between p-4 ">
+            <header className="flex flex-wrap items-center justify-between p-4 pb-0">
                 {/* Left Section */}
                 <div className="flex items-center space-x-4 w-full md:w-auto">
                     <div className='px-4 md:px-16'>
@@ -220,24 +243,24 @@ function Home() {
 
                                     <div className='px-4'>
                                         <div className="mb-2">
-                                            <label className="block text-[10px] font-medium ">Location</label>
+                                            <label className="block text-[12px] font-medium ">Location</label>
                                             <input
                                                 type="text"
                                                 name="location"
                                                 value={filters.location}
                                                 onChange={handleFilterChange}
-                                                className="w-full h-[30px] text-[10px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]"
+                                                className="w-full h-[30px] text-[12px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]"
                                                 placeholder="Enter location"
                                             />
                                         </div>
 
                                         <div className="mb-2">
-                                            <label className="block text-[10px] font-medium ">Ethnicity</label>
+                                            <label className="block text-[12px] font-medium ">Ethnicity</label>
                                             <select
                                                 name="ethnicity"
                                                 value={filters.ethnicity}
                                                 onChange={handleFilterChange}
-                                                className="w-full h-[30px] text-[10px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]"
+                                                className="w-full h-[30px] text-[12px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]"
                                             >
                                                 <option value="">All</option>
                                                 <option value="Black">Black</option>
@@ -249,12 +272,12 @@ function Home() {
                                         </div>
 
                                         <div className="mb-2">
-                                            <label className="block text-[10px] font-medium">Hair Color</label>
+                                            <label className="block text-[12px] font-medium">Hair Color</label>
                                             <div className="flex mt-2">
                                                 {["Blonde", "Brown", "Black", "Red"].map((color, index) => (
                                                     <span
                                                         key={index}
-                                                        className={`w-4 h-4 rounded-full mr-[10px] cursor-pointer ${filters.hairColor === color ? "border-2 border-black" : ""}`}
+                                                        className={`w-5 h-5 rounded-full mr-[10px] cursor-pointer ${filters.hairColor === color ? "border-2 border-[#a3a0a0]" : ""}`}
                                                         style={{ backgroundColor: color }}
                                                         onClick={() => setFilters((prev) => ({ ...prev, hairColor: color }))}
                                                     ></span>
@@ -263,7 +286,7 @@ function Home() {
                                         </div>
 
                                         <div className="mb-2">
-                                            <label className="block text-[10px] font-medium">Height - ({height}cm)</label>
+                                            <label className="block text-[12px] font-medium">Height - ({height}cm)</label>
                                             <div className="mt-2">
                                                 <input
                                                     type="range"
@@ -285,7 +308,15 @@ function Home() {
 
                                     </div>
 
-                                    <button onClick={applyFilters} className='text-sm cursor-pointer font-semibold rounded-b-3xl mt-2 text-white bg-[#5E50BF] py-3 w-full'>
+                                    <button
+                                        onClick={clearFilters}
+                                        className="text-sm cursor-pointer font-semibold mt-2 text-[#5E50BF] bg-white py-3 w-full border-t border-gray-200"
+                                    >
+                                        Clear Filters
+                                    </button>
+
+
+                                    <button onClick={applyFilters} className='text-sm cursor-pointer font-semibold rounded-b-3xl text-white bg-[#5E50BF] py-3 w-full'>
                                         Filter
                                     </button>
                                 </div>
@@ -301,15 +332,15 @@ function Home() {
                     </button>
                     <button
                         onClick={() => navigate('/login')}
-                        className="px-4 py-2 bg-[#5E50BF] w-[120px] h-[45px] text-white font-semibold rounded-full rounded-tr-none"
+                        className="px-4 cursor-pointer py-2 bg-[#5E50BF] w-[120px] h-[45px] text-white font-semibold rounded-full rounded-tr-none"
                     >
                         Sign in
                     </button>
                 </div>
             </header>
 
-            <main className="p-8 py-16">
-                <div className="grid grid-cols-1  md:grid-cols-3 justify-center sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <main className="flex justify-center items-center">
+                <div className="flex flex-wrap justify-center p-4 max-w-full">
                     {serviceProviders.length > 0 ? (
                         serviceProviders.map((provider) => (
                             <ServiceCard key={provider._id} provider={provider} />
@@ -320,35 +351,7 @@ function Home() {
                 </div>
             </main>
 
-            <CustomModal isOpen={isOpen} width={'436px'} contentLabel="Modal">
-                <div className="text-center flex justify-center items-center flex-col">
 
-                    <div className='mt-10'>
-                        <h2 className="text-[30px] font-bold ">Welcome</h2>
-                    </div>
-
-                    <div className='py-4'>
-                        <p className="text-[20px] font-semibold ">Are you 18 years or older?</p>
-                    </div>
-
-                    <div className='mb-8'>
-                        <button onClick={() => setCondition(true)} className="cursor-pointer px-4 py-2 bg-[#D74042] w-[131px] h-[48px] text-white rounded-full rounded-tr-none mr-[12px]">
-                            No
-                        </button>
-
-                        <button onClick={() => { setIsOpen(false); setCondition(false) }} className=" cursor-pointer px-4 py-2  bg-[#5E50BF] w-[131px] h-[48px] text-white rounded-full rounded-tl-none ">
-                            Yes
-                        </button>
-                    </div>
-
-                    {condition && <div className='mb-8'>
-                        <p className='text-[#D74042] font-semibold'>
-                            Sorry, you must be 18+ to access this platform.
-                        </p>
-                    </div>}
-
-                </div>
-            </CustomModal>
         </div>
     );
 }

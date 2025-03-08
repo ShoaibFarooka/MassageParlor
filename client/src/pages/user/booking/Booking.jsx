@@ -21,7 +21,7 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const CustomToolbar = ({ label, onNavigate, onView, view }) => {
   return (
-    <div className="flex justify-between items-center bg-white p-4 rounded-lg ">
+    <div className="flex flex-col sm:flex-row justify-between items-center bg-white p-4 rounded-lg ">
       <div className="flex items-center space-x-4">
         <button
           onClick={() => onNavigate("TODAY")}
@@ -245,7 +245,7 @@ const UserBooking = () => {
 
         <div className="flex space-x-4 items-center">
 
-          <div className='flex items-center space-x-2 border border-[#858FAD] rounded-[12px] px-4 py-2'>
+          {/* <div className='flex items-center space-x-2 border border-[#858FAD] rounded-[12px] px-4 py-2'>
             <IoLocationOutline fontSize={24} className='p-0 m-0' />
 
             <div className='flex flex-col pl-3 sm:pl-6'>
@@ -257,7 +257,7 @@ const UserBooking = () => {
                 Brooklyn
               </span>
             </div>
-          </div>
+          </div> */}
 
           <div className='bg-white rounded-full h-[50px] w-[50px] flex items-center justify-center shadow'>
             <CiBellOn fontSize={24} />
