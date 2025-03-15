@@ -48,6 +48,12 @@ function ProviderSignUpForm() {
     if (!user.password) errors.password = "Password is required";
     if (user.password && user.password !== confirmPassword) errors.confirmPassword = "Passwords do not match";
 
+    if (!user.ethnicity.trim()) errors.ethnicity = "Ethnicity is required";
+    if (!user.location.trim()) errors.location = "Location is required";
+    if (!user.height) errors.height = "Height is required";
+    if (!user.hairColor.trim()) errors.hairColor = "Hair color is required";
+    if (!user.callOutType.trim()) errors.callOutType = "Call-out type is required";
+
     if (Object.keys(errors).length > 0) {
       setError(errors);
       return;
@@ -219,6 +225,7 @@ function ProviderSignUpForm() {
             <option value="Hispanic">Hispanic</option>
             <option value="Other">Other</option>
           </select>
+          {error.ethnicity && <div className="text-red-500 text-sm">{error.ethnicity}</div>}
         </div>
         <div className='mb-6'>
           <label htmlFor="loc" className=" label">
@@ -234,6 +241,7 @@ function ProviderSignUpForm() {
             value={user.location}
             onChange={(e) => setUser({ ...user, location: e.target.value })}
           />
+          {error.location && <div className="text-red-500 text-sm">{error.location}</div>}
         </div>
       </div>
 
@@ -252,6 +260,7 @@ function ProviderSignUpForm() {
             value={user.height}
             onChange={(e) => setUser({ ...user, height: e.target.value })}
           />
+          {error.height && <div className="text-red-500 text-sm">{error.height}</div>}
         </div>
         <div className='mb-6'>
           <label htmlFor="hc" className=" label">
@@ -270,6 +279,7 @@ function ProviderSignUpForm() {
             <option value="Black">Black</option>
             <option value="Red">Red</option>
           </select>
+          {error.hairColor && <div className="text-red-500 text-sm">{error.hairColor}</div>}
 
         </div>
       </div>
@@ -290,6 +300,7 @@ function ProviderSignUpForm() {
           <option value="Out-call">Out-call</option>
           <option value="Both">Both</option>
         </select>
+        {error.callOutType && <div className="text-red-500 text-sm">{error.callOutType}</div>}
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
