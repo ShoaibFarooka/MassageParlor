@@ -8,7 +8,7 @@ const Redirect = () => {
     if (user.role === 'admin') {
         return <Navigate to="/admin/home" />;
     } else if (user.role === 'service-provider') {
-        return <Navigate to="/service-provider/home" />;
+        return <Navigate to="/service/dashboard" />;
     } else if (user.role === 'user') {
         return <Navigate to="/user/home" />;
     }

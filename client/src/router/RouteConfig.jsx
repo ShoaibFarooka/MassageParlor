@@ -2,13 +2,14 @@ import Login from '../pages/common/Login/Login.jsx';
 import Register from '../pages/common/Register/Register.jsx';
 import ForgotPassword from '../pages/common/ForgotPassword/ForgotPassword.jsx';
 import ResetPassword from '../pages/common/ResetPassword/ResetPassword.jsx';
-import CompanyDashboard from '../pages/company/Dashboard/Dashboard.jsx';
-import CompanyCampaigns from '../pages/company/Campaigns/Campaigns.jsx';
 import Redirect from '../pages/common/Redirect/Redirect.jsx';
 import NotFound from '../pages/common/NotFound/NotFound.jsx';
 import Home from '../pages/common/Home/Home.jsx';
 import UserHome from '../pages/user/Home/Home.jsx';
 import UserBooking from '../pages/user/booking/Booking.jsx';
+import Dashboard from '../pages/serviceProvider/dashboard/Dashboard.jsx';
+import Calendar from '../pages/serviceProvider/calendar/Calendar.jsx';
+import Services from '../pages/serviceProvider/services/Services.jsx';
 
 const routes = [
   //user
@@ -24,11 +25,10 @@ const routes = [
   { path: "/user/home", element: <UserHome />, protected: true, authRedirect: false, showSidebar: true },
   { path: "/user/booking", element: <UserBooking />, protected: true, authRedirect: false, showSidebar: true },
 
-
-  //company
-  { path: "/company/dashboard", element: <CompanyDashboard />, protected: false, authRedirect: false, showSidebar: true },
-  { path: "/company/campaigns", element: <CompanyCampaigns />, protected: true, authRedirect: false, showSidebar: true },
-  // { path: "/company", element: <Redirect />, protected: true, showSidebar: true },
+  //service Provider
+  { path: "/service/dashboard", element: <Dashboard />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/service/calendar", element: <Calendar />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/service/services", element: <Services />, protected: true, authRedirect: false, showSidebar: true },
 
   //admin
   // { path: "/company/admin/dashboard", element: <AdminDashboard />, protected: true, showSidebar: true },
