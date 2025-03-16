@@ -11,6 +11,7 @@ import { clearUser } from '../../../redux/userSlice';
 import userService from '../../../services/userService';
 import NewBookings from './components/NewBookings';
 import TotalRevenue from './components/TotalRevenue';
+import TodayBookings from './components/TodayBookings';
 
 const Dashboard = () => {
   const user = useSelector((state) => state.user.user);
@@ -93,6 +94,10 @@ const Dashboard = () => {
         <div className='md:mr-[35px] lg:mr-[51px] w-full'>
           <div className=''>
             <TotalRevenue />
+          </div>
+
+          <div className=''>
+            <TodayBookings />
           </div>
         </div>
 
