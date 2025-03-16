@@ -6,13 +6,18 @@ import { MdOutlineLogout } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import profile from '../../../assets/images/profile.png'
 import ServiceTable from './components/ServicesTable';
+import CreateService from './components/CreateService';
 
 const Services = () => {
   const user = useSelector((state) => state.user.user);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileDropdownRef = useRef(null);
   const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false)
 
+  const handleLogout = () => {
+    console.log('Logging out...');
+  };
   console.log(user, 'user')
 
   useEffect(() => {
@@ -71,11 +76,13 @@ const Services = () => {
         </div>
       </header>
 
-      <button className='w-[203px] ml-auto flex justify-center items-center cursor-pointer my-6 font-semibold bg-[#5E50BF] text-white rounded-full rounded-tr-none h-[52px]'>Add Service</button>
+      <button onClick={() => setIsOpen(true)} className='w-[203px] ml-auto flex justify-center items-center cursor-pointer my-6 font-semibold bg-[#5E50BF] text-white rounded-full rounded-tr-none h-[52px]'>Add Service</button>
 
       <div className='block'>
         <ServiceTable />
       </div>
+
+      <CreateService isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </div>
   )
 }
