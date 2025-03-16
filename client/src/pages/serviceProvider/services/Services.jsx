@@ -73,9 +73,9 @@ const Services = () => {
               <div className="absolute right-0 mt-2 w-[200px] bg-white border border-gray-200 rounded shadow-lg p-4 z-50">
                 <p className="font-bold mb-2">My Account</p>
                 <ul>
-                  <li className="py-1 text-sm cursor-pointer flex items-center"><CgProfile className='mr-2' /> Profile</li>
-                  <li className="py-1 text-sm cursor-pointer flex items-center"><IoMdCard className='mr-2' />                                        Billing</li>
-                  <li className="py-1 text-sm cursor-pointer flex items-center"><CiSettings className='mr-2' />                                        Settings</li>
+                  <li className="py-1 text-sm cursor-pointer flex items-center"><CgProfile className='mr-2' />Profile</li>
+                  <li className="py-1 text-sm cursor-pointer flex items-center"><IoMdCard className='mr-2' />Billing</li>
+                  <li className="py-1 text-sm cursor-pointer flex items-center"><CiSettings className='mr-2' />Settings</li>
                   <li onClick={handleLogout} className="py-1 text-sm cursor-pointer flex items-center text-red-500">
                     <MdOutlineLogout className='mr-2' />
                     Log out
