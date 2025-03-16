@@ -141,7 +141,7 @@ function CreateService({ isOpen, onClose }) {
                             {error.color && <div className="text-red-500 text-sm">{error.color}</div>}
                         </div>
 
-                        <div className="mb-6">
+                        <div className="">
                             <label htmlFor="status" className="label">
                                 Active status
                             </label>
@@ -172,7 +172,8 @@ function CreateService({ isOpen, onClose }) {
                         <textarea
                             id="description"
                             placeholder="Write a short description..."
-                            className="w-full input p-4"
+                            className="w-full p-4 bg-[#F3F2F8] rounded-2xl text-sm outline-0"
+                            rows={6}
                             value={service.description}
                             onChange={(e) => setService({ ...service, description: e.target.value })}
                         />
@@ -180,20 +181,22 @@ function CreateService({ isOpen, onClose }) {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex flex-col md:flex-row items-center md:justify-center gap-4">
-                        <button
-                            type="submit"
-                            className="w-full md:w-auto h-[48px] cursor-pointer px-8 py-2 text-sm font-medium text-white bg-[#5E50BF] rounded-full"
-                        >
-                            Add Service
-                        </button>
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-4 ">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="w-full md:w-auto h-[48px] cursor-pointer px-8 py-2 text-sm font-medium text-[#5E50BF] bg-white border border-[#5E50BF] rounded-full"
+                            className=" h-[48px] cursor-pointer px-8 py-2 text-sm font-medium text-[#5E50BF] border border-[#5E50BF] bg-white  min-w-[200px]  rounded-tr-none  rounded-full"
                         >
                             Cancel
                         </button>
+
+                        <button
+                            type="submit"
+                            className=" md:w-auto h-[48px] cursor-pointer px-8 py-2 text-sm font-medium text-white bg-[#5E50BF] min-w-[200px] rounded-tr-none  rounded-full"
+                        >
+                            Add Service
+                        </button>
+
                     </div>
                 </form>
             </div>
