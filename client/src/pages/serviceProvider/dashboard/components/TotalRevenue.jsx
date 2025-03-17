@@ -62,7 +62,7 @@ const TotalRevenue = () => {
   };
 
   return (
-    <div className="bg-white rounded-[9.35px] shadow-md p-5 w-full mx-auto">
+    <div className="bg-white rounded-[9.35px] shadow p-5 w-full mx-auto">
       <h2 className="text-xl font-bold text-gray-800 mb-4">Total Revenue</h2>
       <Line data={data} options={options} />
     </div>
