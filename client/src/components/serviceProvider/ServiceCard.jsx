@@ -8,6 +8,7 @@ import serviceService from '../../services/serviceService';
 import { useDispatch, useSelector } from 'react-redux';
 import { HideLoading, ShowLoading } from '../../redux/loaderSlice';
 import { useNavigate } from 'react-router-dom';
+import profilePic from '../../assets/images/profile.png'
 
 const CustomDateInput = forwardRef(({ value, onClick, placeholder }, ref) => (
   <div className="relative" onClick={onClick}>
@@ -52,7 +53,7 @@ const ServiceCard = ({ key, provider }) => {
   const user = useSelector((state) => state.user.user);
 
 
-  
+
 
   const [services, setServices] = useState([]);
   const [galleries, setGalleries] = useState([]);
@@ -88,7 +89,7 @@ const ServiceCard = ({ key, provider }) => {
         className="bg-white mr-[18px] mt-[90px] cursor-pointer relative pt-[59px] rounded-[24px] shadow-md text-center max-w-[260px] flex flex-col items-center"
       >
         <img
-          src={provider?.image}
+          src={provider?.image ? provider?.image : profilePic}
           alt={`Profile of ${provider?.name}`}
           className="w-[88px] h-[88px] object-cover rounded-full mx-auto mb-4 absolute top-[-44px]"
         />
