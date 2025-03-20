@@ -184,7 +184,7 @@ const fetchUser = async (userId) => {
     zip: 1,
     image: 1,
     role: 1,
-    _id: 0,
+    _id: 1,
   };
   const user = await User.findById(userId, userProjection);
   if (!user) {

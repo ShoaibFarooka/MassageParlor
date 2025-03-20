@@ -8,10 +8,10 @@ const ServiceSchema = new mongoose.Schema(
       required: true,
     },
     gallery: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "gallery",
-        required: false,
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "gallery",
+      required: false,
+    },
     name: {
       type: String,
       required: true,
@@ -30,6 +30,9 @@ const ServiceSchema = new mongoose.Schema(
     },
     description: {
       type: String,
+    },
+    isActive: {
+      type: Boolean,
     },
     status: {
       type: String,

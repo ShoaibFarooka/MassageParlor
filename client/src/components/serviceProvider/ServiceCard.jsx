@@ -52,9 +52,6 @@ const ServiceCard = ({ key, provider }) => {
   const navigate = useNavigate()
   const user = useSelector((state) => state.user.user);
 
-
-
-
   const [services, setServices] = useState([]);
   const [galleries, setGalleries] = useState([]);
 

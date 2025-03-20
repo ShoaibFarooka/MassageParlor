@@ -1,37 +1,72 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import CustomModal from '../../../../components/CustomModal/CustomModal';
-// import serviceService from '../../../../../services/serviceService'; // Example import if you have a dedicated service
+import serviceService from '../../../../services/serviceService';
+import { useDispatch, useSelector } from 'react-redux';
 
-function CreateService({ isOpen, onClose }) {
-    const navigate = useNavigate();
+function CreateEditService({ isOpen, onClose, serviceId, refreshServices }) {
+    const isEditMode = Boolean(serviceId);
+    const user = useSelector((state) => state.user.user);
 
-    // Form state for creating a service
     const [service, setService] = useState({
+        serviceProvider: user?._id || '', // Ensure it always has a value
+        gallery: '67c8402e6088c63eccaeac66', // Ensure gallery is always set
         name: '',
         price: '',
         duration: '',
-        color: '',
-        status: '',
+        calendarColor: '',
+        isActive: false, // Default to boolean instead of empty string
         description: '',
     });
 
-    // Track validation errors
     const [error, setError] = useState({});
 
-    // Example form submission handler
+    useEffect(() => {
+        if (isEditMode && isOpen) {
+            loadServiceData();
+        } else {
+            setService({
+                serviceProvider: user?._id || '',
+                gallery: '67c8402e6088c63eccaeac66',
+                name: '',
+                price: '',
+                duration: '',
+                calendarColor: '',
+                isActive: false,
+                description: '',
+            });
+            setError({});
+        }
+    }, [serviceId, isOpen, user?._id]);
+
+    const loadServiceData = async () => {
+        try {
+            const data = await serviceService.getServiceById(serviceId);
+            setService({
+                serviceProvider: data.serviceProvider || user?._id,
+                gallery: data.gallery || '67c8402e6088c63eccaeac66',
+                name: data.name,
+                price: data.price,
+                duration: data.duration,
+                calendarColor: data.calendarColor,
+                isActive: Boolean(data.isActive), // Ensure boolean value
+                description: data.description,
+            });
+        } catch (err) {
+            toast.error('Failed to fetch service details.');
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Basic client-side validation
         let errors = {};
 
         if (!service.name.trim()) errors.name = 'Name is required';
         if (!service.price.trim()) errors.price = 'Price is required';
         if (!service.duration.trim()) errors.duration = 'Duration is required';
-        if (!service.color.trim()) errors.color = 'Calendar color is required';
-        if (!service.status.trim()) errors.status = 'Active status is required';
+        if (!service.calendarColor.trim()) errors.calendarColor = 'Calendar calendarColor is required';
+        if (service.isActive === '') errors.isActive = 'Active status is required';
         if (!service.description.trim()) errors.description = 'Description is required';
 
         if (Object.keys(errors).length > 0) {
@@ -42,13 +77,15 @@ function CreateService({ isOpen, onClose }) {
         setError({});
 
         try {
-            // If you have a dedicated service-creation function, use it here:
-            // const response = await serviceService.createService(service);
-
-            // For now, just simulate success:
-            toast.success('Service created successfully');
-            // Navigate or close modal on success:
-            onClose(); // or navigate('/services')
+            if (isEditMode) {
+                await serviceService.updateService(serviceId, service);
+                toast.success('Service updated successfully');
+            } else {
+                await serviceService.createService(service);
+                toast.success('Service created successfully');
+            }
+            refreshServices();
+            onClose();
         } catch (err) {
             console.error(err);
             toast.error('An error occurred. Please try again later.');
@@ -56,23 +93,22 @@ function CreateService({ isOpen, onClose }) {
     };
 
     return (
-        <CustomModal isOpen={isOpen} onRequestClose={onClose} width="697px" contentLabel="Add Service Modal">
-            {/* Heading */}
+        <CustomModal
+            isOpen={isOpen}
+            onRequestClose={onClose}
+            width="697px"
+            contentLabel={isEditMode ? "Edit Service Modal" : "Add Service Modal"}
+        >
             <div className='px-[48px] py-[43px]'>
                 <div className="text-center mb-6">
-                    <h2 className="text-2xl font-bold">Add a service</h2>
+                    <h2 className="text-2xl font-bold">{isEditMode ? 'Edit Service' : 'Add a service'}</h2>
                     <p className="text-gray-500">Enter service details to continue</p>
                 </div>
 
-                {/* Form */}
                 <form onSubmit={handleSubmit} autoComplete="off">
-                    {/* Row 1: Name, Price */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                        {/* Name */}
                         <div>
-                            <label htmlFor="name" className="label">
-                                Name
-                            </label>
+                            <label htmlFor="name" className="label">Name</label>
                             <input
                                 id="name"
                                 type="text"
@@ -84,11 +120,8 @@ function CreateService({ isOpen, onClose }) {
                             {error.name && <div className="text-red-500 text-sm">{error.name}</div>}
                         </div>
 
-                        {/* Price (R) */}
                         <div>
-                            <label htmlFor="price" className="label">
-                                Price (R)
-                            </label>
+                            <label htmlFor="price" className="label">Price (R)</label>
                             <input
                                 id="price"
                                 type="text"
@@ -101,13 +134,9 @@ function CreateService({ isOpen, onClose }) {
                         </div>
                     </div>
 
-                    {/* Row 2: Duration, Calendar Color */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        {/* Duration */}
                         <div>
-                            <label htmlFor="duration" className="label">
-                                Duration
-                            </label>
+                            <label htmlFor="duration" className="label">Duration</label>
                             <input
                                 id="duration"
                                 type="text"
@@ -119,56 +148,40 @@ function CreateService({ isOpen, onClose }) {
                             {error.duration && <div className="text-red-500 text-sm">{error.duration}</div>}
                         </div>
 
-                        {/* Calendar Color */}
                         <div>
-                            <label htmlFor="color" className="label">
-                                Calendar Color
-                            </label>
+                            <label htmlFor="calendarColor" className="label">Calendar calendarColor</label>
                             <select
-                                id="color"
+                                id="calendarColor"
                                 className="w-full input"
-                                value={service.color}
-                                onChange={(e) => setService({ ...service, color: e.target.value })}
+                                value={service.calendarColor}
+                                onChange={(e) => setService({ ...service, calendarColor: e.target.value })}
                             >
-                                <option disabled value="">
-                                    Select One
-                                </option>
+                                <option disabled value="">Select One</option>
                                 <option value="Red">Red</option>
                                 <option value="Blue">Blue</option>
                                 <option value="Green">Green</option>
                                 <option value="Purple">Purple</option>
                             </select>
-                            {error.color && <div className="text-red-500 text-sm">{error.color}</div>}
+                            {error.calendarColor && <div className="text-red-500 text-sm">{error.calendarColor}</div>}
                         </div>
 
-                        <div className="">
-                            <label htmlFor="status" className="label">
-                                Active status
-                            </label>
+                        <div>
+                            <label htmlFor="isActive" className="label">Active Status</label>
                             <select
-                                id="status"
+                                id="isActive"
                                 className="w-full input"
-                                value={service.status}
-                                onChange={(e) => setService({ ...service, status: e.target.value })}
+                                value={service.isActive ? 'true' : 'false'}
+                                onChange={(e) => setService({ ...service, isActive: e.target.value === 'true' })}
                             >
-                                <option disabled value="">
-                                    Select One
-                                </option>
-                                <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
+                                <option value="true">Active</option>
+                                <option value="false">Inactive</option>
                             </select>
-                            {error.status && <div className="text-red-500 text-sm">{error.status}</div>}
+                            {error.isActive && <div className="text-red-500 text-sm">{error.isActive}</div>}
                         </div>
                     </div>
 
-                    {/* Row 3: Active Status */}
-
-
-                    {/* Description */}
                     <div className="mb-6">
-                        <label htmlFor="description" className="label">
-                            The description
-                        </label>
+                        <label htmlFor="description" className="label">The description</label>
                         <textarea
                             id="description"
                             placeholder="Write a short description..."
@@ -180,28 +193,24 @@ function CreateService({ isOpen, onClose }) {
                         {error.description && <div className="text-red-500 text-sm">{error.description}</div>}
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-4 ">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className=" h-[48px] cursor-pointer px-8 py-2 text-sm font-medium text-[#5E50BF] border border-[#5E50BF] bg-white  min-w-[200px]  rounded-tr-none  rounded-full"
-                        >
-                            Cancel
-                        </button>
 
-                        <button
-                            type="submit"
-                            className=" md:w-auto h-[48px] cursor-pointer px-8 py-2 text-sm font-medium text-white bg-[#5E50BF] min-w-[200px] rounded-tr-none  rounded-full"
-                        >
-                            Add Service
-                        </button>
+                  <div className='flex justify-center items-center'>
+                  <button
+                        type="button"
+                        onClick={onClose}
+                        className="h-[48px] mr-2 cursor-pointer px-8 py-2 text-sm font-medium text-[#5E50BF] border border-[#5E50BF] bg-white min-w-[200px] rounded-tr-none rounded-full"
+                    >
+                        Cancel
+                    </button>
+                    <button type="submit" className="md:w-auto h-[48px] cursor-pointer px-8 py-2 text-sm font-medium text-white bg-[#5E50BF] min-w-[200px] rounded-tr-none rounded-full">
+                        {isEditMode ? 'Update Service' : 'Add Service'}
+                    </button>
+                  </div>
 
-                    </div>
                 </form>
             </div>
         </CustomModal>
     );
 }
 
-export default CreateService;
+export default CreateEditService;

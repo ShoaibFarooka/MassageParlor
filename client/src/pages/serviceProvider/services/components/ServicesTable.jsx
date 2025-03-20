@@ -1,28 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { RiDeleteBin6Line } from "react-icons/ri";
+import serviceService from '../../../../services/serviceService';
+import { useDispatch, useSelector } from 'react-redux';
+import { HideLoading, ShowLoading } from '../../../../redux/loaderSlice';
 
 function ServiceTable() {
-  const [services, setServices] = useState([
-    {
-      id: 1,
-      name: 'Swedish Massage',
-      description: 'A relaxing massage using gentle techniques...',
-      price: 'R920.00',
-      duration: '1h',
-      calendarColor: '#A78BFA', // example color
-      isActive: true,
-    },
-    {
-      id: 2,
-      name: 'Swedish Massage',
-      description: 'A relaxing massage using gentle techniques...',
-      price: 'R920.00',
-      duration: '0.5h',
-      calendarColor: '#A78BFA',
-      isActive: false,
-    },
-  ]);
+  const [services, setServices] = useState([]);
+  const user = useSelector((state) => state.user.user);
+  const dispatch = useDispatch();
+
+  const loadServiceData = async () => {
+  dispatch(ShowLoading());
+      try {
+        const response = await serviceService.getServicesByProvider(user?._id);
+        setServices(response);
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      } finally {
+        dispatch(HideLoading());
+      }
+};
+
+useEffect(()=>{
+  loadServiceData()
+},[])
 
   // Toggle active status
   const handleToggle = (id) => {

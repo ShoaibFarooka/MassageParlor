@@ -11,7 +11,7 @@ const createService = async (req, res, next) => {
 
 const getServices = async (req, res, next) => {
   try {
-    const services = await serviceService.getServices();
+    const services = await serviceService.getServices(req.query);
     res.status(200).json(services);
   } catch (error) {
     next(error);
