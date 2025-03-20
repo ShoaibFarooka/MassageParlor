@@ -5,29 +5,34 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import serviceService from '../../../../services/serviceService';
 import { useDispatch, useSelector } from 'react-redux';
 import { HideLoading, ShowLoading } from '../../../../redux/loaderSlice';
+import DeleteConfirmationModal from '../../../../components/Delete/DeleteConfirmationModal';
+import CreateEditService from './CreateService';
 
 function ServiceTable() {
   const [services, setServices] = useState([]);
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [selectedServiceId, setSelectedServiceId] = useState(null);
+  const [editOpen, setEditOpen] = useState(false);
+
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
 
   const loadServiceData = async () => {
-  dispatch(ShowLoading());
-      try {
-        const response = await serviceService.getServicesByProvider(user?._id);
-        setServices(response);
-      } catch (error) {
-        console.error("Error fetching services:", error);
-      } finally {
-        dispatch(HideLoading());
-      }
-};
+    dispatch(ShowLoading());
+    try {
+      const response = await serviceService.getServicesByProvider(user?._id);
+      setServices(response);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    } finally {
+      dispatch(HideLoading());
+    }
+  };
 
-useEffect(()=>{
-  loadServiceData()
-},[])
+  useEffect(() => {
+    loadServiceData()
+  }, [])
 
-  // Toggle active status
   const handleToggle = (id) => {
     setServices((prevServices) =>
       prevServices.map((service) =>
@@ -38,13 +43,32 @@ useEffect(()=>{
     );
   };
 
-  // Example edit & delete handlers
   const handleEdit = (id) => {
-    alert(`Editing service with ID: ${id}`);
+    setSelectedServiceId(id);
+    setEditOpen(true);
   };
 
-  const handleDelete = (id) => {
-    alert(`Deleting service with ID: ${id}`);
+  const handleDeleteClick = (id) => {
+    setSelectedServiceId(id);
+    setDeleteOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selectedServiceId) return;
+    dispatch(ShowLoading());
+    try {
+      await serviceService.deleteService(selectedServiceId);
+      setServices((prevServices) => prevServices.filter(service => service.id !== selectedServiceId));
+      toast.success("Service deleted successfully");
+      loadServiceData()
+    } catch (error) {
+      console.error("Error deleting service:", error);
+      toast.error("Failed to delete service");
+    } finally {
+      dispatch(HideLoading());
+      setDeleteOpen(false);
+      setSelectedServiceId(null);
+    }
   };
 
   return (
@@ -126,13 +150,13 @@ useEffect(()=>{
               </td>
               <td className=" flex justify-center items-center h-[79.96px] pr-6">
                 <button
-                  onClick={() => handleEdit(service.id)}
+                  onClick={() => handleEdit(service._id)}
                   className="border cursor-pointer border-[#D5D5D5] px-[15.8px] py-[8.17px] rounded-l-[7.69px]"
                 >
                   <FaEdit fontSize={14} color='#0E1E40' />
                 </button>
                 <button
-                  onClick={() => handleDelete(service.id)}
+                  onClick={() => handleDeleteClick(service._id)}
                   className="border cursor-pointer border-[#D5D5D5] px-[15.8px] py-[8.17px] border-l-0 rounded-r-[7.69px]"
                 >
                   <RiDeleteBin6Line fontSize={14} color='#EF3826' />
@@ -142,6 +166,19 @@ useEffect(()=>{
           ))}
         </tbody>
       </table>
+
+      <DeleteConfirmationModal
+        isOpen={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        onConfirm={() => handleConfirmDelete()}
+      />
+      <CreateEditService
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        serviceId={selectedServiceId}
+        refreshServices={loadServiceData}
+      />
+
     </div>
   );
 }

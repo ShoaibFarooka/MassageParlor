@@ -43,8 +43,8 @@ function CreateEditService({ isOpen, onClose, serviceId, refreshServices }) {
         try {
             const data = await serviceService.getServiceById(serviceId);
             setService({
-                serviceProvider: data.serviceProvider || user?._id,
-                gallery: data.gallery || '67c8402e6088c63eccaeac66',
+                serviceProvider: data.serviceProvider._id || user?._id,
+                gallery: data.gallery._id || '67c8402e6088c63eccaeac66',
                 name: data.name,
                 price: data.price,
                 duration: data.duration,
@@ -63,7 +63,7 @@ function CreateEditService({ isOpen, onClose, serviceId, refreshServices }) {
         let errors = {};
 
         if (!service.name.trim()) errors.name = 'Name is required';
-        if (!service.price.trim()) errors.price = 'Price is required';
+        if (!service.price) errors.price = 'Price is required';
         if (!service.duration.trim()) errors.duration = 'Duration is required';
         if (!service.calendarColor.trim()) errors.calendarColor = 'Calendar calendarColor is required';
         if (service.isActive === '') errors.isActive = 'Active status is required';
