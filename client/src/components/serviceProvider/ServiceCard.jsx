@@ -212,7 +212,8 @@ const ServiceCard = ({ key, provider }) => {
               {services?.map((data, index) => (
                 <div key={index} className='relative mb-10' >
                   <div className='bg-white rounded-3xl px-[21px] pt-[17px] mt-5 pb-[41px]'>
-                    <span className='text-sm font-semibold pb-[5px]'>{data?.name}</span>
+                    <span className='text-sm font-semibold pb-[5px]'>{data?.name} - {data?.duration}h</span>
+                    <span className='text-[#5E50BF] text-[12px] font-bold block pb-[5px]'>Rs{data?.price}</span>
                     <p className='text-[12px]'>{data?.description}</p>
 
                     <button disabled={!provider?.isActive} onClick={() => { user ? setBookingOpen(true) : navigate('/login') }} className={`bg-[#5E50BF] rounded-full rounded-tr-none w-[212px] h-[44px] flex justify-center items-center text-white text-sm font-semibold absolute right-0 bottom-[-22px] cursor-pointer ${!provider?.isActive && 'opacity-85'}`}>BOOK NOW</button>
