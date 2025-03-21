@@ -18,6 +18,7 @@ import { clearUser } from '../../../redux/userSlice';
 import { HideLoading, ShowLoading } from '../../../redux/loaderSlice';
 import Cookies from 'js-cookie';
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import bookingService from '../../../services/bookingService';
 
 const CustomToolbar = ({ label, onNavigate, onView, view }) => {
   return (
@@ -161,6 +162,51 @@ const UserBooking = () => {
     }
   ]);
 
+  const parseTime = (timeString) => {
+    const [time, modifier] = timeString.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
+  
+    if (modifier === "PM" && hours !== 12) hours += 12;
+    if (modifier === "AM" && hours === 12) hours = 0;
+  
+    return { hours, minutes };
+  };
+  
+
+  const getBookingData = async () => {
+    dispatch(ShowLoading());
+    try {
+      const response = await bookingService.getBookingsByUserId(user?._id);
+      
+      const formattedEvents = response.map((booking) => {
+        const startDate = new Date(booking.startDate);
+        const startTime = parseTime(booking.startTime);
+        const endTime = parseTime(booking.endTime);
+  
+        return {
+          id: booking._id,
+          title: booking.service_id.name,
+          start: new Date(startDate.setHours(startTime.hours, startTime.minutes)),
+          end: new Date(startDate.setHours(endTime.hours, endTime.minutes)),
+          color: booking.color,
+        };
+      });
+  
+      console.log(formattedEvents, 'saaa');
+      console.log(response, 'response123');
+  
+      setEvents(formattedEvents);
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
+    } finally {
+      dispatch(HideLoading());
+    }
+  };
+  
+
+  useEffect(() => {
+    getBookingData();
+  }, [user?._id]);
 
   return (
     <div>

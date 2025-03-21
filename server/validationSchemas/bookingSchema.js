@@ -1,25 +1,26 @@
-const Joi = require("joi");
+const yup = require("yup");
 
-const createBookingSchema = Joi.object({
-  serviceId: Joi.string().required(),
-  userId: Joi.string().required(),
-  startDate: Joi.date().required(),
-  startTime: Joi.string().required(),
-  endTime: Joi.string().required(),
-  color: Joi.string().required(),
-  status: Joi.string().required(),
-  price: Joi.number().required(),
+
+const createBookingSchema = yup.object({
+  service_id: yup.string().required(),
+  user_id: yup.string().required(),
+  startDate: yup.date().required(),
+  startTime: yup.string().required(),
+  endTime: yup.string().required(),
+  color: yup.string().optional(),
+  status: yup.string().required(),
+  price: yup.number().required(),
 });
 
-const updateBookingSchema = Joi.object({
-  startDate: Joi.date().optional(),
-  startTime: Joi.string().optional(),
-  endTime: Joi.string().optional(),
-  price: Joi.number().optional(),
+const updateBookingSchema = yup.object({
+  startDate: yup.date().optional(),
+  startTime: yup.string().optional(),
+  endTime: yup.string().optional(),
+  price: yup.number().optional(),
 });
 
-const bookingIdSchema = Joi.object({
-  _id: Joi.string().required(),
+const bookingIdSchema = yup.object({
+  _id: yup.string().required(),
 });
 
 module.exports = {

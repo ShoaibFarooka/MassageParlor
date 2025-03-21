@@ -5,19 +5,19 @@ const createBooking = async (bookingData) => {
 };
 
 const getBookings = async () => {
-  return await Booking.find().populate("serviceId userId");
+  return await Booking.find().populate("service_id user_id");
 };
 
 const getBookingById = async (bookingId) => {
-  return await Booking.findById(bookingId).populate("serviceId userId");
+  return await Booking.findById(bookingId).populate("service_id user_id");
 };
 
 const getBookingsByUserId = async (userId) => {
-  return await Booking.find({ userId }).populate("serviceId userId");
+  return await Booking.find({ user_id: userId }).populate("service_id user_id");
 };
 
 const getBookingsByServiceId = async (serviceId) => {
-  return await Booking.find({ serviceId }).populate("serviceId userId");
+  return await Booking.find({ serviceId }).populate("service_id user_id");
 };
 
 const updateBooking = async (bookingId, updatedData) => {

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { HideLoading, ShowLoading } from '../../redux/loaderSlice';
 import { useNavigate } from 'react-router-dom';
 import profilePic from '../../assets/images/profile.png'
+import bookingService from '../../services/bookingService';
 
 const CustomDateInput = forwardRef(({ value, onClick, placeholder }, ref) => (
   <div className="relative" onClick={onClick}>
@@ -51,9 +52,9 @@ const ServiceCard = ({ key, provider }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate()
   const user = useSelector((state) => state.user.user);
-
   const [services, setServices] = useState([]);
   const [galleries, setGalleries] = useState([]);
+  const [booking, setBooking] = useState()
 
   const fetchServicesForServiceProvider = async () => {
 
@@ -73,6 +74,60 @@ const ServiceCard = ({ key, provider }) => {
       setGalleries(gallery[0])
     } catch (error) {
       console.error("Error fetching services:", error);
+    } finally {
+      dispatch(HideLoading());
+    }
+  };
+
+  const handleBooking = (data) => {
+    setBooking(data)
+    setBookingOpen(true)
+  }
+  const handleBookingSubmit = async (e) => {
+    e.preventDefault();
+  
+    // Validate the selected date and time
+    if (!selectedDate) {
+      alert('Please select a date');
+      return;
+    }
+  
+    if (!selectedTime) {
+      alert('Please select a time');
+      return;
+    }
+  
+    // Format the start date and time
+    const startDate = selectedDate.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    const startTime = selectedTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }); // Format: HH:MM AM/PM
+  
+    // Calculate the end time by adding the duration (in hours) to the start time
+    const durationInHours = booking?.duration || 1; // Default to 1 hour if duration is not provided
+    const endTime = new Date(selectedTime.getTime() + durationInHours * 60 * 60 * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }); // Format: HH:MM AM/PM
+  
+    // Prepare the booking data according to the schema
+    const bookingData = {
+      user_id: user?._id, // Assuming user contains the logged-in user details
+      service_id: booking?._id, // Assuming booking contains the service details
+      startDate: startDate,
+      startTime: startTime,
+      endTime: endTime,
+      price: booking?.price, // Assuming booking contains the price
+      status: 'Pending', // Default status
+    };
+  
+    try {
+      dispatch(ShowLoading());
+      // Call the API to create the booking
+      const response = await bookingService.createBooking(bookingData);
+      if (response) {
+        alert('Booking created successfully');
+        setBookingOpen(false); // Close the booking modal
+        // Optionally, you can refresh the bookings list or navigate to a different page
+      }
+    } catch (error) {
+      console.error('Error creating booking:', error);
+      alert('An error occurred. Please try again later.');
     } finally {
       dispatch(HideLoading());
     }
@@ -216,7 +271,7 @@ const ServiceCard = ({ key, provider }) => {
                     <span className='text-[#5E50BF] text-[12px] font-bold block pb-[5px]'>Rs{data?.price}</span>
                     <p className='text-[12px]'>{data?.description}</p>
 
-                    <button disabled={!provider?.isActive} onClick={() => { user ? setBookingOpen(true) : navigate('/login') }} className={`bg-[#5E50BF] rounded-full rounded-tr-none w-[212px] h-[44px] flex justify-center items-center text-white text-sm font-semibold absolute right-0 bottom-[-22px] cursor-pointer ${!provider?.isActive && 'opacity-85'}`}>BOOK NOW</button>
+                    <button disabled={!provider?.isActive} onClick={() => { user ? handleBooking(data) : navigate('/login') }} className={`bg-[#5E50BF] rounded-full rounded-tr-none w-[212px] h-[44px] flex justify-center items-center text-white text-sm font-semibold absolute right-0 bottom-[-22px] cursor-pointer ${!provider?.isActive && 'opacity-85'}`}>BOOK NOW</button>
                   </div>
                 </div>
               ))}
@@ -229,19 +284,15 @@ const ServiceCard = ({ key, provider }) => {
       <CustomModal isOpen={bookingOpen} onRequestClose={() => setBookingOpen(false)} contentLabel="Modal" width='400px'>
         <div className="px-4 md:px-6 ">
           <div className=''>
-
             <div className="w-full flex flex-col items-center">
-
               <img
                 src={provider?.image}
                 alt={`Profile of ${provider?.name}`}
                 className="w-[108px] h-[108px] object-cover rounded-full mx-auto mt-[100px]"
               />
-
               <div className="flex justify-between items-center mt-[17px]">
                 <h2 className="text-[22px] font-semibold">{provider?.name}</h2>
               </div>
-
               <p className="text-[#858FAD] text-[12.74px] mt-[8px]">
                 Age {provider?.age} | Located in {provider?.location}
               </p>
@@ -249,9 +300,9 @@ const ServiceCard = ({ key, provider }) => {
           </div>
 
           <div className='bg-white rounded-3xl px-[21px] py-[17px]  mt-5'>
-            <span className='text-sm font-semibold pb-[5px]'>Phone Number</span>
-            <span className='text-[#5E50BF] text-[12px] font-bold block pb-[5px]'>Rs980.00</span>
-            <p className=' text-[12px]'>A relaxing massage using gentle techniques to soothe muscles and improve circulation.</p>
+            <span className='text-sm font-semibold pb-[5px]'>{booking?.name} - {booking?.duration}h</span>
+            <span className='text-[#5E50BF] text-[12px] font-bold block pb-[5px]'>Rs{booking?.price}</span>
+            <p className=' text-[12px]'>{booking?.description}</p>
           </div>
 
           <div className='mt-6 pb-20 md:pb-32'>
@@ -259,7 +310,6 @@ const ServiceCard = ({ key, provider }) => {
               Booking date and time
             </label>
             <div className="">
-              {/* Date Picker */}
               <DatePicker
                 selected={selectedDate}
                 onChange={(date) => setSelectedDate(date)}
@@ -267,7 +317,6 @@ const ServiceCard = ({ key, provider }) => {
                 dateFormat="MMM, dd yyyy"
               />
 
-              {/* Time Picker */}
               <DatePicker
                 selected={selectedTime}
                 onChange={(time) => setSelectedTime(time)}
@@ -282,8 +331,18 @@ const ServiceCard = ({ key, provider }) => {
           </div>
 
           <div className='flex pb-8'>
-            <span className='border border-[#5E50BF] mr-2 h-[46px] rounded-full rounded-tr-none flex justify-center items-center w-full text-[#5E50BF] text-sm font-semibold cursor-pointer'>Cancel</span>
-            <span className='bg-[#5E50BF] rounded-full h-[46px] rounded-tr-none flex justify-center items-center w-full text-white text-sm font-semibold cursor-pointer'>Confirm</span>
+            <span
+              className='border border-[#5E50BF] mr-2 h-[46px] rounded-full rounded-tr-none flex justify-center items-center w-full text-[#5E50BF] text-sm font-semibold cursor-pointer'
+              onClick={() => setBookingOpen(false)}
+            >
+              Cancel
+            </span>
+            <span
+              className='bg-[#5E50BF] rounded-full h-[46px] rounded-tr-none flex justify-center items-center w-full text-white text-sm font-semibold cursor-pointer'
+              onClick={handleBookingSubmit}
+            >
+              Confirm
+            </span>
           </div>
         </div>
       </CustomModal>
