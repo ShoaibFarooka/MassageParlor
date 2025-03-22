@@ -23,10 +23,12 @@ const Calendar = () => {
     }
   };
 
-
   useEffect(() => {
-    getBookingData();
+    if (user?._id) {
+      getBookingData()
+    }
   }, [user?._id]);
+
   return (
     <div>
       <ServicesHeader title={'Calender'} />

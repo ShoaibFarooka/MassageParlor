@@ -43,7 +43,8 @@ const createUserSchema = yup.object().shape({
   city: yup.string().trim().required('City is required'),
   zip: yup.string().trim().required('Zip is required'),
   password: yup.string().trim().required('Password is required'),
-  notes: yup.string().trim()
+  notes: yup.string().trim(),
+  isOnline: yup.boolean().optional(),
 });
 
 const updateUserSchema = yup.object().shape({
@@ -55,6 +56,7 @@ const updateUserSchema = yup.object().shape({
   address: yup.string().trim(),
   city: yup.string().trim(),
   zip: yup.string().trim(),
+  isOnline: yup.boolean().optional(),
   // password: yup.string().trim(),
 });
 

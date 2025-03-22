@@ -250,7 +250,7 @@ const ServiceCard = ({ key, provider }) => {
             <div className='pt-[48px] relative'>
               <h3 className='text-lg font-semibold items-start'>Available services</h3>
               {!provider?.isActive && <p className='text-sm text-red-500'>This Service Provider is not Active</p>}
-              {services?.map((data, index) => (
+              {services.filter(item=> item.isActive)?.map((data, index) => (
                 <div key={index} className='relative mb-10' >
                   <div className='bg-white rounded-3xl px-[21px] pt-[17px] mt-5 pb-[41px]'>
                     <span className='text-sm font-semibold pb-[5px]'>{data?.name} - {data?.duration}h</span>
