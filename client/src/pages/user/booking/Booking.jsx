@@ -135,29 +135,29 @@ const UserBooking = () => {
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentView, setCurrentView] = useState("month");
-  const [events, setEvents] = useState([  ]);
+  const [events, setEvents] = useState([]);
 
   const parseTime = (timeString) => {
     const [time, modifier] = timeString.split(" ");
     let [hours, minutes] = time.split(":").map(Number);
-  
+
     if (modifier === "PM" && hours !== 12) hours += 12;
     if (modifier === "AM" && hours === 12) hours = 0;
-  
+
     return { hours, minutes };
   };
-  
+
 
   const getBookingData = async () => {
     dispatch(ShowLoading());
     try {
       const response = await bookingService.getBookingsByUserId(user?._id);
-      
+
       const formattedEvents = response.map((booking) => {
         const startDate = new Date(booking.startDate);
         const startTime = parseTime(booking.startTime);
         const endTime = parseTime(booking.endTime);
-  
+
         return {
           id: booking._id,
           title: booking.service_id.name,
@@ -166,10 +166,7 @@ const UserBooking = () => {
           color: booking.color,
         };
       });
-  
-      console.log(formattedEvents, 'saaa');
-      console.log(response, 'response123');
-  
+
       setEvents(formattedEvents);
     } catch (error) {
       console.error("Error fetching bookings:", error);
@@ -177,7 +174,7 @@ const UserBooking = () => {
       dispatch(HideLoading());
     }
   };
-  
+
 
   useEffect(() => {
     getBookingData();
@@ -320,11 +317,15 @@ const UserBooking = () => {
           className="border rounded-md"
           eventPropGetter={(event) => ({
             style: {
-              backgroundColor: event.color || "#5E50BF",
-              color: "#fff",
-              borderRadius: "8px",
-              border: "none",
+              backgroundColor: `${event.color}80`,
+              color: "black",
+              borderTop: '0px',
+              borderRight: '0px',
+              borderBottom: '0px',
+              borderRadius: "10px",
+              borderLeft: `10px solid ${event.color}`,
               padding: "5px",
+              height: '100px',
             },
           })}
           date={currentDate}

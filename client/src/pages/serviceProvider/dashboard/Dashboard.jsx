@@ -36,11 +36,11 @@ const Dashboard = () => {
       <div className='flex flex-col md:flex-row w-full mt-[35px] '>
         <div className='md:mr-[35px] lg:mr-[51px] w-full'>
           <div className=''>
-            <TotalRevenue />
+            <TotalRevenue events={events}  />
           </div>
 
           <div className=''>
-            <TodayBookings />
+            <TodayBookings  events={events} />
           </div>
         </div>
 
