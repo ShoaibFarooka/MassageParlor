@@ -132,6 +132,10 @@ const ServiceCard = ({ key, provider }) => {
           className="w-[88px] h-[88px] object-cover rounded-full mx-auto mb-4 absolute top-[-44px]"
         />
 
+        <div className={`absolute right-[82px] border-1 border-white top-3 ${provider.isOnline ? 'bg-[#02A847]' : 'bg-[#858FAD]'} rounded-full w-[14px] h-[14px] flex justify-center items-center`}>
+        </div>
+
+
         <h2 className="text-[22px] font-semibold">{provider?.name}</h2>
 
         <p className="text-[#858FAD] text-[10px] mt-[5px]">
@@ -174,11 +178,16 @@ const ServiceCard = ({ key, provider }) => {
 
             <div className="w-full flex flex-col items-center">
 
-              <img
-                src={provider?.image}
-                alt={`Profile of ${provider?.name}`}
-                className="w-[108px] h-[108px] object-cover rounded-full mx-auto mt-[100px]"
-              />
+              <div className='relative'>
+                <img
+                  src={provider?.image}
+                  alt={`Profile of ${provider?.name}`}
+                  className="w-[108px] h-[108px] object-cover rounded-full mx-auto mt-[100px]"
+                />
+
+                <div className={`absolute right-1.5 border-1 border-white bottom-3 ${provider.isOnline ? 'bg-[#02A847]' : 'bg-[#858FAD]'} rounded-full w-[14px] h-[14px] flex justify-center items-center`}>
+                </div>
+              </div>
 
               <div className="flex justify-between items-center mt-[17px]">
                 <h2 className="text-[22px] font-semibold">{provider?.name}</h2>
@@ -250,7 +259,7 @@ const ServiceCard = ({ key, provider }) => {
             <div className='pt-[48px] relative'>
               <h3 className='text-lg font-semibold items-start'>Available services</h3>
               {!provider?.isActive && <p className='text-sm text-red-500'>This Service Provider is not Active</p>}
-              {services.filter(item=> item.isActive)?.map((data, index) => (
+              {services.filter(item => item.isActive)?.map((data, index) => (
                 <div key={index} className='relative mb-10' >
                   <div className='bg-white rounded-3xl px-[21px] pt-[17px] mt-5 pb-[41px]'>
                     <span className='text-sm font-semibold pb-[5px]'>{data?.name} - {data?.duration}h</span>
