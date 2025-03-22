@@ -21,7 +21,7 @@ const NewBookings = ({ events }) => {
 
       const response = await bookingService.updateBooking(eventId, { status: newStatus });
 
-      console.log(response,'121123323')
+      console.log(response, '121123323')
 
     } catch (error) {
       console.error('Error updating status:', error);
@@ -46,7 +46,7 @@ const NewBookings = ({ events }) => {
   };
 
   return (
-    <div className='max-h-[80vh] overflow-y-auto'>
+    <div className='h-[80vh] overflow-y-auto'>
       {updatedEvents
         .filter(event => event.status === 'Pending')
         .map(event => (
@@ -57,9 +57,13 @@ const NewBookings = ({ events }) => {
             <span className="text-sm font-semibold text-[#0E1E40]">
               {event?.service_id?.name} - {event?.service_id?.duration || 'N/A'}h
             </span>
+
             <span className="text-sm font-semibold text-[#5E50BF] py-[5px]">
-              {event?.service_id?.description}
+              {event?.service_id?.description.length > 50
+                ? `${event?.service_id?.description.substring(0, 50)}...`
+                : event?.service_id?.description}
             </span>
+
             <span className="text-sm font-normal">
               Date: {formatDate(event?.startDate, event?.startTime)}
             </span>

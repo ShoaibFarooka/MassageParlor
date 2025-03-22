@@ -2,19 +2,30 @@ import React from "react";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend } from "chart.js";
 
-// Register required components
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
 
-const TotalRevenue = () => {
+const TotalRevenue = ({ events }) => {
+  const approvedEvents = events.filter(event => event.status === "Approved");
+
+  console.log(approvedEvents,'approvedEvents')
+
+  const monthlyRevenue = Array(12).fill(0);
+
+  approvedEvents.forEach(event => {
+    const eventDate = new Date(event.startDate);
+    const monthIndex = eventDate.getMonth(); 
+    monthlyRevenue[monthIndex] += event.price; 
+  });
+
   const data = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"],
     datasets: [
       {
-        label: "2024",
-        data: [10000, 15000, 12000, 18000, 25000, 38753, 22000, 19000, 20000, 21000, 22000, 23000],
-        borderColor: "#6D28D9", // Purple color
-        backgroundColor: "rgba(109, 40, 217, 0.1)", // Light fill color
-        tension: 0.4, // Smooth curve
+        label: "2025",
+        data: monthlyRevenue, // Dynamically calculated revenue
+        borderColor: "#6D28D9",
+        backgroundColor: "rgba(109, 40, 217, 0.1)",
+        tension: 0.4,
         pointRadius: 5,
         pointBackgroundColor: "#6D28D9",
         pointBorderColor: "#6D28D9",
@@ -28,9 +39,7 @@ const TotalRevenue = () => {
       legend: {
         display: true,
         position: "top",
-        labels: {
-          color: "#6D28D9",
-        },
+        labels: { color: "#6D28D9" },
       },
       tooltip: {
         callbacks: {
@@ -40,12 +49,8 @@ const TotalRevenue = () => {
     },
     scales: {
       x: {
-        grid: {
-          display: false,
-        },
-        ticks: {
-          color: "#000",
-        },
+        grid: { display: false },
+        ticks: { color: "#000" },
       },
       y: {
         beginAtZero: true,
@@ -54,9 +59,7 @@ const TotalRevenue = () => {
           color: "#000",
           callback: (value) => `R${value / 1000}k`,
         },
-        grid: {
-          color: "rgba(0, 0, 0, 0.1)",
-        },
+        grid: { color: "rgba(0, 0, 0, 0.1)" },
       },
     },
   };
