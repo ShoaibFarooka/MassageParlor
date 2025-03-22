@@ -14,6 +14,15 @@ const createServiceSchema = yup.object().shape({
 
 const updateServiceSchema = yup.object({
   isActive: yup.boolean(),
+  serviceProvider: yup.string().trim(),
+  gallery: yup.string().trim(),
+  name: yup.string().trim(),
+  price: yup.number().min(0),
+  duration: yup.string().trim(),
+  calendarColor: yup.string().trim().optional(),
+  isActive: yup.boolean(),
+  description: yup.string().trim().max(500).optional(),
+  status: yup.string(),
 });
 
 const serviceIdSchema = yup.object().shape({
