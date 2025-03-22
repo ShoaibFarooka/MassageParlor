@@ -30,6 +30,15 @@ const bookingService = {
     }
   },
 
+  getBookingsByServiceProvider: async (serviceProviderId) => {
+    try {
+      const response = await axiosInstance.get(`${BASE_URL}/serviceProvider/${serviceProviderId}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   getBookingById: async (providerId) => {
     try {
       const response = await axiosInstance.get(

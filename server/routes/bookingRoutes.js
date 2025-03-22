@@ -20,6 +20,8 @@ router.get("/user/:userId", controller.getBookingsByUserId);
 
 router.get("/service/:serviceId", controller.getBookingsByServiceId);
 
+router.get("/serviceProvider/:serviceProviderId", controller.getBookingsByServiceProvider);
+
 router.patch(
   "/:id",
   authMiddleware.authenticateRequest,

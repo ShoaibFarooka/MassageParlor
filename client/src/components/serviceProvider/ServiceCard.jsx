@@ -10,6 +10,7 @@ import { HideLoading, ShowLoading } from '../../redux/loaderSlice';
 import { useNavigate } from 'react-router-dom';
 import profilePic from '../../assets/images/profile.png'
 import bookingService from '../../services/bookingService';
+import toast from 'react-hot-toast';
 
 const CustomDateInput = forwardRef(({ value, onClick, placeholder }, ref) => (
   <div className="relative" onClick={onClick}>
@@ -85,49 +86,34 @@ const ServiceCard = ({ key, provider }) => {
   }
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
-  
-    // Validate the selected date and time
-    if (!selectedDate) {
-      alert('Please select a date');
-      return;
-    }
-  
-    if (!selectedTime) {
-      alert('Please select a time');
-      return;
-    }
-  
-    // Format the start date and time
-    const startDate = selectedDate.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+
+    const startDate = selectedDate.toISOString().split('T')[0];
     const startTime = selectedTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }); // Format: HH:MM AM/PM
-  
-    // Calculate the end time by adding the duration (in hours) to the start time
-    const durationInHours = booking?.duration || 1; // Default to 1 hour if duration is not provided
+
+    const durationInHours = booking?.duration || 1;
     const endTime = new Date(selectedTime.getTime() + durationInHours * 60 * 60 * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }); // Format: HH:MM AM/PM
-  
-    // Prepare the booking data according to the schema
+
     const bookingData = {
-      user_id: user?._id, // Assuming user contains the logged-in user details
-      service_id: booking?._id, // Assuming booking contains the service details
+      user_id: user?._id,
+      service_id: booking?._id,
+      serviceProvider: booking?.serviceProvider?._id,
       startDate: startDate,
       startTime: startTime,
       endTime: endTime,
-      price: booking?.price, // Assuming booking contains the price
-      status: 'Pending', // Default status
+      price: booking?.price,
+      status: 'Pending',
     };
-  
+
     try {
       dispatch(ShowLoading());
-      // Call the API to create the booking
       const response = await bookingService.createBooking(bookingData);
       if (response) {
-        alert('Booking created successfully');
-        setBookingOpen(false); // Close the booking modal
-        // Optionally, you can refresh the bookings list or navigate to a different page
+        toast.success('Booking created successfully');
+        setBookingOpen(false);
       }
     } catch (error) {
       console.error('Error creating booking:', error);
-      alert('An error occurred. Please try again later.');
+      toast.error('An error occurred. Please try again later.');
     } finally {
       dispatch(HideLoading());
     }

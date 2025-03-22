@@ -53,6 +53,18 @@ const getBookingsByServiceId = async (req, res, next) => {
   }
 };
 
+const getBookingsByServiceProvider = async (req, res, next) => {
+  try {
+    const bookings = await bookingService.getBookingsByServiceProvider(req.params.serviceProviderId);
+    if (!bookings || bookings.length === 0) {
+      return res.status(404).json({ message: "No bookings found for this service!" });
+    }
+    res.status(200).json(bookings);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const updateBooking = async (req, res, next) => {
   try {
     const updatedBooking = await bookingService.updateBooking(req.params.id, req.body);
@@ -81,6 +93,7 @@ module.exports = {
   getBookingById,
   getBookingsByUserId,
   getBookingsByServiceId,
+  getBookingsByServiceProvider,
   updateBooking,
   deleteBooking,
 };

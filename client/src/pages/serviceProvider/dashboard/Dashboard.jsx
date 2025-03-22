@@ -1,11 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ServicesHeader from '../components/ServicesHeader';
 import NewBookings from './components/NewBookings';
 import TodayBookings from './components/TodayBookings';
 import TotalRevenue from './components/TotalRevenue';
+import { useDispatch, useSelector } from 'react-redux';
+import bookingService from '../../../services/bookingService';
+import { HideLoading, ShowLoading } from '../../../redux/loaderSlice';
 
 const Dashboard = () => {
+  const [events, setEvents] = useState([  ]);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
 
+    const getBookingData = async () => {
+      dispatch(ShowLoading());
+      try {
+        const response = await bookingService.getBookingsByServiceProvider(user?._id);
+        setEvents(formattedEvents);
+      } catch (error) {
+        console.error("Error fetching bookings:", error);
+      } finally {
+        dispatch(HideLoading());
+      }
+    };
+    
+  
+    useEffect(() => {
+      getBookingData();
+    }, [user?._id]);
 
   return (
     <div>

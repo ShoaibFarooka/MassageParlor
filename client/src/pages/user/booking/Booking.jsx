@@ -135,32 +135,7 @@ const UserBooking = () => {
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentView, setCurrentView] = useState("month");
-  const [events, setEvents] = useState([
-    {
-      title: 'Another Person',
-      start: new Date(2025, 2, 2),
-      end: new Date(2025, 2, 5),
-      color: '#6B46C1' // Purple
-    },
-    {
-      title: 'Weekend Festival',
-      start: new Date(2025, 2, 6),
-      end: new Date(2025, 2, 6),
-      color: '#D53F8C' // Pink
-    },
-    {
-      title: 'Training',
-      start: new Date(2025, 2, 4),
-      end: new Date(2025, 2, 4),
-      color: '#3182CE' // Blue
-    },
-    {
-      title: 'Some Booking',
-      start: new Date(2025, 2, 6),
-      end: new Date(2025, 2, 8),
-      color: '#DD6B20' // Orange
-    }
-  ]);
+  const [events, setEvents] = useState([  ]);
 
   const parseTime = (timeString) => {
     const [time, modifier] = timeString.split(" ");
