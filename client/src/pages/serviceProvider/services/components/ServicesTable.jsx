@@ -33,16 +33,6 @@ function ServiceTable() {
     loadServiceData()
   }, [])
 
-  const handleToggle = (id) => {
-    setServices((prevServices) =>
-      prevServices.map((service) =>
-        service.id === id
-          ? { ...service, isActive: !service.isActive }
-          : service
-      )
-    );
-  };
-
   const handleEdit = (id) => {
     setSelectedServiceId(id);
     setEditOpen(true);
@@ -70,6 +60,29 @@ function ServiceTable() {
       setSelectedServiceId(null);
     }
   };
+
+  const handleToggle = async (id) => {
+    setServices((prevServices) =>
+      prevServices.map((service) =>
+        service._id === id
+          ? { ...service, isActive: !service.isActive }
+          : service
+      )
+    );
+
+    try {
+      dispatch(ShowLoading());
+      await serviceService.updateService(id, { isActive: !services.find(service => service._id === id)?.isActive });
+      toast.success("Service status updated successfully");
+      loadServiceData();
+    } catch (error) {
+      console.error("Error updating service status:", error);
+      toast.error("Failed to update service status");
+    } finally {
+      dispatch(HideLoading());
+    }
+  };
+
 
   return (
     <div className="bg-white rounded-lg shadow overflow-x-auto">
@@ -109,7 +122,9 @@ function ServiceTable() {
                 {service.name}
               </td>
               <td className="text-center text-[12px] ">
-                {service.description}
+                {service.description.length > 30
+                  ? `${service.description.substring(0, 30)}...`
+                  : service.description}
               </td>
               <td className="text-center text-[13px] font-semibold">
                 {service.price}
@@ -132,7 +147,7 @@ function ServiceTable() {
                       type="checkbox"
                       className="sr-only peer"
                       checked={service.isActive}
-                      onChange={() => handleToggle(service.id)}
+                      onChange={() => handleToggle(service._id)}
                     />
                     {/* Slider background */}
                     <div className="w-10 h-5 bg-gray-200 rounded-full peer-focus:outline-none peer-checked:bg-[#5E50BF] relative transition-colors duration-200">

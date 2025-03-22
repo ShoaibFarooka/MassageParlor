@@ -4,7 +4,7 @@ const TodayBooking = ({ events }) => {
     const today = new Date().toISOString().split('T')[0]; 
 
     return (
-        <div className="w-[287px] relative bg-white p-2.5 rounded-[9.35px] min-h-[80vh] mb-8">
+        <div className="md:w-[287px] w-full max-h-[80vh] overflow-y-auto relative bg-white p-2.5 rounded-[9.35px] min-h-[80vh] mb-8">
             <h3 className="text-[18px] text-[#202224] font-bold p-3">Today</h3>
 
             <div className='border-[#E0E0E0] border-t'>

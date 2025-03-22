@@ -12,7 +12,9 @@ const createServiceSchema = yup.object().shape({
   status: yup.string().oneOf(["Pending", "Approved", "Rejected"]).default("Pending"),
 });
 
-const updateServiceSchema = createServiceSchema.noUnknown(true).optional();
+const updateServiceSchema = yup.object({
+  isActive: yup.boolean(),
+});
 
 const serviceIdSchema = yup.object().shape({
   id: yup.string().trim().required(),

@@ -45,7 +45,7 @@ const Dashboard = () => {
         </div>
 
         <div className='px-[23px] py-[25px] h-fit  rounded-[9.35px] bg-white'>
-          <h4 className='text-[17.74px] font-bold'>New bookings</h4>
+          <h4 className='text-[17.74px] font-bold w-[300px]'>New bookings</h4>
           <NewBookings events={events} />
         </div>
       </div>

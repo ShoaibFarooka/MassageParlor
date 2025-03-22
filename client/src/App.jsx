@@ -19,7 +19,7 @@ function App() {
       <Toaster />
 
       <CustomModal isOpen={isOpen} width={'436px'} contentLabel="Modal">
-        <div className="text-center flex justify-center items-center flex-col">
+        <div className="text-center flex justify-center items-center flex-col z-[99999] bg-white">
 
           <div className='mt-10'>
             <h2 className="text-[30px] font-bold ">Welcome</h2>

@@ -80,9 +80,11 @@ function CreateEditService({ isOpen, onClose, serviceId, refreshServices }) {
             if (isEditMode) {
                 await serviceService.updateService(serviceId, service);
                 toast.success('Service updated successfully');
+                onClose()
             } else {
                 await serviceService.createService(service);
                 toast.success('Service created successfully');
+                onClose();
             }
             refreshServices();
             onClose();

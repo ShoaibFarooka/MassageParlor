@@ -83,7 +83,6 @@ const TodayBookings = ({ events }) => {
                         borderRadius: "10px",
                         borderLeft: `10px solid ${event.color}`,
                         padding: "5px",
-                        height: '100px',
                     },
                 })}
             />
