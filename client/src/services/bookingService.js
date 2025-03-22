@@ -23,7 +23,9 @@ const bookingService = {
 
   getBookingsByServiceId: async (serviceId) => {
     try {
-      const response = await axiosInstance.get(`${BASE_URL}/service/${serviceId}`);
+      const response = await axiosInstance.get(
+        `${BASE_URL}/service/${serviceId}`
+      );
       return response.data;
     } catch (error) {
       throw error;
@@ -32,7 +34,9 @@ const bookingService = {
 
   getBookingsByServiceProvider: async (serviceProviderId) => {
     try {
-      const response = await axiosInstance.get(`${BASE_URL}/serviceProvider/${serviceProviderId}`);
+      const response = await axiosInstance.get(
+        `${BASE_URL}/serviceProvider/${serviceProviderId}`
+      );
       return response.data;
     } catch (error) {
       throw error;
@@ -41,9 +45,7 @@ const bookingService = {
 
   getBookingById: async (providerId) => {
     try {
-      const response = await axiosInstance.get(
-        `${BASE_URL}/${providerId}`
-      );
+      const response = await axiosInstance.get(`${BASE_URL}/${providerId}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -52,9 +54,7 @@ const bookingService = {
 
   getBookingsByUserId: async (userId) => {
     try {
-      const response = await axiosInstance.get(
-        `${BASE_URL}/user/${userId}`
-      );
+      const response = await axiosInstance.get(`${BASE_URL}/user/${userId}`);
       return response.data;
     } catch (error) {
       throw error;

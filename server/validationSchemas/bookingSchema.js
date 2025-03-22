@@ -17,11 +17,12 @@ const updateBookingSchema = yup.object({
   startDate: yup.date().optional(),
   startTime: yup.string().optional(),
   endTime: yup.string().optional(),
+  status: yup.string().required(),
   price: yup.number().optional(),
 });
 
 const bookingIdSchema = yup.object({
-  _id: yup.string().required(),
+  id: yup.string().required(),
 });
 
 module.exports = {

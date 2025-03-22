@@ -16,7 +16,7 @@ const Dashboard = () => {
       dispatch(ShowLoading());
       try {
         const response = await bookingService.getBookingsByServiceProvider(user?._id);
-        setEvents(formattedEvents);
+        setEvents(response);
       } catch (error) {
         console.error("Error fetching bookings:", error);
       } finally {
@@ -30,7 +30,7 @@ const Dashboard = () => {
     }, [user?._id]);
 
   return (
-    <div>
+    <div >
       <ServicesHeader title={'Dashboard'} />
 
       <div className='flex flex-col md:flex-row w-full mt-[35px] '>
@@ -44,9 +44,9 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className='px-[23px] py-[25px] h-fit rounded-[9.35px] bg-white'>
+        <div className='px-[23px] py-[25px] h-fit  rounded-[9.35px] bg-white'>
           <h4 className='text-[17.74px] font-bold'>New bookings</h4>
-          <NewBookings />
+          <NewBookings events={events} />
         </div>
       </div>
     </div>
