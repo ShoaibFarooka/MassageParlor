@@ -13,6 +13,7 @@ const registerSchema = yup.object().shape({
   height: yup.string().trim(),
   hairColor: yup.string().trim(),
   callOutType: yup.string().trim(),
+  file: yup.mixed().optional(),
   password: yup.string().trim().required('Password is required'),
 });
 
@@ -48,14 +49,17 @@ const createUserSchema = yup.object().shape({
 });
 
 const updateUserSchema = yup.object().shape({
+  file: yup.mixed().optional(),
   name: yup.string().trim(),
   email: yup.string().trim().email('Invalid email address'),
   number: yup.string().trim(),
-  totalContacts: yup.number(),
   dateOfBirth: yup.string().trim(),
-  address: yup.string().trim(),
-  city: yup.string().trim(),
-  zip: yup.string().trim(),
+  ethnicity: yup.string().trim(),
+  location: yup.string().trim(),
+  height: yup.string().trim(),
+  hairColor: yup.string().trim(),
+  callOutType: yup.string().trim(),
+  password: yup.string().trim(),
   isOnline: yup.boolean().optional(),
   // password: yup.string().trim(),
 });

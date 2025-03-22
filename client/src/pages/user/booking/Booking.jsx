@@ -285,7 +285,7 @@ const UserBooking = () => {
             <img
               src={`http://localhost:5777/static/images/${user.image}` || profile}
               alt="Profile"
-              className="w-[60px] min-h-[60px] object-cover rounded-full border-[2px] border-[#858FAD] cursor-pointer"
+              className="w-[60px] h-[60px] object-cover rounded-full border-[2px] border-[#858FAD] cursor-pointer"
               onClick={toggleProfileDropdown}
             />
             {isProfileOpen && (

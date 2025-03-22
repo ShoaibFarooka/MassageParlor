@@ -26,6 +26,27 @@ const Register = async (req, res, next) => {
   }
 };
 
+const RegisterFormData = async (req, res, next) => {
+  try {
+    console.log("req.file", req.file);
+    const imagePath = req.file ? req.file.filename : null;
+
+    const data = { ...req.body, image: imagePath };
+    const { id } = req.params;
+
+    const user = await userService.updateUserFormData(id, data);
+    res.status(201).json({ message: "User registered successfully!", user });
+  } catch (error) {
+    console.error("Validation or Registration error:", error);
+
+    if (error.name === "ValidationError") {
+      return res.status(400).json({ error: error.errors });
+    }
+
+    next(error);
+  }
+};
+
 const Login = async (req, res, next) => {
   try {
     const data = { ...req.body };
@@ -310,4 +331,5 @@ module.exports = {
   DeleteEmployee,
   DeleteUser,
   SearchServiceProviders,
+  RegisterFormData,
 };

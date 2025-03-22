@@ -75,6 +75,77 @@ const createUser = async (userData, role) => {
   return user;
 };
 
+const updateUserFormData = async (userId, userData) => {
+  const {
+    name,
+    email,
+    number,
+    dateOfBirth,
+    location,
+    city,
+    zip,
+    image,
+    ethnicity,
+    hairColor,
+    height,
+    callOutType,
+    password,
+  } = userData;
+
+  let user = await User.findById(userId);
+  if (!user) {
+    throw new Error("User not found!");
+  }
+
+  // Check for email duplication (if email is being updated)
+  if (email && email !== user.email) {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      const error = new Error("A user with that email already exists!");
+      error.code = 409;
+      throw error;
+    }
+  }
+
+  // Check for number duplication (if number is being updated)
+  if (number && number !== user.number) {
+    const existingUser = await User.findOne({ number });
+    if (existingUser) {
+      const error = new Error("A user with that number already exists!");
+      error.code = 409;
+      throw error;
+    }
+  }
+
+  // Hash password if it's being updated
+  let passwordDigest = user.password; // Keep the existing password
+  if (password) {
+    passwordDigest = await authUtils.hashPassword(password);
+  }
+
+  // Update user fields dynamically
+  user.name = name || user.name;
+  user.email = email || user.email;
+  user.number = number || user.number;
+  user.dateOfBirth = dateOfBirth || user.dateOfBirth;
+  user.city = city || user.city;
+  user.zip = zip || user.zip;
+  user.image = image || user.image;
+  user.password = passwordDigest;
+
+  if (user.role !== "user") {
+    user.location = location || user.location;
+    user.ethnicity = ethnicity || user.ethnicity;
+    user.hairColor = hairColor || user.hairColor;
+    user.height = height || user.height;
+    user.callOutType = callOutType || user.callOutType;
+  }
+
+  await user.save();
+  return user;
+};
+
+
 const loginUser = async (loginData) => {
   const { email, password } = loginData;
   const user = await User.findOne({ email });
@@ -179,9 +250,11 @@ const fetchUser = async (userId) => {
     number: 1,
     totalContacts: 1,
     dateOfBirth: 1,
-    Location: 1,
-    city: 1,
-    zip: 1,
+    location: 1,
+    height: 1,
+    hairColor: 1,
+    callOutType: 1,
+    ethnicity:1,
     image: 1,
     role: 1,
     _id: 1,
@@ -463,6 +536,7 @@ module.exports = {
   fetchUser,
   searchUsers,
   updateUser,
+  updateUserFormData,
   deleteUser,
   changeUserPassword,
   fetchUserStripeCustomerId,

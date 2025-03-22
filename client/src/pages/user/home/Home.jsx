@@ -14,6 +14,9 @@ import { setLoggedOut } from '../../../redux/logoutSlice';
 import { clearUser } from '../../../redux/userSlice';
 import Cookies from 'js-cookie';
 import { HideLoading, ShowLoading } from '../../../redux/loaderSlice';
+import CustomModal from '../../../components/CustomModal/CustomModal';
+import UserProfile from '../../../components/Profile/UserProfile';
+import ServiceProviderProfile from '../../../components/Profile/ServiceProviderProfile';
 
 
 const providers = [
@@ -21,6 +24,7 @@ const providers = [
 
 const UserHome = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
     const dropdownRef = useRef(null);
     const [height, setHeight] = useState(165);
     const minVal = 100;
@@ -312,14 +316,14 @@ const UserHome = () => {
                             <img
                                 src={user?.image ? `http://localhost:5777/static/images/${user.image}` : profile}
                                 alt="Profile"
-                                className="w-[60px] min-h-[60px] object-cover rounded-full border-[2px] border-[#858FAD] cursor-pointer"
+                                className="w-[60px] h-[60px] object-cover rounded-full border-[2px] border-[#858FAD] cursor-pointer"
                                 onClick={toggleProfileDropdown}
                             />
                             {isProfileOpen && (
                                 <div className="absolute right-0 mt-2 w-[200px] bg-white border border-gray-200 rounded shadow-lg p-4 z-50">
                                     <p className="font-bold mb-2">My Account</p>
                                     <ul>
-                                        <li className="py-1 text-sm cursor-pointer flex items-center"><CgProfile className='mr-2' /> Profile</li>
+                                        <li onClick={() => { setIsEditProfileOpen(true); setIsProfileOpen(false) }} className="py-1 text-sm cursor-pointer flex items-center"><CgProfile className='mr-2' /> Profile</li>
                                         <li className="py-1 text-sm cursor-pointer flex items-center"><IoMdCard className='mr-2' />                                        Billing</li>
                                         <li className="py-1 text-sm cursor-pointer flex items-center"><CiSettings className='mr-2' />                                        Settings</li>
                                         <li onClick={handleLogout} className="py-1 text-sm cursor-pointer flex items-center text-red-500">
@@ -347,6 +351,17 @@ const UserHome = () => {
                     </div>
                 </main>
             </div>
+
+            <CustomModal isOpen={isEditProfileOpen} width='500px' onRequestClose={() => setIsEditProfileOpen(false)}>
+                <div className=" p-8">
+                    <h1 className="text-[30px] font-bold text-center">Edit Profile</h1>
+                    <p className=" text-[12px] text-[#858FAD] text-center">
+                        Enter your details to continue
+                    </p>
+
+                    {user.role === 'user' ? <UserProfile setIsEditProfileOpen={setIsEditProfileOpen}  /> : <ServiceProviderProfile  />}
+                </div>
+            </CustomModal>
         </div>
     )
 }
