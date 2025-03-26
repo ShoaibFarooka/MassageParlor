@@ -4,7 +4,7 @@ import CustomModal from '../../../../components/CustomModal/CustomModal';
 import serviceService from '../../../../services/serviceService';
 import { useDispatch, useSelector } from 'react-redux';
 
-function CreateEditService({ isOpen, onClose, serviceId, refreshServices }) {
+function CreateEditService({ isOpen, onClose, serviceId,onLoad }) {
     const isEditMode = Boolean(serviceId);
     const user = useSelector((state) => state.user.user);
 
@@ -85,7 +85,7 @@ function CreateEditService({ isOpen, onClose, serviceId, refreshServices }) {
                 await serviceService.createService(service);
                 onClose();
             }
-            refreshServices();
+            onLoad()
             onClose();
         } catch (err) {
             console.error(err);

@@ -8,30 +8,12 @@ import { HideLoading, ShowLoading } from '../../../../redux/loaderSlice';
 import DeleteConfirmationModal from '../../../../components/Delete/DeleteConfirmationModal';
 import CreateEditService from './CreateService';
 
-function ServiceTable() {
-  const [services, setServices] = useState([]);
+function ServiceTable({ services, setServices, onLoad }) {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [editOpen, setEditOpen] = useState(false);
 
-  const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
-
-  const loadServiceData = async () => {
-    dispatch(ShowLoading());
-    try {
-      const response = await serviceService.getServicesByProvider(user?._id);
-      setServices(response);
-    } catch (error) {
-      console.error("Error fetching services:", error);
-    } finally {
-      dispatch(HideLoading());
-    }
-  };
-
-  useEffect(() => {
-    loadServiceData()
-  }, [])
 
   const handleEdit = (id) => {
     setSelectedServiceId(id);
@@ -50,7 +32,7 @@ function ServiceTable() {
       await serviceService.deleteService(selectedServiceId);
       setServices((prevServices) => prevServices.filter(service => service.id !== selectedServiceId));
       toast.success("Service deleted successfully");
-      loadServiceData()
+      onLoad()
     } catch (error) {
       console.error("Error deleting service:", error);
       toast.error("Failed to delete service");
@@ -74,7 +56,7 @@ function ServiceTable() {
       dispatch(ShowLoading());
       await serviceService.updateService(id, { isActive: !services.find(service => service._id === id)?.isActive });
       toast.success("Service status updated successfully");
-      loadServiceData();
+      onLoad();
     } catch (error) {
       console.error("Error updating service status:", error);
       toast.error("Failed to update service status");
@@ -191,7 +173,7 @@ function ServiceTable() {
         isOpen={editOpen}
         onClose={() => setEditOpen(false)}
         serviceId={selectedServiceId}
-        refreshServices={loadServiceData}
+        onLoad={onLoad}
       />
 
     </div>
