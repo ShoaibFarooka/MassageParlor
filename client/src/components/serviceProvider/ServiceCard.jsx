@@ -307,21 +307,67 @@ const ServiceCard = ({ key, provider }) => {
             <div className="">
               <DatePicker
                 selected={selectedDate}
-                onChange={(date) => setSelectedDate(date)}
-                customInput={<CustomDateInput placeholder="Feb, 28 2025" />}
+                onChange={(date) => {
+                  const utcDate = new Date(Date.UTC(
+                    date.getFullYear(),
+                    date.getMonth(),
+                    date.getDate()
+                  ));
+                  setSelectedDate(utcDate);
+                }}
+                customInput={
+                  <CustomDateInput
+                    placeholder="Feb, 28 2025"
+                    value={
+                      selectedDate
+                        ? selectedDate.toLocaleDateString('en-GB', {
+                          timeZone: 'UTC',
+                          year: 'numeric',
+                          month: 'short',
+                          day: '2-digit',
+                        })
+                        : ''
+                    }
+                  />
+                }
                 dateFormat="MMM, dd yyyy"
               />
 
+
               <DatePicker
                 selected={selectedTime}
-                onChange={(time) => setSelectedTime(time)}
-                customInput={<CustomTimeInput placeholder="14:00 pm" />}
+                onChange={(time) => {
+                  const utcTime = new Date(Date.UTC(
+                    time.getFullYear(),
+                    time.getMonth(),
+                    time.getDate(),
+                    time.getHours(),
+                    time.getMinutes()
+                  ));
+                  setSelectedTime(utcTime);
+                }}
+                customInput={
+                  <CustomTimeInput
+                    placeholder="14:00 pm"
+                    value={
+                      selectedTime
+                        ? selectedTime.toLocaleTimeString('en-GB', {
+                          timeZone: 'UTC',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: false
+                        })
+                        : ''
+                    }
+                  />
+                }
                 showTimeSelect
                 showTimeSelectOnly
                 timeIntervals={15}
-                timeCaption="Time"
-                dateFormat="h:mm aa"
+                timeCaption="Time (UTC)"
+                dateFormat="HH:mm"
               />
+
             </div>
           </div>
 

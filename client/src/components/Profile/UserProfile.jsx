@@ -201,11 +201,31 @@ function UserProfile({ setIsEditProfileOpen }) {
                 <div className="relative">
                     <DatePicker
                         selected={selectedDate}
-                        defaultValue={user.dateOfBirth}
-                        onChange={(date) => setSelectedDate(date)}
-                        customInput={<CustomDateInput />}
+                        onChange={(date) => {
+                            const utcDate = new Date(Date.UTC(
+                                date.getFullYear(),
+                                date.getMonth(),
+                                date.getDate()
+                            ));
+                            setSelectedDate(utcDate);
+                        }}
+                        customInput={
+                            <CustomDateInput
+                                value={
+                                    selectedDate
+                                        ? selectedDate.toLocaleDateString('en-GB', {
+                                            timeZone: 'UTC',
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: '2-digit',
+                                        })
+                                        : ''
+                                }
+                            />
+                        }
                         dateFormat="MMM, dd yyyy"
                     />
+
                 </div>
             </div>
 
