@@ -10,6 +10,7 @@ import UserBooking from '../pages/user/booking/Booking.jsx';
 import Dashboard from '../pages/serviceProvider/dashboard/Dashboard.jsx';
 import Calendar from '../pages/serviceProvider/calendar/Calendar.jsx';
 import Services from '../pages/serviceProvider/services/Services.jsx';
+import Gallery from '../pages/serviceProvider/gallery/Gallery.jsx';
 
 const routes = [
   //user
@@ -29,6 +30,7 @@ const routes = [
   { path: "/service/dashboard", element: <Dashboard />, protected: true, authRedirect: false, showSidebar: true },
   { path: "/service/calendar", element: <Calendar />, protected: true, authRedirect: false, showSidebar: true },
   { path: "/service/services", element: <Services />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/service/gallery", element: <Gallery />, protected: true, authRedirect: false, showSidebar: true },
 
   //admin
   // { path: "/company/admin/dashboard", element: <AdminDashboard />, protected: true, showSidebar: true },

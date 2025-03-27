@@ -9,5 +9,6 @@ const router = express.Router();
 router.use('/user', UserRoutes);
 router.use('/service', ServiceRoutes );
 router.use('/booking', BookingRoutes );
+router.use('/gallery', BookingRoutes );
 
 module.exports = router;

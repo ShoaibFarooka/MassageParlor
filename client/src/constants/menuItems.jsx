@@ -28,6 +28,7 @@ export const menuItems = {
         { path: '/service/dashboard', label: 'Dashboard', icon: <DashboardIcon />, disabled: false },
         { path: '/service/calendar', label: 'Calendar', icon: <CampaignsIcon />, disabled: false },
         { path: '/service/services', label: 'Services', icon: <CampaignsIcon />, disabled: false },
+        { path: '/service/gallery', label: 'Gallery', icon: <CampaignsIcon />, disabled: false },
     ],
     user: [
         { path: '/user/home', label: 'Home', icon: <DashboardIcon />, disabled: false },
