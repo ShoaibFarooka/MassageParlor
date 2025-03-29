@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import profilePic from '../../assets/images/profile.png'
 import bookingService from '../../services/bookingService';
 import toast from 'react-hot-toast';
+import galleryService from '../../services/galleryService';
 
 const CustomDateInput = forwardRef(({ value, onClick, placeholder }, ref) => (
   <div className="relative" onClick={onClick}>
@@ -71,8 +72,8 @@ const ServiceCard = ({ key, provider }) => {
 
     try {
       dispatch(ShowLoading());
-      const gallery = await serviceService.getGalleryByProvider(provider?._id)
-      setGalleries(gallery[0])
+      const gallery = await galleryService.getGalleryByServiceProvider(provider?._id)
+      setGalleries(gallery?.gallery)
     } catch (error) {
       console.error("Error fetching services:", error);
     } finally {
@@ -231,7 +232,7 @@ const ServiceCard = ({ key, provider }) => {
                 {galleries.images.map((image, index) => (
                   <img
                     key={index}
-                    src={image}
+                    src={`http://localhost:5777/static/images/${image.url}`}
                     alt={`Gallery Image ${index + 1}`}
                     className={`w-[100px] sm:w-[124px] h-[100px] sm:h-[124px] m-2 sm:m-4 
                       ${!user && index >= 3 ? "opacity-50 blur-sm" : ""}`}

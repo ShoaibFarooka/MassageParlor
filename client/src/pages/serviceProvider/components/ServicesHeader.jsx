@@ -13,6 +13,7 @@ import toast from 'react-hot-toast';
 import CustomModal from '../../../components/CustomModal/CustomModal';
 import UserProfile from '../../../components/Profile/UserProfile';
 import ServiceProviderProfile from '../../../components/Profile/ServiceProviderProfile';
+import { useNavigate } from 'react-router-dom';
 
 const ServicesHeader = ({ title }) => {
     const user = useSelector((state) => state.user.user);
@@ -20,6 +21,7 @@ const ServicesHeader = ({ title }) => {
     const [isOpen, setIsOpen] = useState(false);
     const profileDropdownRef = useRef(null);
     const dispatch = useDispatch();
+    const navigate=useNavigate()
 
     const handleLogout = async () => {
         dispatch(ShowLoading());
@@ -28,6 +30,7 @@ const ServicesHeader = ({ title }) => {
             Cookies.remove('parlor-jwt-token');
             dispatch(setLoggedOut());
             dispatch(clearUser());
+            navigate('/login')
             dispatch(HideLoading());
         } catch (error) {
             dispatch(HideLoading());
