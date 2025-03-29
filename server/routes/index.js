@@ -2,6 +2,7 @@ const express = require('express');
 const UserRoutes = require('./userRoutes');
 const ServiceRoutes = require('./serviceRoutes')
 const BookingRoutes = require('./bookingRoutes')
+const GalleryRoutes = require('./galleryRoutes')
 
 const router = express.Router();
 
@@ -9,6 +10,6 @@ const router = express.Router();
 router.use('/user', UserRoutes);
 router.use('/service', ServiceRoutes );
 router.use('/booking', BookingRoutes );
-router.use('/gallery', BookingRoutes );
+router.use('/gallery', GalleryRoutes );
 
 module.exports = router;
