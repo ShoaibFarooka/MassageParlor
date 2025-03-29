@@ -3,14 +3,16 @@ import toast from 'react-hot-toast';
 import CustomModal from '../../../../components/CustomModal/CustomModal';
 import serviceService from '../../../../services/serviceService';
 import { useDispatch, useSelector } from 'react-redux';
+import galleryService from '../../../../services/galleryService';
 
 function CreateEditService({ isOpen, onClose, serviceId,onLoad }) {
     const isEditMode = Boolean(serviceId);
     const user = useSelector((state) => state.user.user);
+    const [galleryData,setGalleryData]=useState()
 
     const [service, setService] = useState({
         serviceProvider: user?._id || '', // Ensure it always has a value
-        gallery: '67c8402e6088c63eccaeac66', // Ensure gallery is always set
+        gallery: galleryData?._id, // Ensure gallery is always set
         name: '',
         price: '',
         duration: '',
@@ -21,13 +23,27 @@ function CreateEditService({ isOpen, onClose, serviceId,onLoad }) {
 
     const [error, setError] = useState({});
 
+    const fetchGallery = async () => {
+        try {
+          const res = await galleryService.getGalleryByServiceProvider(user?._id);
+          setGalleryData(res?.gallery || []);
+          console.log(res, 'res123');
+        } catch (error) {
+          console.error("Failed to fetch gallery:", error);
+        }
+      };
+    
+      useEffect(() => {
+        if (user._id) fetchGallery();
+      }, [user._id]);
+
     useEffect(() => {
         if (isEditMode && isOpen) {
             loadServiceData();
         } else {
             setService({
                 serviceProvider: user?._id || '',
-                gallery: '67c8402e6088c63eccaeac66',
+                gallery: galleryData?._id,
                 name: '',
                 price: '',
                 duration: '',
@@ -44,7 +60,7 @@ function CreateEditService({ isOpen, onClose, serviceId,onLoad }) {
             const data = await serviceService.getServiceById(serviceId);
             setService({
                 serviceProvider: data.serviceProvider._id || user?._id,
-                gallery: data.gallery._id || '67c8402e6088c63eccaeac66',
+                gallery: data.gallery._id || galleryData?._id,
                 name: data.name,
                 price: data.price,
                 duration: data.duration,

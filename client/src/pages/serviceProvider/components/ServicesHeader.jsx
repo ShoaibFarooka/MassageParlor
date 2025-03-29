@@ -28,10 +28,12 @@ const ServicesHeader = ({ title }) => {
             Cookies.remove('parlor-jwt-token');
             dispatch(setLoggedOut());
             dispatch(clearUser());
+            dispatch(HideLoading());
         } catch (error) {
+            dispatch(HideLoading());
             message.error(error.response.data);
         }
-        dispatch(HideLoading());
+        
     };
 
     useEffect(() => {
