@@ -85,14 +85,28 @@ const ServiceCard = ({ key, provider }) => {
     setBooking(data)
     setBookingOpen(true)
   }
+
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
 
-    const startDate = selectedDate.toISOString().split('T')[0];
-    const startTime = selectedTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }); // Format: HH:MM AM/PM
+    const startDate = new Date(selectedDate).toISOString().split('T')[0]; // YYYY-MM-DD
+
+    // Format time with AM/PM
+    const startTime = new Date(selectedTime).toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
 
     const durationInHours = booking?.duration || 1;
-    const endTime = new Date(selectedTime.getTime() + durationInHours * 60 * 60 * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }); // Format: HH:MM AM/PM
+    const endTimeDate = new Date(selectedTime.getTime() + durationInHours * 60 * 60 * 1000);
+
+    // Format end time with AM/PM
+    const endTime = endTimeDate.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
 
     const bookingData = {
       user_id: user?._id,
@@ -105,6 +119,7 @@ const ServiceCard = ({ key, provider }) => {
       status: 'Pending',
     };
 
+    // Rest of your code remains the same...
     try {
       dispatch(ShowLoading());
       const response = await bookingService.createBooking(bookingData);
@@ -114,12 +129,15 @@ const ServiceCard = ({ key, provider }) => {
       }
     } catch (error) {
       console.error('Error creating booking:', error);
-      toast.error('An error occurred. Please try again later.');
+      if (error.response?.data?.message === "This timing is already booked.") {
+        toast.error("This time slot is already booked");
+      } else {
+        toast.error('An error occurred. Please try again later.');
+      }
     } finally {
       dispatch(HideLoading());
     }
   };
-
   return (
     <div className='flex justify-center items-center'>
       <div
@@ -308,20 +326,14 @@ const ServiceCard = ({ key, provider }) => {
             <div className="">
               <DatePicker
                 selected={selectedDate}
-                onChange={(date) => {
-                  const utcDate = new Date(Date.UTC(
-                    date.getFullYear(),
-                    date.getMonth(),
-                    date.getDate()
-                  ));
-                  setSelectedDate(utcDate);
-                }}
+                // Store the selected date as-is (local)
+                onChange={(date) => setSelectedDate(date)}
                 customInput={
                   <CustomDateInput
                     placeholder="Feb, 28 2025"
                     value={
                       selectedDate
-                        ? selectedDate.toLocaleDateString('en-GB', {
+                        ? new Date(selectedDate).toLocaleDateString('en-GB', {
                           timeZone: 'UTC',
                           year: 'numeric',
                           month: 'short',
@@ -334,29 +346,18 @@ const ServiceCard = ({ key, provider }) => {
                 dateFormat="MMM, dd yyyy"
               />
 
-
               <DatePicker
                 selected={selectedTime}
-                onChange={(time) => {
-                  const utcTime = new Date(Date.UTC(
-                    time.getFullYear(),
-                    time.getMonth(),
-                    time.getDate(),
-                    time.getHours(),
-                    time.getMinutes()
-                  ));
-                  setSelectedTime(utcTime);
-                }}
+                onChange={(time) => setSelectedTime(time)}
                 customInput={
                   <CustomTimeInput
-                    placeholder="14:00 pm"
+                    placeholder="02:00 PM"
                     value={
                       selectedTime
-                        ? selectedTime.toLocaleTimeString('en-GB', {
-                          timeZone: 'UTC',
+                        ? new Date(selectedTime).toLocaleTimeString('en-US', {
                           hour: '2-digit',
                           minute: '2-digit',
-                          hour12: false
+                          hour12: true,
                         })
                         : ''
                     }
@@ -364,10 +365,11 @@ const ServiceCard = ({ key, provider }) => {
                 }
                 showTimeSelect
                 showTimeSelectOnly
-                timeIntervals={15}
-                timeCaption="Time (UTC)"
-                dateFormat="HH:mm"
+                timeIntervals={booking && booking.duration ? booking.duration * 60 : 15}
+                timeCaption="Time"
+                dateFormat="h:mm aa"
               />
+
 
             </div>
           </div>

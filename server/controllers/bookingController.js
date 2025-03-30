@@ -5,9 +5,14 @@ const createBooking = async (req, res, next) => {
     const booking = await bookingService.createBooking(req.body);
     res.status(201).json({ message: "Booking created successfully!", booking });
   } catch (error) {
+    // Return a 400 status if the error message indicates a timing conflict.
+    if (error.message === "This timing is already booked.") {
+      return res.status(400).json({ message: error.message });
+    }
     next(error);
   }
 };
+
 
 const getBookings = async ( res, next) => {
   try {
