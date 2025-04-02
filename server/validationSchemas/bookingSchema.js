@@ -5,7 +5,7 @@ const createBookingSchema = yup.object({
   service_id: yup.string().required(),
   user_id: yup.string().required(),
   serviceProvider: yup.string().required(),
-  startDate: yup.date().required(),
+  startDate: yup.string().required(),
   startTime: yup.string().required(),
   endTime: yup.string().required(),
   color: yup.string().optional(),
@@ -14,7 +14,7 @@ const createBookingSchema = yup.object({
 });
 
 const updateBookingSchema = yup.object({
-  startDate: yup.date().optional(),
+  startDate: yup.string().optional(),
   startTime: yup.string().optional(),
   endTime: yup.string().optional(),
   status: yup.string().required(),

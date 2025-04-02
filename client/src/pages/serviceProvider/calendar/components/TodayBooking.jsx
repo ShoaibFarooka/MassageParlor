@@ -2,7 +2,7 @@ import React from 'react';
 
 const TodayBooking = ({ events }) => {
     const today = new Date().toLocaleDateString("en-CA");
-    console.log(today); 
+    console.log(today);
     // const today = new Date().toISOString().split('T')[0]; 
 
     return (
@@ -18,10 +18,14 @@ const TodayBooking = ({ events }) => {
                             <div className="relative w-full rounded-br-none mb-[24px] rounded-[24px] bg-pink-200 shadow flex items-center">
                                 <div className="absolute left-0 top-0 bottom-0 w-5 rounded-l-[24px] bg-pink-500"></div>
 
-                                <div className="pl-10 h-[95px]">
+                                <div className="pl-10 min-h-[95px]">
                                     <p className="text-sm font-bold text-gray-900 pt-[13px]">{event?.service_id?.name} - {event?.service_id?.duration || 'N/A'}h</p>
-                                    <p className="text-pink-700 font-semibold text-sm py-1"> {event?.service_id?.description}</p>
-                                    <p className="text-gray-600 text-xs">{event.startTime} - {event.endTime}</p>
+                                    <p className="text-pink-700 font-semibold text-sm py-1"> {event?.service_id?.description ?
+                                        (event.service_id.description.length > 50 ?
+                                            `${event.service_id.description.substring(0, 50)}...` :
+                                            event.service_id.description) :
+                                        ''}</p>
+                                    <p className="text-gray-600 text-xs pb-1">{event.startTime} - {event.endTime}</p>
                                 </div>
                             </div>
                         </div>

@@ -23,22 +23,22 @@ const Gallery = () => {
     if (user._id) fetchGallery();
   }, [user._id]);
 
-  const handleUpload = async () => {
-    if (!file) return;
-
+  const handleFileChange = async (e) => {
+    const selectedFile = e.target.files[0];
+    if (!selectedFile) return;
+    
     if (images.length >= 5) {
       alert("You can only upload up to 5 images.");
       return;
     }
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", selectedFile);
     formData.append("serviceProvider", user._id);
 
     try {
       setLoading(true);
       await galleryService.uploadImage(formData);
-      setFile(null);
       await fetchGallery();
     } catch (error) {
       console.error("Upload failed:", error);
@@ -69,12 +69,7 @@ const Gallery = () => {
           <input
             id="hiddenFileInput"
             type="file"
-            onChange={(e) => {
-              if (e.target.files[0]) {
-                setFile(e.target.files[0]);
-                handleUpload();
-              }
-            }}
+            onChange={handleFileChange}
             className="hidden"
           />
 

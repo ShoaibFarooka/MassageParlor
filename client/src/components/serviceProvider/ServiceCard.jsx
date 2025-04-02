@@ -246,13 +246,13 @@ const ServiceCard = ({ key, provider }) => {
 
             <h3 className='text-lg font-semibold items-start mt-10 sm:mt-0'>Gallery</h3>
             {galleries?.images?.length > 0 ? (
-              <div className="grid grid-cols-2 md::grid-cols-3 lg:grid-cols-3 gap-4">
+              <div className="flex flex-wrap">
                 {galleries.images.map((image, index) => (
                   <img
                     key={index}
                     src={`http://localhost:5777/static/images/${image.url}`}
                     alt={`Gallery Image ${index + 1}`}
-                    className={`w-[100px] sm:w-[124px] h-[100px] sm:h-[124px] m-2 sm:m-4 
+                    className={` object-cover w-[100px] sm:w-[124px] h-[100px] sm:h-[124px] m-2 sm:m-2 
                       ${!user && index >= 3 ? "opacity-50 blur-sm" : ""}`}
                   />
                 ))}

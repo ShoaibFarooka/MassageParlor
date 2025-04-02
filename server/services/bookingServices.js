@@ -9,60 +9,64 @@ const createBooking = async (bookingData) => {
   try {
     const { startDate, startTime, endTime, serviceProvider } = bookingData;
 
-    // Parse booking times in UTC with proper format
-    const startDateTime = moment.utc(`${startDate} ${startTime}`, "YYYY-MM-DD hh:mm A");
-    const endDateTime = moment.utc(`${startDate} ${endTime}`, "YYYY-MM-DD hh:mm A");
-
+    // Parse booking times for comparison
+    const newStartDateTime = moment.utc(`${startDate} ${startTime}`, "YYYY-MM-DD hh:mm A");
+    const newEndDateTime = moment.utc(`${startDate} ${endTime}`, "YYYY-MM-DD hh:mm A");
+    
     // If end time is not after start (crossing midnight case)
-    const adjustedEndDateTime = endDateTime.isAfter(startDateTime) 
-      ? endDateTime 
-      : endDateTime.add(1, 'day');
+    const adjustedNewEndDateTime = newEndDateTime.isAfter(newStartDateTime) 
+      ? newEndDateTime 
+      : newEndDateTime.add(1, 'day');
 
-    console.log("New booking start:", startDateTime.toString());
-    console.log("New booking end:", adjustedEndDateTime.toString());
+    console.log("New booking start:", newStartDateTime.toString());
+    console.log("New booking end:", adjustedNewEndDateTime.toString());
 
     const serviceProviderId = new mongoose.Types.ObjectId(serviceProvider);
 
-    // Check for overlapping bookings (including approved ones)
-    const conflict = await Booking.findOne({
+    // Find all bookings for this service provider on this date
+    const existingBookings = await Booking.find({
       serviceProvider: serviceProviderId,
-      status: 'Approved', // Only check against approved bookings
-      $or: [
-        // Case 1: New booking starts during an existing booking
-        {
-          startDateTime: { $lte: startDateTime.toDate() },
-          endDateTime: { $gt: startDateTime.toDate() }
-        },
-        // Case 2: New booking ends during an existing booking
-        {
-          startDateTime: { $lt: adjustedEndDateTime.toDate() },
-          endDateTime: { $gte: adjustedEndDateTime.toDate() }
-        },
-        // Case 3: New booking completely contains an existing booking
-        {
-          startDateTime: { $gte: startDateTime.toDate() },
-          endDateTime: { $lte: adjustedEndDateTime.toDate() }
-        }
-      ]
+      startDate: startDate,
+      status: { $in: ['Pending', 'Approved'] }
     }).session(session);
 
-    if (conflict) {
-      console.log("Conflict found:", {
-        existingStart: conflict.startDateTime,
-        existingEnd: conflict.endDateTime,
-        newStart: startDateTime.toDate(),
-        newEnd: adjustedEndDateTime.toDate()
-      });
-      throw new Error("This timing is already booked.");
+    // Check each booking for time conflicts
+    for (const booking of existingBookings) {
+      // Parse the existing booking's times
+      const existingStartDateTime = moment.utc(`${booking.startDate} ${booking.startTime}`, "YYYY-MM-DD hh:mm A");
+      const existingEndDateTime = moment.utc(`${booking.startDate} ${booking.endTime}`, "YYYY-MM-DD hh:mm A");
+      
+      // Handle midnight crossing for existing booking
+      const adjustedExistingEndDateTime = existingEndDateTime.isAfter(existingStartDateTime) 
+        ? existingEndDateTime 
+        : existingEndDateTime.add(1, 'day');
+      
+      // Check for overlap
+      const hasOverlap = (
+        // New booking starts during existing booking
+        (newStartDateTime.isSameOrAfter(existingStartDateTime) && newStartDateTime.isBefore(adjustedExistingEndDateTime)) ||
+        // New booking ends during existing booking
+        (adjustedNewEndDateTime.isAfter(existingStartDateTime) && adjustedNewEndDateTime.isSameOrBefore(adjustedExistingEndDateTime)) ||
+        // New booking contains existing booking
+        (newStartDateTime.isSameOrBefore(existingStartDateTime) && adjustedNewEndDateTime.isSameOrAfter(adjustedExistingEndDateTime))
+      );
+
+      if (hasOverlap) {
+        console.log("Conflict found:", {
+          existingStart: existingStartDateTime.format("hh:mm A"),
+          existingEnd: adjustedExistingEndDateTime.format("hh:mm A"),
+          newStart: newStartDateTime.format("hh:mm A"),
+          newEnd: adjustedNewEndDateTime.format("hh:mm A")
+        });
+        throw new Error("This timing is already booked.");
+      }
     }
 
-    // Create the new booking
+    // Create the new booking if no conflicts
     const newBooking = await Booking.create(
       [{
         ...bookingData,
         serviceProvider: serviceProviderId,
-        startDateTime: startDateTime.toDate(),
-        endDateTime: adjustedEndDateTime.toDate(),
         status: 'Pending' // Ensure status is set
       }],
       { session }
