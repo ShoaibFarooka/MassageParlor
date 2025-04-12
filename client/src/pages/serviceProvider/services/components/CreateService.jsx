@@ -5,10 +5,10 @@ import serviceService from '../../../../services/serviceService';
 import { useDispatch, useSelector } from 'react-redux';
 import galleryService from '../../../../services/galleryService';
 
-function CreateEditService({ isOpen, onClose, serviceId,onLoad }) {
+function CreateEditService({ isOpen, onClose, serviceId, onLoad }) {
     const isEditMode = Boolean(serviceId);
     const user = useSelector((state) => state.user.user);
-    const [galleryData,setGalleryData]=useState()
+    const [galleryData, setGalleryData] = useState()
 
     const [service, setService] = useState({
         serviceProvider: user?._id || '', // Ensure it always has a value
@@ -25,17 +25,17 @@ function CreateEditService({ isOpen, onClose, serviceId,onLoad }) {
 
     const fetchGallery = async () => {
         try {
-          const res = await galleryService.getGalleryByServiceProvider(user?._id);
-          setGalleryData(res?.gallery || []);
-          console.log(res, 'res123');
+            const res = await galleryService.getGalleryByServiceProvider(user?._id);
+            setGalleryData(res?.gallery || []);
+            console.log(res, 'res123');
         } catch (error) {
-          console.error("Failed to fetch gallery:", error);
+            console.error("Failed to fetch gallery:", error);
         }
-      };
-    
-      useEffect(() => {
+    };
+
+    useEffect(() => {
         if (user._id) fetchGallery();
-      }, [user._id]);
+    }, [user._id]);
 
     useEffect(() => {
         if (isEditMode && isOpen) {
@@ -81,7 +81,7 @@ function CreateEditService({ isOpen, onClose, serviceId,onLoad }) {
         if (!service.name.trim()) errors.name = 'Name is required';
         if (!service.price) errors.price = 'Price is required';
         if (!service.duration.trim()) errors.duration = 'Duration is required';
-        if (!service.calendarColor.trim()) errors.calendarColor = 'Calendar calendarColor is required';
+        if (!service.calendarColor.trim()) errors.calendarColor = 'Calendar Color is required';
         if (service.isActive === '') errors.isActive = 'Active status is required';
         if (!service.description.trim()) errors.description = 'Description is required';
 
@@ -166,7 +166,7 @@ function CreateEditService({ isOpen, onClose, serviceId,onLoad }) {
                         </div>
 
                         <div>
-                            <label htmlFor="calendarColor" className="label">Calendar calendarColor</label>
+                            <label htmlFor="calendarColor" className="label">Calendar Color</label>
                             <select
                                 id="calendarColor"
                                 className="w-full input"
@@ -211,18 +211,18 @@ function CreateEditService({ isOpen, onClose, serviceId,onLoad }) {
                     </div>
 
 
-                  <div className='flex justify-center items-center'>
-                  <button
-                        type="button"
-                        onClick={onClose}
-                        className="h-[48px] mr-2 cursor-pointer px-8 py-2 text-sm font-medium text-[#5E50BF] border border-[#5E50BF] bg-white min-w-[200px] rounded-tr-none rounded-full"
-                    >
-                        Cancel
-                    </button>
-                    <button type="submit" className="md:w-auto h-[48px] cursor-pointer px-8 py-2 text-sm font-medium text-white bg-[#5E50BF] min-w-[200px] rounded-tr-none rounded-full">
-                        {isEditMode ? 'Update Service' : 'Add Service'}
-                    </button>
-                  </div>
+                    <div className='flex justify-center items-center'>
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="h-[48px] mr-2 cursor-pointer px-8 py-2 text-sm font-medium text-[#5E50BF] border border-[#5E50BF] bg-white min-w-[200px] rounded-tr-none rounded-full"
+                        >
+                            Cancel
+                        </button>
+                        <button type="submit" className="md:w-auto h-[48px] cursor-pointer px-8 py-2 text-sm font-medium text-white bg-[#5E50BF] min-w-[200px] rounded-tr-none rounded-full">
+                            {isEditMode ? 'Update Service' : 'Add Service'}
+                        </button>
+                    </div>
 
                 </form>
             </div>

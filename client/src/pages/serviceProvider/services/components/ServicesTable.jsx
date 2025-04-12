@@ -81,7 +81,7 @@ function ServiceTable({ services, setServices, onLoad }) {
               Price
             </th>
             <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal">
-              Duration
+              Duration(h)
             </th>
             <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal">
               Calendar Color
