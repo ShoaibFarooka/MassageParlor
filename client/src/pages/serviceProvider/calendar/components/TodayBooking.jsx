@@ -18,7 +18,7 @@ const TodayBooking = ({ events }) => {
                             <div className="relative w-full rounded-br-none mb-[24px] rounded-[24px] bg-pink-200 shadow flex items-center">
                                 <div className="absolute left-0 top-0 bottom-0 w-5 rounded-l-[24px] bg-pink-500"></div>
 
-                                <div className="pl-10 min-h-[95px]">
+                                <div className="pl-10 pt-2 min-h-[95px]">
                                     <p className="text-sm font-bold text-gray-900 pt-[13px]">{event?.service_id?.name} - {event?.service_id?.duration || 'N/A'}h</p>
                                     <p className="text-pink-700 font-semibold text-sm py-1"> {event?.service_id?.description ?
                                         (event.service_id.description.length > 50 ?

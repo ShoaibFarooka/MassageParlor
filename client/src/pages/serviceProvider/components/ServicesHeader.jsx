@@ -14,6 +14,7 @@ import CustomModal from '../../../components/CustomModal/CustomModal';
 import UserProfile from '../../../components/Profile/UserProfile';
 import ServiceProviderProfile from '../../../components/Profile/ServiceProviderProfile';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const ServicesHeader = ({ title }) => {
     const user = useSelector((state) => state.user.user);
@@ -30,13 +31,10 @@ const ServicesHeader = ({ title }) => {
             Cookies.remove('parlor-jwt-token');
             dispatch(setLoggedOut());
             dispatch(clearUser());
-            navigate('/login')
-            dispatch(HideLoading());
         } catch (error) {
-            dispatch(HideLoading());
             message.error(error.response.data);
         }
-        
+        dispatch(HideLoading());
     };
 
     useEffect(() => {
