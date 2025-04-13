@@ -39,7 +39,7 @@ function ProviderSignUpForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     let errors = {};
@@ -47,9 +47,9 @@ function ProviderSignUpForm() {
     if (!user.surname) errors.surname = "Surname is required";
     if (!user.email) {
       errors.email = "Email is required";
-  } else if (!emailRegex.test(user.email)) {
+    } else if (!emailRegex.test(user.email)) {
       errors.email = "Please enter a valid email address";
-  }
+    }
     if (!user.number) errors.number = "Contact number is required";
     if (!user.password) errors.password = "Password is required";
     if (user.password && user.password !== confirmPassword) errors.confirmPassword = "Passwords do not match";
@@ -91,7 +91,7 @@ function ProviderSignUpForm() {
       navigate("/login");
       toast.success('New Service Provider Registered');
     } catch (err) {
-      console.log(err,'qwqw')
+      console.log(err, 'qwqw')
       toast.error(err.response.data.error);
       setError({ form: "An error occurred. Please try again later." });
     }
@@ -185,7 +185,7 @@ function ProviderSignUpForm() {
             name='email'
             id='email'
             autoComplete="off"
-            type="email"
+            type="text"
             placeholder="email@email.com"
             className="w-full input "
             value={user.email}
@@ -202,10 +202,15 @@ function ProviderSignUpForm() {
             name='num'
             id='num'
             autoComplete="off"
-            type="tel"
+            type="number"
             placeholder="0710000000"
             className="w-full input"
             value={user.number}
+            onKeyDown={(e) => {
+              if (["e", "E", "+", "-"].includes(e.key)) {
+                e.preventDefault();
+              }
+            }}
             onChange={(e) => setUser({ ...user, number: e.target.value })}
           />
           {error.number && <div className="text-red-500 text-sm">{error.number}</div>}
