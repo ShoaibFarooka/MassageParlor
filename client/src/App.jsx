@@ -4,13 +4,25 @@ import { useSelector } from "react-redux";
 import Router from './router/Router.jsx';
 import { Toaster } from 'react-hot-toast';
 import CustomModal from './components/CustomModal/CustomModal.jsx';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
+
 
 function App() {
   const { counter } = useSelector((state) => state.loader);
   const loading = counter > 0;
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(() => {
+    const modalCookie = Cookies.get('ageVerified');
+    return modalCookie !== 'true';
+  });
+
   const [condition, setCondition] = useState(false);
+
+  const handleYes = () => {
+    Cookies.set('ageVerified', 'true', { expires: 30 });
+    setIsOpen(false);
+    setCondition(false);
+  };
 
   return (
     <div className="App">
@@ -34,7 +46,7 @@ function App() {
               No
             </button>
 
-            <button onClick={() => { setIsOpen(false); setCondition(false) }} className=" cursor-pointer px-4 py-2  bg-[#5E50BF] w-[131px] h-[48px] text-white rounded-full rounded-tl-none ">
+            <button onClick={handleYes} className=" cursor-pointer px-4 py-2  bg-[#5E50BF] w-[131px] h-[48px] text-white rounded-full rounded-tl-none ">
               Yes
             </button>
           </div>

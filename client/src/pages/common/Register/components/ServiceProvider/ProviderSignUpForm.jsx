@@ -39,11 +39,17 @@ function ProviderSignUpForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     let errors = {};
     if (!user.name) errors.name = "Name is required";
     if (!user.surname) errors.surname = "Surname is required";
-    if (!user.email) errors.email = "Email is required";
+    if (!user.email) {
+      errors.email = "Email is required";
+  } else if (!emailRegex.test(user.email)) {
+      errors.email = "Please enter a valid email address";
+  }
     if (!user.number) errors.number = "Contact number is required";
     if (!user.password) errors.password = "Password is required";
     if (user.password && user.password !== confirmPassword) errors.confirmPassword = "Passwords do not match";
