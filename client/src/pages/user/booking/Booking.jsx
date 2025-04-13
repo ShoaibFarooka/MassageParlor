@@ -147,12 +147,28 @@ const UserBooking = () => {
     return { hours, minutes };
   };
 
+  const colorNameToRGB = {
+    Red: [255, 0, 0],
+    Green: [0, 128, 0],
+    Blue: [0, 0, 255],
+    Purple: [128, 0, 128],
+    // Add more color mappings as needed
+  };
+
+
+  const getRGBAColor = (colorName, opacity = 0.5) => {
+    const rgb = colorNameToRGB[colorName];
+    if (rgb) {
+      return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${opacity})`;
+    }
+    // Fallback to a default color if the name isn't found
+    return `rgba(0, 0, 0, ${opacity})`;
+  };
 
   const getBookingData = async () => {
     dispatch(ShowLoading());
     try {
       const response = await bookingService.getBookingsByUserId(user?._id);
-
       const formattedEvents = response.map((booking) => {
         const startDate = new Date(booking.startDate);
         const startTime = parseTime(booking.startTime);
@@ -163,7 +179,8 @@ const UserBooking = () => {
           title: booking.service_id.name,
           start: new Date(startDate.setHours(startTime.hours, startTime.minutes)),
           end: new Date(startDate.setHours(endTime.hours, endTime.minutes)),
-          color: booking.color,
+          color: booking?.service_id?.calendarColor,
+          status: booking.status,
         };
       });
 
@@ -315,18 +332,30 @@ const UserBooking = () => {
           endAccessor="end"
           style={{ height: 700, border: "none" }}
           className="border rounded-md"
-          eventPropGetter={(event) => ({
-            style: {
-              backgroundColor: `${event.color}80`,
-              color: "black",
-              borderTop: '0px',
-              borderRight: '0px',
-              borderBottom: '0px',
-              borderRadius: "10px",
-              borderLeft: `10px solid ${event.color}`,
-              padding: "5px",
-            },
-          })}
+          eventPropGetter={(event) => {
+            const isPending = event.status === "Pending";
+
+            if (event.color) {
+              return {
+                style: {
+                  backgroundColor: `${getRGBAColor(event.color, 0.5)}`,
+                  color: "black",
+                  borderTop: '0px',
+                  borderRight: '0px',
+                  borderBottom: '0px',
+                  borderRadius: "10px",
+                  borderLeft: `10px solid ${event.color}`,
+                  padding: "5px",
+                  opacity: isPending ? 0.5 : 1,
+                },
+              };
+            }
+
+            // Return an empty style object for events without a color
+            return {};
+          }}
+
+
           date={currentDate}
           onNavigate={(newDate) => {
             // newDate is the date RBC wants to show after Next/Prev/Today

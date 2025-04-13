@@ -20,7 +20,7 @@ const CustomDateInput = forwardRef(({ value, onClick, placeholder }, ref) => (
       value={value}
       placeholder={placeholder}
       readOnly
-      className="w-full input mb-6"
+      className="w-full input mb-6 cursor-pointer"
       ref={ref}
     />
     <div className="absolute right-4 top-4 text-[#858FAD] pointer-events-none">
@@ -36,7 +36,7 @@ const CustomTimeInput = forwardRef(({ value, onClick, placeholder }, ref) => (
       value={value}
       placeholder={placeholder}
       readOnly
-      className="w-full input"
+      className="w-full input cursor-pointer"
       ref={ref}
     />
     <div className="absolute right-4 top-4 text-[#858FAD] pointer-events-none">
