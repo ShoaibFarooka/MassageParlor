@@ -91,7 +91,6 @@ function ProviderSignUpForm() {
       navigate("/login");
       toast.success('New Service Provider Registered');
     } catch (err) {
-      console.log(err, 'qwqw')
       toast.error(err.response.data.error);
       setError({ form: "An error occurred. Please try again later." });
     }

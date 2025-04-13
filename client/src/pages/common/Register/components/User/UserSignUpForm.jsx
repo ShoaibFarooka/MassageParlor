@@ -93,7 +93,7 @@ function UserSignUpForm() {
             navigate("/login");
             toast.success('New User Registered');
         } catch (err) {
-            toast.error("Registration error: " + err.message);
+            toast.error(err.response.data.error);
             setError({ form: "An error occurred. Please try again later." });
         }
     };
