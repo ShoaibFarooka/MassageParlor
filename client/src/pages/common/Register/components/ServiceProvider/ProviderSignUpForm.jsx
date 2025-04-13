@@ -96,8 +96,6 @@ function ProviderSignUpForm() {
     }
   };
 
-
-
   return (
     <form onSubmit={handleSubmit} autoComplete="off" className="mt-6">
       <div className="flex justify-center">
