@@ -14,7 +14,7 @@ const createBooking = async (req, res, next) => {
 };
 
 
-const getBookings = async ( res, next) => {
+const getBookings = async ( req, res, next) => {
   try {
     const bookings = await bookingService.getBookings();
     res.status(200).json(bookings);
