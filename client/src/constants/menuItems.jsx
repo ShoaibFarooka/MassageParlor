@@ -5,8 +5,8 @@ export const menuItems = {
     admin: [
         { path: '/admin/dashboard', label: 'Dashboard', icon: <DashboardIcon />, disabled: false },
         { path: '/admin/calendar', label: 'Calendar', icon: <CampaignsIcon />, disabled: false },
-        { path: '/admin/services', label: 'Services', icon: <CampaignsIcon />, disabled: false },
-        { path: '/admin/gallery', label: 'Gallery', icon: <CampaignsIcon />, disabled: false },
+        { path: '/admin/users', label: 'User', icon: <CampaignsIcon />, disabled: false },
+        { path: '/admin/service-providers', label: 'Service Provider', icon: <CampaignsIcon />, disabled: false },
     ],
     'service-provider': [
         { path: '/service/dashboard', label: 'Dashboard', icon: <DashboardIcon />, disabled: false },

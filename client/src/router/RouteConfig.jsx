@@ -15,7 +15,7 @@ import Gallery from '../pages/serviceProvider/gallery/Gallery.jsx';
 import AdminDashboard from '../pages/admin/dashboard/Dashboard.jsx';
 import AdminCalendar from '../pages/admin/calendar/Calendar.jsx';
 import AdminServices from '../pages/admin/services/Services.jsx';
-import AdminGallery from '../pages/admin/gallery/Gallery.jsx';
+import AdminUsers from '../pages/admin/users/AdminUsers.jsx';
 
 const routes = [
 
@@ -31,8 +31,8 @@ const routes = [
   //admin
   { path: "/admin/dashboard", element: <AdminDashboard />, protected: true, authRedirect: false, showSidebar: true },
   { path: "/admin/calendar", element: <AdminCalendar />, protected: true, authRedirect: false, showSidebar: true },
-  { path: "/admin/services", element: <AdminServices />, protected: true, authRedirect: false, showSidebar: true },
-  { path: "/admin/gallery", element: <AdminGallery />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/admin/users", element: <AdminUsers />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/admin/service-providers", element: <AdminServices />, protected: true, authRedirect: false, showSidebar: true },
 
   //common
   { path: "/", element: <Redirect />, protected: true, authRedirect: false, showSidebar: false },
