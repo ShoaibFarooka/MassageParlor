@@ -12,17 +12,13 @@ import Calendar from '../pages/serviceProvider/calendar/Calendar.jsx';
 import Services from '../pages/serviceProvider/services/Services.jsx';
 import Gallery from '../pages/serviceProvider/gallery/Gallery.jsx';
 
+import AdminDashboard from '../pages/admin/dashboard/Dashboard.jsx';
+import AdminCalendar from '../pages/admin/calendar/Calendar.jsx';
+import AdminServices from '../pages/admin/services/Services.jsx';
+import AdminGallery from '../pages/admin/gallery/Gallery.jsx';
+
 const routes = [
-  //user
-  // { path: "/login", element: <AuthenticatedRedirect><UserLogin /></AuthenticatedRedirect>, protected: false, showSidebar: false },
-  // { path: "/register", element: <AuthenticatedRedirect><Register /></AuthenticatedRedirect>, protected: false, showSidebar: false },
-  // { path: "/forgot-password", element: <AuthenticatedRedirect><ForgetPassword /></AuthenticatedRedirect>, protected: false, showSidebar: false },
-  // { path: "/reset-password", element: <AuthenticatedRedirect><ResetPassword /></AuthenticatedRedirect>, protected: false, showSidebar: false },
-  // { path: "/billing", element: <Billing />, protected: true, showSidebar: true },
-  // { path: "/plans", element: <Plans />, protected: true, showSidebar: true },
-  // { path: "/success", element: <Success />, protected: true, showSidebar: false },
-  // { path: "/settings", element: <Settings />, protected: true, showSidebar: true },
-  // { path: "/", element: <Redirect />, protected: true, showSidebar: true },
+
   { path: "/user/home", element: <UserHome />, protected: true, authRedirect: false, showSidebar: true },
   { path: "/user/booking", element: <UserBooking />, protected: true, authRedirect: false, showSidebar: true },
 
@@ -33,10 +29,10 @@ const routes = [
   { path: "/service/gallery", element: <Gallery />, protected: true, authRedirect: false, showSidebar: true },
 
   //admin
-  // { path: "/company/admin/dashboard", element: <AdminDashboard />, protected: true, showSidebar: true },
-  // { path: "/company/admin/employees", element: <AdminEmployees />, protected: true, showSidebar: true },
-  // { path: "/company/admin/products", element: <AdminProducts />, protected: true, showSidebar: true },
-  // { path: "/company/admin/settings", element: <AdminSettings />, protected: true, showSidebar: true },
+  { path: "/admin/dashboard", element: <AdminDashboard />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/admin/calendar", element: <AdminCalendar />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/admin/services", element: <AdminServices />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/admin/gallery", element: <AdminGallery />, protected: true, authRedirect: false, showSidebar: true },
 
   //common
   { path: "/", element: <Redirect />, protected: true, authRedirect: false, showSidebar: false },

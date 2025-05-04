@@ -6,7 +6,7 @@ const Redirect = () => {
     console.log('User: ', user);
 
     if (user.role === 'admin') {
-        return <Navigate to="/admin/home" />;
+        return <Navigate to="/admin/dashboard" />;
     } else if (user.role === 'service-provider') {
         return <Navigate to="/service/dashboard" />;
     } else if (user.role === 'user') {
