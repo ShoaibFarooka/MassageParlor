@@ -14,7 +14,7 @@ const Calendar = () => {
   const getBookingData = async () => {
     dispatch(ShowLoading());
     try {
-      const response = await bookingService.getBookingsByServiceProvider();
+      const response = await bookingService.getBookings();
       setEvents(response);
     } catch (error) {
       console.error("Error fetching bookings:", error);
