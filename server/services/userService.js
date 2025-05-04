@@ -254,7 +254,7 @@ const fetchUser = async (userId) => {
     height: 1,
     hairColor: 1,
     callOutType: 1,
-    ethnicity:1,
+    ethnicity: 1,
     image: 1,
     role: 1,
     _id: 1,
