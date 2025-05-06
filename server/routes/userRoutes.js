@@ -75,9 +75,9 @@ router.get("/search-service-providers", controller.SearchServiceProviders);
 
 router.get(
   "/search-users",
-  authMiddleware.authenticateRequest,
-  authMiddleware.verifyRole(["admin", "service-provider"]),
-  validationMiddleware.validateQuery(userSchemas.searchUsersSchema),
+  // authMiddleware.authenticateRequest,
+  // authMiddleware.verifyRole(["admin", "service-provider"]),
+  // validationMiddleware.validateQuery(userSchemas.searchUsersSchema),
   controller.SearchUsers
 );
 

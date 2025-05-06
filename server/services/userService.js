@@ -269,6 +269,66 @@ const fetchUser = async (userId) => {
   return user;
 };
 
+// const searchUsers = async (pageIndex, limit, searchQuery, role) => {
+//   const skip = (pageIndex - 1) * limit;
+//   let query = {};
+//   if (searchQuery && searchQuery !== "") {
+//     query = {
+//       $or: [
+//         { name: { $regex: searchQuery, $options: "i" } },
+//         { email: { $regex: searchQuery, $options: "i" } },
+//         { phone: { $regex: searchQuery, $options: "i" } },
+//       ],
+//     };
+//   }
+//   if (role) {
+//     query = { ...query, role };
+//   }
+//   const totalCount = await User.countDocuments(query);
+//   const totalPages = Math.ceil(totalCount / limit);
+//   const userProjection = {
+//     name: 1,
+//     email: 1,
+//     number: 1,
+//     dateOfBirth: 1,
+//     Location: 1,
+//     city: 1,
+//     zip: 1,
+//     role: 1,
+//     notes: 1,
+//     createdAt: 1,
+//   };
+//   const users = await User.find(query, userProjection)
+//     .sort({ createdAt: -1 }) // Sort by createdAt descending (-1)
+//     .skip(skip)
+//     .limit(limit);
+
+//   if (!users || users.length <= 0) {
+//     const error = new Error("Users not found!");
+//     error.code = 404;
+//     throw error;
+//   }
+
+//   let usersWithSubscription = [];
+//   if (role === "user") {
+//     // Create an array of promises to fetch subscription info for each user
+//     const subscriptionPromises = users.map(async (user) => {
+//       const subscriptionInfo =
+//         await subscriptionService.getUserSubscriptionStatus(user._id);
+//       return { ...user.toObject(), ...subscriptionInfo }; // Merge user data with subscription info
+//     });
+
+//     // Await all promises and attach subscription info to users
+//     usersWithSubscription = await Promise.all(subscriptionPromises);
+//   }
+
+//   return {
+//     users: role === "user" ? usersWithSubscription : users,
+//     totalPages,
+//     totalCount,
+//   };
+// };
+
 const searchUsers = async (pageIndex, limit, searchQuery, role) => {
   const skip = (pageIndex - 1) * limit;
   let query = {};
@@ -297,6 +357,7 @@ const searchUsers = async (pageIndex, limit, searchQuery, role) => {
     role: 1,
     notes: 1,
     createdAt: 1,
+    isActive: 1,
   };
   const users = await User.find(query, userProjection)
     .sort({ createdAt: -1 }) // Sort by createdAt descending (-1)
@@ -309,21 +370,21 @@ const searchUsers = async (pageIndex, limit, searchQuery, role) => {
     throw error;
   }
 
-  let usersWithSubscription = [];
-  if (role === "user") {
-    // Create an array of promises to fetch subscription info for each user
-    const subscriptionPromises = users.map(async (user) => {
-      const subscriptionInfo =
-        await subscriptionService.getUserSubscriptionStatus(user._id);
-      return { ...user.toObject(), ...subscriptionInfo }; // Merge user data with subscription info
-    });
+  // let usersWithSubscription = [];
+  // if (role === "user") {
+  //   // Create an array of promises to fetch subscription info for each user
+  //   const subscriptionPromises = users.map(async (user) => {
+  //     const subscriptionInfo =
+  //       await subscriptionService.getUserSubscriptionStatus(user._id);
+  //     return { ...user.toObject(), ...subscriptionInfo }; // Merge user data with subscription info
+  //   });
 
-    // Await all promises and attach subscription info to users
-    usersWithSubscription = await Promise.all(subscriptionPromises);
-  }
+  //   // Await all promises and attach subscription info to users
+  //   usersWithSubscription = await Promise.all(subscriptionPromises);
+  // }
 
   return {
-    users: role === "user" ? usersWithSubscription : users,
+    users: users,
     totalPages,
     totalCount,
   };

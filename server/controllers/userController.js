@@ -225,6 +225,7 @@ module.exports = {
 };
 
 const SearchUsers = async (req, res, next) => {
+  console.log('11111')
   try {
     const { pageIndex, limit, searchQuery, status } = req.query;
     const parsedPageIndex = parseInt(pageIndex);
@@ -244,6 +245,7 @@ const SearchUsers = async (req, res, next) => {
     }
     res.status(200).json({ result });
   } catch (error) {
+    console.log(error, "error in search users");
     next(error);
   }
 };
