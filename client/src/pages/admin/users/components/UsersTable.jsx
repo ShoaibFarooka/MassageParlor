@@ -106,7 +106,7 @@ function UsersTable({ users, setUsers, onLoad }) {
                 {service?.name}
               </td>
 
-              <td className="text-start text-[12px] pl-6">
+              <td className="text-center text-[12px] pl-6">
                 {service?.email}
               </td>
 
@@ -146,13 +146,7 @@ function UsersTable({ users, setUsers, onLoad }) {
         onClose={() => setDeleteOpen(false)}
         onConfirm={() => handleConfirmDelete()}
       />
-      <CreateEditService
-        isOpen={editOpen}
-        onClose={() => setEditOpen(false)}
-        serviceId={selectedServiceId}
-        onLoad={onLoad}
-      />
-
+      
     </div>
   );
 }

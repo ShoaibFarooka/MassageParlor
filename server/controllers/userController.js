@@ -225,7 +225,6 @@ module.exports = {
 };
 
 const SearchUsers = async (req, res, next) => {
-  console.log('11111')
   try {
     const { pageIndex, limit, searchQuery, status } = req.query;
     const parsedPageIndex = parseInt(pageIndex);
