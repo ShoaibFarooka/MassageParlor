@@ -358,6 +358,7 @@ const searchUsers = async (pageIndex, limit, searchQuery, role) => {
     notes: 1,
     createdAt: 1,
     isActive: 1,
+    image: 1,
   };
   const users = await User.find(query, userProjection)
     .sort({ createdAt: -1 }) // Sort by createdAt descending (-1)

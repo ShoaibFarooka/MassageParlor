@@ -5,32 +5,33 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { useDispatch, useSelector } from 'react-redux';
 import { HideLoading, ShowLoading } from '../../../../redux/loaderSlice';
 import DeleteConfirmationModal from '../../../../components/Delete/DeleteConfirmationModal';
-import CreateEditService from './CreateService';
+import CreateEditService from './CreateUser';
 import userService from '../../../../services/userService';
+import CreateUser from './CreateUser';
 
 function UsersTable({ users, setUsers, onLoad }) {
   const [deleteOpen, setDeleteOpen] = useState(false)
-  const [selectedServiceId, setSelectedServiceId] = useState(null);
-  const [editOpen, setEditOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [isOpen, setIsOpen] = useState(false)
 
   const dispatch = useDispatch();
 
-  const handleEdit = (id) => {
-    setSelectedServiceId(id);
-    setEditOpen(true);
+  const handleEdit = (data) => {
+    setSelectedUser(data);
+    setIsOpen(true);
   };
 
   const handleDeleteClick = (id) => {
-    setSelectedServiceId(id);
+    setSelectedUser(id);
     setDeleteOpen(true);
   };
 
   const handleConfirmDelete = async () => {
-    if (!selectedServiceId) return;
+    if (!selectedUser) return;
     dispatch(ShowLoading());
     try {
-      await userService.deleteUser(selectedServiceId);
-      setUsers((prevServices) => prevServices.filter(service => service.id !== selectedServiceId));
+      await userService.deleteUser(selectedUser);
+      setUsers((prevServices) => prevServices.filter(service => service.id !== selectedUser));
       toast.success("Service deleted successfully");
       onLoad()
     } catch (error) {
@@ -39,32 +40,9 @@ function UsersTable({ users, setUsers, onLoad }) {
     } finally {
       dispatch(HideLoading());
       setDeleteOpen(false);
-      setSelectedServiceId(null);
+      setSelectedUser(null);
     }
   };
-
-  // const handleToggle = async (id) => {
-  //   setUsers((prevServices) =>
-  //     prevServices.map((service) =>
-  //       service._id === id
-  //         ? { ...service, isActive: !service.isActive }
-  //         : service
-  //     )
-  //   );
-
-  //   try {
-  //     dispatch(ShowLoading());
-  //     await serviceService.updateService(id, { isActive: !users.find(service => service._id === id)?.isActive });
-  //     toast.success("Service status updated successfully");
-  //     onLoad();
-  //   } catch (error) {
-  //     console.error("Error updating service status:", error);
-  //     toast.error("Failed to update service status");
-  //   } finally {
-  //     dispatch(HideLoading());
-  //   }
-  // };
-
 
   return (
     <div className="bg-white rounded-lg shadow overflow-x-auto">
@@ -97,40 +75,41 @@ function UsersTable({ users, setUsers, onLoad }) {
           </tr>
         </thead>
         <tbody>
-          {users?.result?.users?.map((service) => (
+          {users?.result?.users?.map((user) => (
             <tr
-              key={service.id}
+              key={user.id}
               className="border-b border-[#E8E9EE] h-[79.96px] last:border-none bg-white"
             >
               <td className="text-start text-[12px] pl-6">
-                {service?.name}
+                {user?.name}
               </td>
 
               <td className="text-center text-[12px] pl-6">
-                {service?.email}
+                {user?.email}
               </td>
 
               <td className="text-center text-[12px] pl-6">
-                {service?.number}
+                {user?.number}
               </td>
 
               <td className="text-center text-[12px] pl-6">
-                {service?.dateOfBirth}
+                {user?.dateOfBirth}
               </td>
 
               <td className="text-center text-[12px] pl-6">
-                {service?.isActive ? "Active" : "Suspended"}
+                {user?.isActive ? "Active" : "Suspended"}
               </td>
 
               <td className=" flex justify-center items-center h-[79.96px] pr-6">
                 <button
-                  onClick={() => handleEdit(service._id)}
+                  onClick={() => handleEdit(user)}
                   className="border cursor-pointer border-[#D5D5D5] px-[15.8px] py-[8.17px] rounded-l-[7.69px]"
                 >
                   <FaEdit fontSize={14} color='#0E1E40' />
                 </button>
+
                 <button
-                  onClick={() => handleDeleteClick(service._id)}
+                  onClick={() => handleDeleteClick(user._id)}
                   className="border cursor-pointer border-[#D5D5D5] px-[15.8px] py-[8.17px] border-l-0 rounded-r-[7.69px]"
                 >
                   <RiDeleteBin6Line fontSize={14} color='#EF3826' />
@@ -146,7 +125,9 @@ function UsersTable({ users, setUsers, onLoad }) {
         onClose={() => setDeleteOpen(false)}
         onConfirm={() => handleConfirmDelete()}
       />
-      
+
+      <CreateUser selectedUser={selectedUser} onLoad={onLoad} isOpen={isOpen} onClose={() => setIsOpen(false)} />
+
     </div>
   );
 }
