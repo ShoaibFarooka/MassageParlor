@@ -1,4 +1,4 @@
-import React, { useState, forwardRef, useRef } from 'react';
+import React, { useState, forwardRef, useRef, useEffect } from 'react';
 import { FaCalendarCheck, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
@@ -26,12 +26,12 @@ function CreateUser({ isOpen, onClose, selectedUser, onLoad }) {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
     const [user, setUser] = useState({
-        name: selectedUser ? selectedUser.name.split(" ")[0] : "",
-        surname: selectedUser ? selectedUser.name.split(" ")[1] : "",
-        dateOfBirth: selectedUser ? selectedUser.dateOfBirth : "",
-        number: selectedUser ? selectedUser.number : "",
-        email: selectedUser ? selectedUser.email : "",
-        password: selectedUser ? selectedUser.password : "",
+        name: "",
+        surname: "",
+        dateOfBirth: "",
+        number: "",
+        email: "",
+        password: ""
     });
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState({});
@@ -40,7 +40,28 @@ function CreateUser({ isOpen, onClose, selectedUser, onLoad }) {
     const [imageFile, setImageFile] = useState(null);
     const fileInputRef = useRef(null);
 
-    console.log(selectedUser, "selectedUser");
+    console.log(selectedUser,)
+
+    useEffect(() => {
+        if (selectedUser) {
+            setUser({
+                name: selectedUser.name.split(" ")[0] || "",
+                surname: selectedUser.name.split(" ")[1] || "",
+                dateOfBirth: selectedUser.dateOfBirth,
+                number: selectedUser.number,
+                email: selectedUser.email,
+            });
+
+            if (selectedUser.dateOfBirth) {
+                const parsedDate = new Date(selectedUser.dateOfBirth);
+                if (!isNaN(parsedDate)) {
+                    setSelectedDate(parsedDate);
+                }
+            }
+        }
+    }, [selectedUser]);
+
+
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
@@ -207,8 +228,7 @@ function CreateUser({ isOpen, onClose, selectedUser, onLoad }) {
                                 <CustomDateInput
                                     value={
                                         selectedDate
-                                            ? selectedDate.toLocaleDateString('en-GB', {
-                                                timeZone: 'UTC',
+                                            ? selectedDate.toLocaleDateString('en-US', {
                                                 year: 'numeric',
                                                 month: 'short',
                                                 day: '2-digit',
@@ -217,8 +237,9 @@ function CreateUser({ isOpen, onClose, selectedUser, onLoad }) {
                                     }
                                 />
                             }
-                            dateFormat="MMM, dd yyyy"
+                            dateFormat="MMM dd, yyyy"
                         />
+
 
                     </div>
                 </div>
@@ -264,7 +285,7 @@ function CreateUser({ isOpen, onClose, selectedUser, onLoad }) {
                 </div>
 
 
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                {!selectedUser && <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                     {/* Password */}
                     <div className='mb-6'>
                         <label htmlFor="pass" className="label">Password</label>
@@ -326,12 +347,12 @@ function CreateUser({ isOpen, onClose, selectedUser, onLoad }) {
 
                         </div>
                     </div>
-                </div>
+                </div>}
 
                 {/* Sign Up Button */}
                 <button
                     type="submit"
-                    className="w-full h-[48px] cursor-pointer py-2 text-sm font-medium text-white bg-[#5E50BF] rounded-full rounded-tr-none"
+                    className="w-full h-[48px] mt-2 cursor-pointer py-2 text-sm font-medium text-white bg-[#5E50BF] rounded-full rounded-tr-none"
                 >
                     Sign up
                 </button>
