@@ -8,7 +8,7 @@ import { HideLoading, ShowLoading } from '../../../../redux/loaderSlice';
 import DeleteConfirmationModal from '../../../../components/Delete/DeleteConfirmationModal';
 import CreateEditService from './CreateService';
 
-function ServiceTable({ services, setServices, onLoad }) {
+function ServiceTable({ serviceProviders, setServiceProviders, onLoad }) {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [editOpen, setEditOpen] = useState(false);
@@ -30,7 +30,7 @@ function ServiceTable({ services, setServices, onLoad }) {
     dispatch(ShowLoading());
     try {
       await serviceService.deleteService(selectedServiceId);
-      setServices((prevServices) => prevServices.filter(service => service.id !== selectedServiceId));
+      setServiceProviders((prevServices) => prevServices.filter(service => service.id !== selectedServiceId));
       toast.success("Service deleted successfully");
       onLoad()
     } catch (error) {
@@ -44,7 +44,7 @@ function ServiceTable({ services, setServices, onLoad }) {
   };
 
   const handleToggle = async (id) => {
-    setServices((prevServices) =>
+    setServiceProviders((prevServices) =>
       prevServices.map((service) =>
         service._id === id
           ? { ...service, isActive: !service.isActive }
@@ -54,7 +54,7 @@ function ServiceTable({ services, setServices, onLoad }) {
 
     try {
       dispatch(ShowLoading());
-      await serviceService.updateService(id, { isActive: !services.find(service => service._id === id)?.isActive });
+      await serviceService.updateService(id, { isActive: !serviceProviders.find(service => service._id === id)?.isActive });
       toast.success("Service status updated successfully");
       onLoad();
     } catch (error) {
@@ -64,6 +64,8 @@ function ServiceTable({ services, setServices, onLoad }) {
       dispatch(HideLoading());
     }
   };
+
+  console.log(serviceProviders,'serviceProviders')
 
 
   return (
@@ -95,71 +97,47 @@ function ServiceTable({ services, setServices, onLoad }) {
           </tr>
         </thead>
         <tbody>
-          {services.map((service) => (
-            <tr
-              key={service.id}
-              className="border-b border-[#E8E9EE] h-[79.96px] last:border-none bg-white"
-            >
-              <td className="text-center text-[12px] pl-6">
-                {service.name}
-              </td>
-              <td className="text-center text-[12px] ">
-                {service.description.length > 30
-                  ? `${service.description.substring(0, 30)}...`
-                  : service.description}
-              </td>
-              <td className="text-center text-[13px] font-semibold">
-                {service.price}
-              </td>
-              <td className="text-center text-[13px] font-semibold">
-                {service.duration}
-              </td>
-              <td className="">
-                {/* Calendar Color Circle */}
-                <div
-                  className="w-5 h-5 rounded-full mx-auto"
-                  style={{ backgroundColor: service.calendarColor }}
-                ></div>
-              </td>
-              <td className=" ">
-                {/* Toggle for Active/Inactive */}
-                <div className=' flex justify-center items-center h-[79.96px]'>
-                  <label className="inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="sr-only peer"
-                      checked={service.isActive}
-                      onChange={() => handleToggle(service._id)}
-                    />
-                    {/* Slider background */}
-                    <div className="w-10 h-5 bg-gray-200 rounded-full peer-focus:outline-none peer-checked:bg-[#5E50BF] relative transition-colors duration-200">
-                      {/* Slider knob */}
-                      <span
-                        className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transform transition-transform duration-200
-                          ${service.isActive ? 'translate-x-5' : ''}`}
-                      ></span>
-                    </div>
-                  </label>
-                  <span className="ml-2 text-sm">
-                    {service.isActive ? 'Active' : 'Inactive'}
-                  </span>
-                </div>
-              </td>
-              <td className=" flex justify-center items-center h-[79.96px] pr-6">
-                <button
-                  onClick={() => handleEdit(service._id)}
-                  className="border cursor-pointer border-[#D5D5D5] px-[15.8px] py-[8.17px] rounded-l-[7.69px]"
-                >
-                  <FaEdit fontSize={14} color='#0E1E40' />
-                </button>
-                <button
-                  onClick={() => handleDeleteClick(service._id)}
-                  className="border cursor-pointer border-[#D5D5D5] px-[15.8px] py-[8.17px] border-l-0 rounded-r-[7.69px]"
-                >
-                  <RiDeleteBin6Line fontSize={14} color='#EF3826' />
-                </button>
-              </td>
-            </tr>
+          {serviceProviders.map((service) => (
+         <tr
+                       key={service.id}
+                       className="border-b border-[#E8E9EE] h-[79.96px] last:border-none bg-white"
+                     >
+                       <td className="text-start text-[12px] pl-6">
+                         {service?.name}
+                       </td>
+         
+                       <td className="text-center text-[12px] pl-6">
+                         {service?.email}
+                       </td>
+         
+                       <td className="text-center text-[12px] pl-6">
+                         {service?.number}
+                       </td>
+         
+                       <td className="text-center text-[12px] pl-6">
+                         {service?.dateOfBirth}
+                       </td>
+         
+                       <td className="text-center text-[12px] pl-6">
+                         {service?.isActive ? "Active" : "Suspended"}
+                       </td>
+         
+                       <td className=" flex justify-center items-center h-[79.96px] pr-6">
+                         <button
+                           onClick={() => handleEdit(service)}
+                           className="border cursor-pointer border-[#D5D5D5] px-[15.8px] py-[8.17px] rounded-l-[7.69px]"
+                         >
+                           <FaEdit fontSize={14} color='#0E1E40' />
+                         </button>
+         
+                         <button
+                           onClick={() => handleDeleteClick(service)}
+                           className="border cursor-pointer border-[#D5D5D5] px-[15.8px] py-[8.17px] border-l-0 rounded-r-[7.69px]"
+                         >
+                           <RiDeleteBin6Line fontSize={14} color='#EF3826' />
+                         </button>
+                       </td>
+                     </tr>
           ))}
         </tbody>
       </table>
