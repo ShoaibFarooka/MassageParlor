@@ -81,6 +81,14 @@ router.get(
   controller.SearchUsers
 );
 
+router.get(
+  "/search-users",
+  // authMiddleware.authenticateRequest,
+  // authMiddleware.verifyRole(["admin", "service-provider"]),
+  // validationMiddleware.validateQuery(userSchemas.searchUsersSchema),
+  controller.SearchServiceProvider
+);
+
 router.post(
   "/create-employee",
   authMiddleware.authenticateRequest,

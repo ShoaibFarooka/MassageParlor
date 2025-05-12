@@ -74,7 +74,7 @@ const handleConfirmDelete = async () => {
           </tr>
         </thead>
         <tbody>
-          {users?.result?.users?.map((user) => (
+          {users?.map((user) => (
             <tr
               key={user.id}
               className="border-b border-[#E8E9EE] h-[79.96px] last:border-none bg-white"

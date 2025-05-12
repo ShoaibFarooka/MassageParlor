@@ -183,6 +183,7 @@ const SearchEmployees = async (req, res, next) => {
   }
 };
 
+
 const SearchServiceProviders = async (req, res, next) => {
   try {
     const {
@@ -220,10 +221,6 @@ const SearchServiceProviders = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  SearchServiceProviders,
-};
-
 const SearchUsers = async (req, res, next) => {
   try {
     const { pageIndex, limit, searchQuery, status } = req.query;
@@ -234,6 +231,31 @@ const SearchUsers = async (req, res, next) => {
       parsedLimit,
       searchQuery,
       "user"
+    );
+    if (status && result.users && result.users.length > 0) {
+      result.users = result.users.filter((user) => {
+        const lowerCaseArr = user.status.map((status) => status.toLowerCase());
+        const lowerCaseStatus = status.toLowerCase();
+        return lowerCaseArr.includes(lowerCaseStatus);
+      });
+    }
+    res.status(200).json({ result });
+  } catch (error) {
+    console.log(error, "error in search users");
+    next(error);
+  }
+};
+
+const SearchServiceProvider = async (req, res, next) => {
+  try {
+    const { pageIndex, limit, searchQuery, status } = req.query;
+    const parsedPageIndex = parseInt(pageIndex);
+    const parsedLimit = parseInt(limit);
+    const result = await userService.searchUsers(
+      parsedPageIndex,
+      parsedLimit,
+      searchQuery,
+      "service-provider"
     );
     if (status && result.users && result.users.length > 0) {
       result.users = result.users.filter((user) => {
@@ -334,5 +356,6 @@ module.exports = {
   DeleteEmployee,
   DeleteUser,
   SearchServiceProviders,
+  SearchServiceProvider,
   RegisterFormData,
 };
