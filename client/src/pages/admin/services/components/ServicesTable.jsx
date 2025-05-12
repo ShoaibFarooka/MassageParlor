@@ -65,7 +65,7 @@ function ServiceTable({ serviceProviders, setServiceProviders, onLoad }) {
     }
   };
 
-  console.log(serviceProviders,'serviceProviders')
+  console.log(serviceProviders, 'serviceProviders')
 
 
   return (
@@ -98,46 +98,46 @@ function ServiceTable({ serviceProviders, setServiceProviders, onLoad }) {
         </thead>
         <tbody>
           {serviceProviders.map((service) => (
-         <tr
-                       key={service.id}
-                       className="border-b border-[#E8E9EE] h-[79.96px] last:border-none bg-white"
-                     >
-                       <td className="text-start text-[12px] pl-6">
-                         {service?.name}
-                       </td>
-         
-                       <td className="text-center text-[12px] pl-6">
-                         {service?.email}
-                       </td>
-         
-                       <td className="text-center text-[12px] pl-6">
-                         {service?.number}
-                       </td>
-         
-                       <td className="text-center text-[12px] pl-6">
-                         {service?.dateOfBirth}
-                       </td>
-         
-                       <td className="text-center text-[12px] pl-6">
-                         {service?.isActive ? "Active" : "Suspended"}
-                       </td>
-         
-                       <td className=" flex justify-center items-center h-[79.96px] pr-6">
-                         <button
-                           onClick={() => handleEdit(service)}
-                           className="border cursor-pointer border-[#D5D5D5] px-[15.8px] py-[8.17px] rounded-l-[7.69px]"
-                         >
-                           <FaEdit fontSize={14} color='#0E1E40' />
-                         </button>
-         
-                         <button
-                           onClick={() => handleDeleteClick(service)}
-                           className="border cursor-pointer border-[#D5D5D5] px-[15.8px] py-[8.17px] border-l-0 rounded-r-[7.69px]"
-                         >
-                           <RiDeleteBin6Line fontSize={14} color='#EF3826' />
-                         </button>
-                       </td>
-                     </tr>
+            <tr
+              key={service.id}
+              className="border-b border-[#E8E9EE] h-[79.96px] last:border-none bg-white"
+            >
+              <td className="text-start text-[12px] pl-6">
+                {service?.name}
+              </td>
+
+              <td className="text-center text-[12px] pl-6">
+                {service?.email}
+              </td>
+
+              <td className="text-center text-[12px] pl-6">
+                {service?.number}
+              </td>
+
+              <td className="text-center text-[12px] pl-6">
+                {service?.dateOfBirth}
+              </td>
+
+              <td className="text-center text-[12px] pl-6">
+                {service?.isActive ? "Active" : "Suspended"}
+              </td>
+
+              <td className=" flex justify-center items-center h-[79.96px] pr-6">
+                <button
+                  onClick={() => handleEdit(service)}
+                  className="border cursor-pointer border-[#D5D5D5] px-[15.8px] py-[8.17px] rounded-l-[7.69px]"
+                >
+                  <FaEdit fontSize={14} color='#0E1E40' />
+                </button>
+
+                <button
+                  onClick={() => handleDeleteClick(service)}
+                  className="border cursor-pointer border-[#D5D5D5] px-[15.8px] py-[8.17px] border-l-0 rounded-r-[7.69px]"
+                >
+                  <RiDeleteBin6Line fontSize={14} color='#EF3826' />
+                </button>
+              </td>
+            </tr>
           ))}
         </tbody>
       </table>
