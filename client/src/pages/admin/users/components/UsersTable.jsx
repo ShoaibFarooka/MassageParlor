@@ -21,22 +21,21 @@ function UsersTable({ users, setUsers, onLoad }) {
     setIsOpen(true);
   };
 
-  const handleDeleteClick = (id) => {
-    setSelectedUser(id);
+  const handleDeleteClick = (data) => {
+    setSelectedUser(data);
     setDeleteOpen(true);
   };
 
-  const handleConfirmDelete = async () => {
+const handleConfirmDelete = async () => {
     if (!selectedUser) return;
     dispatch(ShowLoading());
     try {
-      await userService.deleteUser(selectedUser);
-      setUsers((prevServices) => prevServices.filter(service => service.id !== selectedUser));
-      toast.success("Service deleted successfully");
-      onLoad()
+      await userService.deleteUser(selectedUser._id);
+      onLoad(); 
+      toast.success("User deleted successfully");
     } catch (error) {
-      console.error("Error deleting service:", error);
-      toast.error("Failed to delete service");
+      console.error("Error deleting user:", error);
+      toast.error("Failed to delete user");
     } finally {
       dispatch(HideLoading());
       setDeleteOpen(false);
@@ -109,7 +108,7 @@ function UsersTable({ users, setUsers, onLoad }) {
                 </button>
 
                 <button
-                  onClick={() => handleDeleteClick(user._id)}
+                  onClick={() => handleDeleteClick(user)}
                   className="border cursor-pointer border-[#D5D5D5] px-[15.8px] py-[8.17px] border-l-0 rounded-r-[7.69px]"
                 >
                   <RiDeleteBin6Line fontSize={14} color='#EF3826' />

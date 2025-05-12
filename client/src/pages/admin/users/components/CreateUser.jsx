@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import toast from 'react-hot-toast';
 import CustomModal from '../../../../components/CustomModal/CustomModal';
+import userService from '../../../../services/userService';
+import { HideLoading, ShowLoading } from '../../../../redux/loaderSlice';
+import { useDispatch } from 'react-redux';
 
 const CustomDateInput = forwardRef(({ value, onClick }, ref) => (
     <div className="relative" onClick={onClick}>
@@ -35,10 +38,11 @@ function CreateUser({ isOpen, onClose, selectedUser, onLoad }) {
     });
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState({});
-    const navigate = useNavigate();
     const [selectedImage, setSelectedImage] = useState(null);
     const [imageFile, setImageFile] = useState(null);
     const fileInputRef = useRef(null);
+    const dispatch = useDispatch();
+    let response;
 
     console.log(selectedUser,)
 
@@ -58,6 +62,10 @@ function CreateUser({ isOpen, onClose, selectedUser, onLoad }) {
                     setSelectedDate(parsedDate);
                 }
             }
+
+            setImageFile(`http://localhost:5777/static/images/${selectedUser.image}`);
+            setSelectedImage(`http://localhost:5777/static/images/${selectedUser.image}`);
+
         }
     }, [selectedUser]);
 
@@ -74,6 +82,7 @@ function CreateUser({ isOpen, onClose, selectedUser, onLoad }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        dispatch(ShowLoading());
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         let errors = {};
@@ -85,8 +94,12 @@ function CreateUser({ isOpen, onClose, selectedUser, onLoad }) {
             errors.email = "Please enter a valid email address";
         }
         if (!user.number) errors.number = "Contact number is required";
-        if (!user.password) errors.password = "Password is required";
-        if (user.password && user.password !== confirmPassword) errors.confirmPassword = "Passwords do not match";
+
+        if (!selectedUser) {
+
+            if (!user.password) errors.password = "Password is required";
+            if (user.password && user.password !== confirmPassword) errors.confirmPassword = "Passwords do not match";
+        }
 
         if (Object.keys(errors).length > 0) {
             setError(errors);
@@ -104,21 +117,26 @@ function CreateUser({ isOpen, onClose, selectedUser, onLoad }) {
         if (imageFile) formData.append('file', imageFile); // ✅ Append Image
 
         try {
-            const response = await userService.registerUser(formData, 'user');
 
+            if (selectedUser) {
+                response = await userService.updateUserProfile(formData, selectedUser._id);
+            } else {
+                response = await userService.registerUser(formData, 'user');
+            }
             if (!response) {
                 const data = await response.json();
                 setError({ form: data.message || "Registration failed" });
                 return;
             }
 
-            navigate("/login");
             toast.success('New User Registered');
             onLoad();
             onClose();
         } catch (err) {
             toast.error(err.response.data.error);
             setError({ form: "An error occurred. Please try again later." });
+        } finally {
+            dispatch(HideLoading());
         }
     };
 
@@ -354,7 +372,7 @@ function CreateUser({ isOpen, onClose, selectedUser, onLoad }) {
                     type="submit"
                     className="w-full h-[48px] mt-2 cursor-pointer py-2 text-sm font-medium text-white bg-[#5E50BF] rounded-full rounded-tr-none"
                 >
-                    Sign up
+                    Create
                 </button>
             </form>
         </CustomModal>

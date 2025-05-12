@@ -306,9 +306,11 @@ const DeleteEmployee = async (req, res, next) => {
 const DeleteUser = async (req, res, next) => {
   try {
     const { userId } = req.params;
+    console.log("userId", userId);
     await userService.deleteUser(userId, "user");
     res.status(200).json({ message: "User deleted successfully!" });
   } catch (error) {
+    console.log(error, "error in delete user");
     next(error);
   }
 };

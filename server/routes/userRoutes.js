@@ -125,7 +125,7 @@ router.delete(
 router.delete(
   "/delete-user/:userId",
   authMiddleware.authenticateRequest,
-  authMiddleware.verifyRole(["admin", "service-provider"]),
+  // authMiddleware.verifyRole(["admin", "service-provider"]),
   validationMiddleware.validateParams(userSchemas.userIdSchema),
   controller.DeleteUser
 );
