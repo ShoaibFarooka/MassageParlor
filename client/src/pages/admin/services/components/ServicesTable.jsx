@@ -8,7 +8,7 @@ import { HideLoading, ShowLoading } from '../../../../redux/loaderSlice';
 import DeleteConfirmationModal from '../../../../components/Delete/DeleteConfirmationModal';
 import CreateEditService from './CreateEditService';
 
-function ServiceTable({ selectedImage, setSelectedImage, user, setUser, editOpen, setEditOpen, serviceProviders, setServiceProviders, onLoad }) {
+function ServiceTable({ handleServicesModel, selectedImage, setSelectedImage, user, setUser, editOpen, setEditOpen, serviceProviders, setServiceProviders, onLoad }) {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [selectedService, setSelectedService] = useState(null);
 
@@ -97,7 +97,7 @@ function ServiceTable({ selectedImage, setSelectedImage, user, setUser, editOpen
               key={service.id}
               className="border-b border-[#E8E9EE] h-[79.96px] last:border-none bg-white"
             >
-              <td className="text-start text-[12px] pl-6">
+              <td onClick={() => handleServicesModel(service)} className="text-start cursor-pointer text-[12px] pl-6">
                 {service?.name}
               </td>
 

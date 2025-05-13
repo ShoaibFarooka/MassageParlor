@@ -269,8 +269,6 @@ const ServiceCard = ({ key, provider }) => {
               <p>No images available.</p>
             )}
 
-
-
           </div>
 
           <div>

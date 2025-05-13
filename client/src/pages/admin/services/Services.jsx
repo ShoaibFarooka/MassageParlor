@@ -5,6 +5,7 @@ import { HideLoading, ShowLoading } from '../../../redux/loaderSlice';
 import userService from '../../../services/userService';
 import ServicesHeader from '../components/ServicesHeader';
 import ServicesTable from './components/ServicesTable';
+import ServicesModel from './components/Services';
 
 const Services = () => {
   const [isOpenFilter, setIsOpenFilter] = useState(false);
@@ -15,22 +16,23 @@ const Services = () => {
   const fillPercentage = ((height - minVal) / (maxVal - minVal)) * 100;
   const debounceTimer = useRef(null);
   const [editOpen, setEditOpen] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null);
-
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [serviceData, setServiceData] = useState(null);
   const dispatch = useDispatch();
   const [serviceProviders, setServiceProviders] = useState([]);
-      const [user, setUser] = useState({
-        name: '',
-        surname: '',
-        number: '',
-        email: '',
-        password: '',
-        ethnicity: '',
-        location: '',
-        height: '',
-        hairColor: '',
-        callOutType: '',
-    });
+  const [user, setUser] = useState({
+    name: '',
+    surname: '',
+    number: '',
+    email: '',
+    password: '',
+    ethnicity: '',
+    location: '',
+    height: '',
+    hairColor: '',
+    callOutType: '',
+  });
 
   const [filters, setFilters] = useState({
     searchQuery: "",
@@ -132,6 +134,11 @@ const Services = () => {
 
   const onLoad = () => {
     fetchServiceProviders()
+  }
+
+  const handleServicesModel = (data) => {
+    setServiceData(data);
+    setIsOpen(true)
   }
 
   return (
@@ -254,7 +261,11 @@ const Services = () => {
         <button onClick={() => setEditOpen(true)} className='w-[210px] md:ml-auto flex justify-center items-center cursor-pointer my-6 font-semibold bg-[#5E50BF] text-white rounded-full rounded-tr-none h-[52px]'>Add Service Provider</button>
       </div>
 
-      <ServicesTable selectedImage={selectedImage} setSelectedImage={setSelectedImage} user={user} setUser={setUser} editOpen={editOpen} setEditOpen={setEditOpen} setServiceProviders={setServiceProviders} serviceProviders={serviceProviders} onLoad={onLoad} />
+      <ServicesTable handleServicesModel={handleServicesModel} selectedImage={selectedImage} setSelectedImage={setSelectedImage} user={user} setUser={setUser} editOpen={editOpen} setEditOpen={setEditOpen} setServiceProviders={setServiceProviders} serviceProviders={serviceProviders} onLoad={onLoad} />
+
+      <ServicesModel
+        setIsOpen={setIsOpen} isOpen={isOpen} serviceData={serviceData}
+      />
 
       {/* <CreateService onLoad={onLoad} isOpen={isOpen} onClose={() => setIsOpen(false)} /> */}
     </div>
