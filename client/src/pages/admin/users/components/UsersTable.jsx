@@ -26,12 +26,12 @@ function UsersTable({ users, setUsers, onLoad }) {
     setDeleteOpen(true);
   };
 
-const handleConfirmDelete = async () => {
+  const handleConfirmDelete = async () => {
     if (!selectedUser) return;
     dispatch(ShowLoading());
     try {
       await userService.deleteUser(selectedUser._id);
-      onLoad(); 
+      onLoad();
       toast.success("User deleted successfully");
     } catch (error) {
       console.error("Error deleting user:", error);
@@ -96,7 +96,9 @@ const handleConfirmDelete = async () => {
               </td>
 
               <td className="text-center text-[12px] pl-6">
-                {user?.isActive ? "Active" : "Suspended"}
+                <div className={`${user?.isActive ? "bg-[#02A847]" : 'bg-[#FF9E58]'} p-[6px] px-5 text-white w-fit mx-auto rounded-4xl`}>
+                  {user?.isActive ? "Active" : "Suspended"}
+                </div>
               </td>
 
               <td className=" flex justify-center items-center h-[79.96px] pr-6">

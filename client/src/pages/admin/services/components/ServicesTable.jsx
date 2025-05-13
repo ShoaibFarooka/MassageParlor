@@ -118,8 +118,10 @@ function ServiceTable({ handleServicesModel, selectedImage, setSelectedImage, us
                 {service?.hairColor}
               </td>
 
-              <td className="text-center text-[12px] pl-6">
-                {service?.isActive ? "Active" : "Suspended"}
+              <td className={`text-center text-[12px] pl-6`}>
+                <div className={`${service?.isActive ? "bg-[#02A847]" : 'bg-[#FF9E58]'} p-[6px] px-5 text-white w-fit mx-auto rounded-4xl`}>
+                  {service?.isActive ? "Active" : "Suspended"}
+                </div>
               </td>
 
               <td className=" flex justify-center items-center h-[79.96px] pr-6">
