@@ -74,19 +74,19 @@ function ServiceTable({ serviceProviders, setServiceProviders, onLoad }) {
         <thead >
           <tr className="bg-[#E8E9EE] h-[64px]">
             <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal pl-6">
-              Service Name
+              Name
             </th>
             <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal">
-              Description
+              Email
             </th>
             <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal">
-              Price
+              Phone Number
             </th>
             <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal">
-              Duration(h)
+              Location
             </th>
             <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal">
-              Calendar Color
+              Hair Color
             </th>
             <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal">
               Active Status
@@ -115,7 +115,11 @@ function ServiceTable({ serviceProviders, setServiceProviders, onLoad }) {
               </td>
 
               <td className="text-center text-[12px] pl-6">
-                {service?.dateOfBirth}
+                {service?.location}
+              </td>
+
+                 <td className="text-center text-[12px] pl-6">
+                {service?.hairColor}
               </td>
 
               <td className="text-center text-[12px] pl-6">
