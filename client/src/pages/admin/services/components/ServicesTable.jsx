@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { HideLoading, ShowLoading } from '../../../../redux/loaderSlice';
 import DeleteConfirmationModal from '../../../../components/Delete/DeleteConfirmationModal';
 import CreateEditService from './CreateEditService';
+import userService from '../../../../services/userService';
 
 function ServiceTable({ handleServicesModel, selectedImage, setSelectedImage, user, setUser, editOpen, setEditOpen, serviceProviders, setServiceProviders, onLoad }) {
   const [deleteOpen, setDeleteOpen] = useState(false)
@@ -28,7 +29,7 @@ function ServiceTable({ handleServicesModel, selectedImage, setSelectedImage, us
     if (!selectedService) return;
     dispatch(ShowLoading());
     try {
-      await serviceService.deleteService(selectedService);
+      await userService.deleteUser(selectedService._id);
       setServiceProviders((prevServices) => prevServices.filter(service => service._id !== selectedService._id));
       toast.success("Service deleted successfully");
       onLoad()
