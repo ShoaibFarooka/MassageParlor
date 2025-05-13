@@ -58,7 +58,7 @@ const loadUserData = async () => {
             <div className=''>
                 <ServicesHeader title={'Users'} />
 
-                <div className='flex flex-col sm:flex-row items-center justify-between px-4 sm:px-8 py-4'>
+                <div className='flex flex-col lg:flex-row items-center justify-between px-4 sm:px-8 py-4'>
                     <div className="relative">
                         <input
                             type="text"
@@ -66,14 +66,14 @@ const loadUserData = async () => {
                             value={searchQuery}
                             onChange={handleFilterChange}
                             placeholder="Search"
-                            className="pl-6 pr-4 py-2 text-lg rounded-full h-[56px] w-[220px] sm:w-[400px] bg-white shadow outline-0"
+                            className="pl-6 pr-4 py-2 text-lg rounded-full h-[56px] w-full sm:w-[400px] bg-white shadow outline-0"
                         />
 
 
                         <FaSearch className="absolute right-6 top-1/2 transform -translate-y-1/2 text-black " fontSize={24} />
                     </div>
 
-                    <button onClick={() => setIsOpen(true)} className='w-[203px] ml-auto flex justify-center items-center cursor-pointer my-6 font-semibold bg-[#5E50BF] text-white rounded-full rounded-tr-none h-[52px]'>Add User</button>
+                    <button onClick={() => setIsOpen(true)} className='w-[203px] md:ml-auto flex justify-center items-center cursor-pointer my-6 font-semibold bg-[#5E50BF] text-white rounded-full rounded-tr-none h-[52px]'>Add User</button>
 
                 </div>
                 <UsersTable users={users} setUsers={setUsers} onLoad={onLoad} />

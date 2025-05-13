@@ -7,125 +7,140 @@ import ServicesHeader from '../components/ServicesHeader';
 import ServicesTable from './components/ServicesTable';
 
 const Services = () => {
- const [isOpenFilter, setIsOpenFilter] = useState(false);
-    const dropdownRef = useRef(null);
-    const [height, setHeight] = useState(165);
-    const minVal = 100;
-    const maxVal = 200;
-    const fillPercentage = ((height - minVal) / (maxVal - minVal)) * 100;
-    const debounceTimer = useRef(null);
+  const [isOpenFilter, setIsOpenFilter] = useState(false);
+  const dropdownRef = useRef(null);
+  const [height, setHeight] = useState(165);
+  const minVal = 100;
+  const maxVal = 200;
+  const fillPercentage = ((height - minVal) / (maxVal - minVal)) * 100;
+  const debounceTimer = useRef(null);
+  const [editOpen, setEditOpen] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
 
-    const dispatch = useDispatch();
-    const [serviceProviders, setServiceProviders] = useState([]);
-    const [filters, setFilters] = useState({
-        searchQuery: "",
-        location: "",
-        ethnicity: "",
-        hairColor: "",
-        minHeight: "",
-        maxHeight: "",
-        callOutType: "",
+  const dispatch = useDispatch();
+  const [serviceProviders, setServiceProviders] = useState([]);
+      const [user, setUser] = useState({
+        name: '',
+        surname: '',
+        number: '',
+        email: '',
+        password: '',
+        ethnicity: '',
+        location: '',
+        height: '',
+        hairColor: '',
+        callOutType: '',
     });
 
-    const fetchServiceProviders = async () => {
-        dispatch(ShowLoading());
-        try {
-            const response = await userService.searchServiceProviders(filters);
-            let fetchedProviders = response.result.users;
+  const [filters, setFilters] = useState({
+    searchQuery: "",
+    location: "",
+    ethnicity: "",
+    hairColor: "",
+    minHeight: "",
+    maxHeight: "",
+    callOutType: "",
+  });
 
-            // Apply local filtering in case the API doesn't support it
-            fetchedProviders = fetchedProviders.filter((provider) => {
-                const searchQuery = filters.searchQuery.toLowerCase();
-                return (
-                    provider.name.toLowerCase().includes(searchQuery) ||
-                    provider.location.toLowerCase().includes(searchQuery)
-                );
-            });
+  const fetchServiceProviders = async () => {
+    dispatch(ShowLoading());
+    try {
+      const response = await userService.searchServiceProviders(filters);
+      let fetchedProviders = response.result.users;
 
-            // Add static data if missing
-            fetchedProviders = fetchedProviders.map((provider) => ({
-                ...provider,
-                age: provider.age || 25,
-                years: provider.years || 3,
-                clients: provider.clients || 24,
-                specialization: provider.specialization || "Specializes in Hot Stone and Sports massage.",
-                image: provider.image ? `http://localhost:5777/static/images/${provider.image}` : profile,
-            }));
+      // Apply local filtering in case the API doesn't support it
+      fetchedProviders = fetchedProviders.filter((provider) => {
+        const searchQuery = filters.searchQuery.toLowerCase();
+        return (
+          provider.name.toLowerCase().includes(searchQuery) ||
+          provider.location.toLowerCase().includes(searchQuery)
+        );
+      });
 
-            setServiceProviders(fetchedProviders);
-        } catch (error) {
-            console.error("Error fetching service providers:", error);
-            setServiceProviders([]);
-        }
-        dispatch(HideLoading());
-    };
+      // Add static data if missing
+      fetchedProviders = fetchedProviders.map((provider) => ({
+        ...provider,
+        age: provider.age || 25,
+        years: provider.years || 3,
+        clients: provider.clients || 24,
+        specialization: provider.specialization || "Specializes in Hot Stone and Sports massage.",
+        image: provider.image ? `http://localhost:5777/static/images/${provider.image}` : profile,
+      }));
 
-    useEffect(() => {
-        // Clear the previous timer if the user types again
-        if (debounceTimer.current) {
-            clearTimeout(debounceTimer.current);
-        }
-
-        // Set a new timer that runs the API call after 500ms of inactivity
-        debounceTimer.current = setTimeout(() => {
-            fetchServiceProviders();
-        }, 500);
-
-        return () => clearTimeout(debounceTimer.current);
-    }, [filters.searchQuery]);
-
-    const handleFilterChange = (e) => {
-        setFilters((prevFilters) => ({
-            ...prevFilters,
-            [e.target.name]: e.target.value,
-        }));
-    };
-
-
-    const applyFilters = async () => {
-        fetchServiceProviders()
-    };
-
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setIsOpenFilter(false);
-            }
-        };
-
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
-
-    const toggleDropdown = () => {
-        setIsOpenFilter((prev) => !prev);
-    };
-
-    const clearFilters = () => {
-        setFilters({
-            searchQuery: "",
-            location: "",
-            ethnicity: "",
-            hairColor: "",
-            minHeight: "",
-            maxHeight: "",
-            callOutType: "",
-        });
-        setHeight(165); // Reset height slider to default
-        fetchServiceProviders()
-    };
-
-   const onLoad = () => {
-        fetchServiceProviders()
+      setServiceProviders(fetchedProviders);
+    } catch (error) {
+      console.error("Error fetching service providers:", error);
+      setServiceProviders([]);
     }
+    dispatch(HideLoading());
+  };
+
+  useEffect(() => {
+    // Clear the previous timer if the user types again
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    // Set a new timer that runs the API call after 500ms of inactivity
+    debounceTimer.current = setTimeout(() => {
+      fetchServiceProviders();
+    }, 500);
+
+    return () => clearTimeout(debounceTimer.current);
+  }, [filters.searchQuery]);
+
+  const handleFilterChange = (e) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+
+  const applyFilters = async () => {
+    fetchServiceProviders()
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpenFilter(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const toggleDropdown = () => {
+    setIsOpenFilter((prev) => !prev);
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      searchQuery: "",
+      location: "",
+      ethnicity: "",
+      hairColor: "",
+      minHeight: "",
+      maxHeight: "",
+      callOutType: "",
+    });
+    setHeight(165); // Reset height slider to default
+    fetchServiceProviders()
+  };
+
+  const onLoad = () => {
+    fetchServiceProviders()
+  }
 
   return (
     <div className=''>
       <ServicesHeader title={'Services'} />
 
-      <div className='flex flex-col md:flex-row items-center justify-between '>
+      <div className='flex flex-col lg:flex-row items-center justify-center md:justify-between '>
         <div className="flex items-center space-x-4 w-full md:w-auto">
-          <div className="flex items-center pb-4 lg:pb-0 justify-center space-x-4 w-full md:w-auto">
+          <div className="flex items-center pb-4 mt-8 lg:mt-0 lg:pb-0 justify-center space-x-4 w-full md:w-auto">
             <div className="relative">
               <input
                 type="text"
@@ -236,10 +251,10 @@ const Services = () => {
 
 
 
-        <button onClick={() => setIsOpen(true)} className='w-[210px] ml-auto flex justify-center items-center cursor-pointer my-6 font-semibold bg-[#5E50BF] text-white rounded-full rounded-tr-none h-[52px]'>Add Service Provider</button>
+        <button onClick={() => setEditOpen(true)} className='w-[210px] md:ml-auto flex justify-center items-center cursor-pointer my-6 font-semibold bg-[#5E50BF] text-white rounded-full rounded-tr-none h-[52px]'>Add Service Provider</button>
       </div>
 
-      <ServicesTable setServiceProviders={setServiceProviders} serviceProviders={serviceProviders} onLoad={onLoad} />
+      <ServicesTable selectedImage={selectedImage} setSelectedImage={setSelectedImage} user={user} setUser={setUser} editOpen={editOpen} setEditOpen={setEditOpen} setServiceProviders={setServiceProviders} serviceProviders={serviceProviders} onLoad={onLoad} />
 
       {/* <CreateService onLoad={onLoad} isOpen={isOpen} onClose={() => setIsOpen(false)} /> */}
     </div>

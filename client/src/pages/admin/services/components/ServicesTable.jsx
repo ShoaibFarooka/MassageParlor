@@ -6,31 +6,30 @@ import serviceService from '../../../../services/serviceService';
 import { useDispatch, useSelector } from 'react-redux';
 import { HideLoading, ShowLoading } from '../../../../redux/loaderSlice';
 import DeleteConfirmationModal from '../../../../components/Delete/DeleteConfirmationModal';
-import CreateEditService from './CreateService';
+import CreateEditService from './CreateEditService';
 
-function ServiceTable({ serviceProviders, setServiceProviders, onLoad }) {
+function ServiceTable({ selectedImage, setSelectedImage, user, setUser, editOpen, setEditOpen, serviceProviders, setServiceProviders, onLoad }) {
   const [deleteOpen, setDeleteOpen] = useState(false)
-  const [selectedServiceId, setSelectedServiceId] = useState(null);
-  const [editOpen, setEditOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
 
   const dispatch = useDispatch();
 
-  const handleEdit = (id) => {
-    setSelectedServiceId(id);
+  const handleEdit = (data) => {
+    setSelectedService(data);
     setEditOpen(true);
   };
 
-  const handleDeleteClick = (id) => {
-    setSelectedServiceId(id);
+  const handleDeleteClick = (data) => {
+    setSelectedService(data);
     setDeleteOpen(true);
   };
 
   const handleConfirmDelete = async () => {
-    if (!selectedServiceId) return;
+    if (!selectedService) return;
     dispatch(ShowLoading());
     try {
-      await serviceService.deleteService(selectedServiceId);
-      setServiceProviders((prevServices) => prevServices.filter(service => service.id !== selectedServiceId));
+      await serviceService.deleteService(selectedService);
+      setServiceProviders((prevServices) => prevServices.filter(service => service._id !== selectedService._id));
       toast.success("Service deleted successfully");
       onLoad()
     } catch (error) {
@@ -39,33 +38,29 @@ function ServiceTable({ serviceProviders, setServiceProviders, onLoad }) {
     } finally {
       dispatch(HideLoading());
       setDeleteOpen(false);
-      setSelectedServiceId(null);
-    }
-  };
-
-  const handleToggle = async (id) => {
-    setServiceProviders((prevServices) =>
-      prevServices.map((service) =>
-        service._id === id
-          ? { ...service, isActive: !service.isActive }
-          : service
-      )
-    );
-
-    try {
-      dispatch(ShowLoading());
-      await serviceService.updateService(id, { isActive: !serviceProviders.find(service => service._id === id)?.isActive });
-      toast.success("Service status updated successfully");
-      onLoad();
-    } catch (error) {
-      console.error("Error updating service status:", error);
-      toast.error("Failed to update service status");
-    } finally {
-      dispatch(HideLoading());
+      setSelectedService(null);
     }
   };
 
   console.log(serviceProviders, 'serviceProviders')
+
+  const handleCloseEdit = () => {
+    setEditOpen(false);
+    setSelectedService(null);
+    setUser({
+      name: '',
+      surname: '',
+      number: '',
+      email: '',
+      password: '',
+      ethnicity: '',
+      location: '',
+      height: '',
+      hairColor: '',
+      callOutType: '',
+    });
+    setSelectedImage(null);
+  }
 
 
   return (
@@ -118,7 +113,7 @@ function ServiceTable({ serviceProviders, setServiceProviders, onLoad }) {
                 {service?.location}
               </td>
 
-                 <td className="text-center text-[12px] pl-6">
+              <td className="text-center text-[12px] pl-6">
                 {service?.hairColor}
               </td>
 
@@ -153,9 +148,13 @@ function ServiceTable({ serviceProviders, setServiceProviders, onLoad }) {
       />
       <CreateEditService
         isOpen={editOpen}
-        onClose={() => setEditOpen(false)}
-        serviceId={selectedServiceId}
+        onClose={handleCloseEdit}
+        selectedService={selectedService}
         onLoad={onLoad}
+        setUser={setUser}
+        user={user}
+        setSelectedImage={setSelectedImage}
+        selectedImage={selectedImage}
       />
 
     </div>
