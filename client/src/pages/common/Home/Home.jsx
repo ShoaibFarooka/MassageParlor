@@ -259,7 +259,7 @@ function Home() {
             <main className="flex justify-center items-center">
                 <div className="flex flex-wrap justify-center p-4 max-w-full">
                     {serviceProviders.length > 0 ? (
-                        serviceProviders.map((provider) => (
+                        serviceProviders.filter(data => data.isActive === true).map((provider) => (
                             <ServiceCard key={provider._id} provider={provider} />
                         ))
                     ) : (
