@@ -103,14 +103,18 @@ const Services = ({ setIsOpen, isOpen, serviceData }) => {
                                     return (
                                         <div
                                             key={index}
-                                            className={`w-[100px] sm:w-[124px] h-[100px] sm:h-[124px] m-2 flex items-center justify-center 
-                     ${isBlurred ? "bg-gray-300 overflow-hidden" : ""}`}
+                                            className={`w-[100px] sm:w-[124px] h-[100px] sm:h-[124px] relative m-2 flex items-center justify-center 
+                                                         ${isBlurred ? "bg-gray-300 overflow-hidden" : ""}`}
                                         >
                                             <img
                                                 src={`http://localhost:5777/static/images/${image.url}`}
                                                 alt={`Gallery Image ${index + 1}`}
                                                 className={`object-cover w-full h-full ${isBlurred ? "blur-xs" : ""}`}
                                             />
+
+                                            <div className='absolute bottom-0 left-0 right-0 top-0 w-[100px] sm:w-[124px] h-[100px] sm:h-[124px]  flex justify-center items-center'>
+                                                <button className='bg-[#5E50BF] px-4 py-2 rounded-full rounded-tr-none text-white text-sm'>Review</button>
+                                            </div>
                                         </div>
                                     );
                                 })}
