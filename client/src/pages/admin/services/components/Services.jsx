@@ -10,6 +10,8 @@ const Services = ({ setIsOpen, isOpen, serviceData }) => {
     const [galleries, setGalleries] = useState([]);
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.user);
+    const [statusModal, setStatusModal] = useState(false);
+    const [selectedImageId, setSelectedImageId] = useState(null);
 
 
     const fetchServicesForServiceProvider = async () => {
@@ -36,8 +38,29 @@ const Services = ({ setIsOpen, isOpen, serviceData }) => {
     };
 
     useEffect(() => {
+        setGalleries([]);
+        setServices([]);
         fetchServicesForServiceProvider();
     }, [serviceData?._id]);
+
+
+
+    const handleUpdateStatus = async (id, status) => {
+        dispatch(ShowLoading());
+        try {
+            const response = await galleryService.updateImageStatus(id, status);
+            setGalleries((prevGalleries) => ({
+                ...prevGalleries,
+                images: prevGalleries.images.map((image) =>
+                    image._id === id ? { ...image, status } : image
+                ),
+            }));
+        } catch (error) {
+            console.error("Error updating service:", error);
+        } finally {
+            dispatch(HideLoading());
+        }
+    }
 
     return (
         <div>
@@ -112,9 +135,17 @@ const Services = ({ setIsOpen, isOpen, serviceData }) => {
                                                 className={`object-cover w-full h-full ${isBlurred ? "blur-xs" : ""}`}
                                             />
 
-                                            <div className='absolute bottom-0 left-0 right-0 top-0 w-[100px] sm:w-[124px] h-[100px] sm:h-[124px]  flex justify-center items-center'>
-                                                <button className='bg-[#5E50BF] px-4 py-2 rounded-full rounded-tr-none text-white text-sm'>Review</button>
-                                            </div>
+                                            {index >= 3 && <div className='absolute bottom-0 left-0 right-0 top-0 w-[100px] sm:w-[124px] h-[100px] sm:h-[124px]  flex justify-center items-center'>
+                                                <button
+                                                    onClick={() => {
+                                                        setSelectedImageId(image._id);
+                                                        setStatusModal(true);
+                                                    }}
+                                                    className={`${image.status === 'pending' ? 'bg-[#5E50BF]' : image.status=== 'approved' ?'bg-green-500' : 'bg-red-500'} px-4 py-2 rounded-full cursor-pointer rounded-tr-none text-white text-[10px] capitalize`}
+                                                >
+                                                    {image.status === 'pending' ? 'Review' : image.status}
+                                                </button>
+                                            </div>}
                                         </div>
                                     );
                                 })}
@@ -155,6 +186,38 @@ const Services = ({ setIsOpen, isOpen, serviceData }) => {
 
                 </div>
             </CustomModal>
+
+            <CustomModal isOpen={statusModal} onRequestClose={() => setStatusModal(false)} width={'436px'} contentLabel="Status Confirmation">
+                <div className="text-center flex justify-center items-center flex-col">
+                    <div className='mt-10'>
+                        <h2 className="text-[30px] font-bold">Update Status</h2>
+                    </div>
+                    <div className='py-4'>
+                        <p className="">Are you sure you want to update the status of this image?</p>
+                    </div>
+                    <div className='mb-8 flex justify-center'>
+                        <button
+                            onClick={() => {
+                                handleUpdateStatus(selectedImageId, 'rejected');
+                                setStatusModal(false);
+                            }}
+                            className="cursor-pointer px-4 py-2 bg-red-500 w-[131px] h-[48px] text-white rounded-full rounded-tr-none mr-[12px]"
+                        >
+                            Reject
+                        </button>
+                        <button
+                            onClick={() => {
+                                handleUpdateStatus(selectedImageId, 'approved');
+                                setStatusModal(false);
+                            }}
+                            className="cursor-pointer px-4 py-2 bg-green-600 w-[131px] h-[48px] text-white rounded-full rounded-tl-none"
+                        >
+                            Approve
+                        </button>
+                    </div>
+                </div>
+            </CustomModal>
+
         </div>
     )
 }

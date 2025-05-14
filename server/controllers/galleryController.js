@@ -61,7 +61,30 @@ const getGalleryByServiceProvider = async (req, res, next) => {
   }
 };
 
+const updateImageStatus = async (req, res, next) => {
+  try {
+    const { status } = req.body;
+    const imageId = req.params.imageId;
+
+    if (!status) {
+      return res.status(400).json({ message: "Status is required" });
+    }
+
+    const updatedGallery = await serviceService.updateStatus(imageId, { status });
+
+    if (!updatedGallery) {
+      return res.status(404).json({ message: "Image not found" });
+    }
+
+    res.status(200).json({ message: "Image status updated successfully", updatedGallery });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 module.exports = {
+  updateImageStatus,
   addToGallery,
   deleteFromGallery,
   updateStatus,
