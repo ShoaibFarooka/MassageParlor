@@ -43,6 +43,32 @@ function UsersTable({ users, setUsers, onLoad }) {
     }
   };
 
+
+  const handleToggle = async (id) => {
+    setUsers((prevServices) =>
+      prevServices.map((user) =>
+        user._id === id
+          ? { ...user, isActive: !user.isActive }
+          : user
+      )
+    );
+
+    try {
+      dispatch(ShowLoading());
+      await userService.updateUserProfile(
+        { isActive: !users.find(user => user._id === id)?.isActive },
+        id
+      );
+      toast.success("User status updated successfully");
+      onLoad();
+    } catch (error) {
+      console.error("Error updating service status:", error);
+      toast.error("Failed to update service status");
+    } finally {
+      dispatch(HideLoading());
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg shadow overflow-x-auto">
       <table className="min-w-full">
@@ -96,7 +122,7 @@ function UsersTable({ users, setUsers, onLoad }) {
               </td>
 
               <td className="text-center text-[12px] pl-6">
-                <div className={`${user?.isActive ? "bg-[#02A847]" : 'bg-[#FF9E58]'} p-[6px] px-5 text-white w-fit mx-auto rounded-4xl`}>
+                <div onClick={() => handleToggle(user._id)} className={`${user?.isActive ? "bg-[#02A847]" : 'bg-[#FF9E58]'} p-[6px] px-5 text-white cursor-pointer w-fit mx-auto rounded-4xl`}>
                   {user?.isActive ? "Active" : "Suspended"}
                 </div>
               </td>

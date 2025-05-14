@@ -90,6 +90,7 @@ const updateUserFormData = async (userId, userData) => {
     height,
     callOutType,
     password,
+    isActive,
   } = userData;
 
   let user = await User.findById(userId);
@@ -132,6 +133,7 @@ const updateUserFormData = async (userId, userData) => {
   user.zip = zip || user.zip;
   user.image = image || user.image;
   user.password = passwordDigest;
+  user.isActive = isActive || user.isActive; // Set isActive to true by default
 
   if (user.role !== "user") {
     user.location = location || user.location;
@@ -139,6 +141,7 @@ const updateUserFormData = async (userId, userData) => {
     user.hairColor = hairColor || user.hairColor;
     user.height = height || user.height;
     user.callOutType = callOutType || user.callOutType;
+    user.isActive = isActive || user.isActive; // Set isActive to true by default
   }
 
   await user.save();

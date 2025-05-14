@@ -23,6 +23,7 @@ const registerSchema = yup.object().shape({
   callOutType: yup.string().trim(),
   file: yup.mixed().optional(),
   password: yup.string().trim().required("Password is required"),
+
 });
 
 const loginSchema = yup.object().shape({
@@ -84,6 +85,7 @@ const updateUserSchema = yup.object().shape({
   callOutType: yup.string().trim(),
   password: yup.string().trim(),
   isOnline: yup.boolean().optional(),
+  isActive: yup.boolean().optional(),
   // password: yup.string().trim(),
 });
 

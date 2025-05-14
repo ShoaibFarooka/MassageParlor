@@ -63,6 +63,31 @@ function ServiceTable({ handleServicesModel, selectedImage, setSelectedImage, us
     setSelectedImage(null);
   }
 
+  const handleToggle = async (id) => {
+    setServiceProviders((prevServices) =>
+      prevServices.map((service) =>
+        service._id === id
+          ? { ...service, isActive: !service.isActive }
+          : service
+      )
+    );
+
+    try {
+      dispatch(ShowLoading());
+      await userService.updateUserProfile(
+        { isActive: !serviceProviders.find(service => service._id === id)?.isActive },
+        id
+      );
+      toast.success("Service Provider status updated successfully");
+      onLoad();
+    } catch (error) {
+      console.error("Error updating service status:", error);
+      toast.error("Failed to update service status");
+    } finally {
+      dispatch(HideLoading());
+    }
+  };
+
 
   return (
     <div className="bg-white rounded-lg shadow overflow-x-auto">
@@ -119,7 +144,7 @@ function ServiceTable({ handleServicesModel, selectedImage, setSelectedImage, us
               </td>
 
               <td className={`text-center text-[12px] pl-6`}>
-                <div className={`${service?.isActive ? "bg-[#02A847]" : 'bg-[#FF9E58]'} p-[6px] px-5 text-white w-fit mx-auto rounded-4xl`}>
+                <div onClick={() => handleToggle(service._id)} className={`${service?.isActive ? "bg-[#02A847]" : 'bg-[#FF9E58]'} p-[6px] px-5 text-white cursor-pointer w-fit mx-auto rounded-4xl`}>
                   {service?.isActive ? "Active" : "Suspended"}
                 </div>
               </td>
