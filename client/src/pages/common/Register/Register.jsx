@@ -43,7 +43,7 @@ const Register = () => {
 
         {activeTab === 'user' ? <UserSignUpForm /> : <ProviderSignUpForm />}
 
-        <p className="text-sm text-center text-[#858FAD] mt-[24px] flex flex-col">
+        <p className="text-sm text-center text-[#858FAD] !mt-[24px] flex flex-col">
           Already have an account?{' '}
           <span onClick={() => navigate('/login')} className="text-[#5E50BF] cursor-pointer hover:underline font-semibold" >
             Sign in
