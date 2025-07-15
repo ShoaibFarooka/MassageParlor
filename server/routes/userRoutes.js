@@ -1,16 +1,23 @@
 const router = require("express").Router();
 const controller = require("../controllers/userController");
 const authMiddleware = require("../middleware/authMiddleware");
-const userSchemas = require('../validationSchemas/userSchemas');
-const validationMiddleware = require('../middleware/validationMiddleware');
+const userSchemas = require("../validationSchemas/userSchemas");
+const validationMiddleware = require("../middleware/validationMiddleware");
 const upload = require("../configs/multer.config");
 
 router.post(
   "/:userType-register",
-  upload.single('file'),
+  upload.single("file"),
   validationMiddleware.validateParams(userSchemas.userTypeSchema),
   validationMiddleware.validateRequest(userSchemas.registerSchema),
   controller.Register
+);
+
+router.patch(
+  "/update-user-profile/:id",
+  upload.single("file"),
+  validationMiddleware.validateRequest(userSchemas.updateUserSchema),
+  controller.RegisterFormData
 );
 
 router.post(
@@ -31,15 +38,9 @@ router.post(
   controller.ResetPassword
 );
 
-router.post(
-  "/refresh-token",
-  controller.RefreshToken
-);
+router.post("/refresh-token", controller.RefreshToken);
 
-router.post(
-  "/logout",
-  controller.Logout
-);
+router.post("/logout", controller.Logout);
 
 router.get(
   "/fetch-user-info",
@@ -49,6 +50,7 @@ router.get(
 
 router.patch(
   "/update-user-info",
+  upload.single("file"),
   authMiddleware.authenticateRequest,
   validationMiddleware.validateRequest(userSchemas.updateUserSchema),
   controller.UpdateUserInfo
@@ -64,29 +66,33 @@ router.patch(
 router.get(
   "/search-employees",
   authMiddleware.authenticateRequest,
-  authMiddleware.verifyRole(['admin']),
+  authMiddleware.verifyRole(["admin"]),
   validationMiddleware.validateQuery(userSchemas.searchUsersSchema),
   controller.SearchEmployees
 );
 
-router.get(
-  "/search-service-providers",
-  controller.SearchServiceProviders
-);
-
+router.get("/search-service-providers", controller.SearchServiceProviders);
 
 router.get(
   "/search-users",
-  authMiddleware.authenticateRequest,
-  authMiddleware.verifyRole(['admin', 'employee']),
-  validationMiddleware.validateQuery(userSchemas.searchUsersSchema),
+  // authMiddleware.authenticateRequest,
+  // authMiddleware.verifyRole(["admin", "service-provider"]),
+  // validationMiddleware.validateQuery(userSchemas.searchUsersSchema),
   controller.SearchUsers
+);
+
+router.get(
+  "/search-users",
+  // authMiddleware.authenticateRequest,
+  // authMiddleware.verifyRole(["admin", "service-provider"]),
+  // validationMiddleware.validateQuery(userSchemas.searchUsersSchema),
+  controller.SearchServiceProvider
 );
 
 router.post(
   "/create-employee",
   authMiddleware.authenticateRequest,
-  authMiddleware.verifyRole(['admin']),
+  authMiddleware.verifyRole(["admin"]),
   validationMiddleware.validateRequest(userSchemas.createUserSchema),
   controller.CreateEmployee
 );
@@ -94,7 +100,7 @@ router.post(
 router.post(
   "/create-user",
   authMiddleware.authenticateRequest,
-  authMiddleware.verifyRole(['admin', 'employee']),
+  authMiddleware.verifyRole(["admin", "service-provider"]),
   validationMiddleware.validateRequest(userSchemas.createUserSchema),
   controller.CreateUser
 );
@@ -102,7 +108,7 @@ router.post(
 router.patch(
   "/update-employee/:userId",
   authMiddleware.authenticateRequest,
-  authMiddleware.verifyRole(['admin']),
+  authMiddleware.verifyRole(["admin"]),
   validationMiddleware.validateParams(userSchemas.userIdSchema),
   validationMiddleware.validateRequest(userSchemas.updateUserSchema),
   controller.UpdateEmployee
@@ -111,7 +117,6 @@ router.patch(
 router.patch(
   "/update-user/:userId",
   authMiddleware.authenticateRequest,
-  authMiddleware.verifyRole(['admin', 'employee']),
   validationMiddleware.validateParams(userSchemas.userIdSchema),
   validationMiddleware.validateRequest(userSchemas.updateUserSchema),
   controller.UpdateUser
@@ -120,7 +125,7 @@ router.patch(
 router.delete(
   "/delete-employee/:userId",
   authMiddleware.authenticateRequest,
-  authMiddleware.verifyRole(['admin']),
+  authMiddleware.verifyRole(["admin"]),
   validationMiddleware.validateParams(userSchemas.userIdSchema),
   controller.DeleteEmployee
 );
@@ -128,7 +133,7 @@ router.delete(
 router.delete(
   "/delete-user/:userId",
   authMiddleware.authenticateRequest,
-  authMiddleware.verifyRole(['admin', 'employee']),
+  // authMiddleware.verifyRole(["admin", "service-provider"]),
   validationMiddleware.validateParams(userSchemas.userIdSchema),
   controller.DeleteUser
 );

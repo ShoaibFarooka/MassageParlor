@@ -18,10 +18,11 @@ import { clearUser } from '../../../redux/userSlice';
 import { HideLoading, ShowLoading } from '../../../redux/loaderSlice';
 import Cookies from 'js-cookie';
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import bookingService from '../../../services/bookingService';
 
 const CustomToolbar = ({ label, onNavigate, onView, view }) => {
   return (
-    <div className="flex justify-between items-center bg-white p-4 rounded-lg ">
+    <div className="flex flex-col sm:flex-row justify-between items-center bg-white p-4 rounded-lg ">
       <div className="flex items-center space-x-4">
         <button
           onClick={() => onNavigate("TODAY")}
@@ -134,33 +135,67 @@ const UserBooking = () => {
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentView, setCurrentView] = useState("month");
-  const [events, setEvents] = useState([
-    {
-      title: 'Another Person',
-      start: new Date(2025, 2, 2),
-      end: new Date(2025, 2, 5),
-      color: '#6B46C1' // Purple
-    },
-    {
-      title: 'Weekend Festival',
-      start: new Date(2025, 2, 6),
-      end: new Date(2025, 2, 6),
-      color: '#D53F8C' // Pink
-    },
-    {
-      title: 'Training',
-      start: new Date(2025, 2, 4),
-      end: new Date(2025, 2, 4),
-      color: '#3182CE' // Blue
-    },
-    {
-      title: 'Some Booking',
-      start: new Date(2025, 2, 6),
-      end: new Date(2025, 2, 8),
-      color: '#DD6B20' // Orange
-    }
-  ]);
+  const [events, setEvents] = useState([]);
 
+  const parseTime = (timeString) => {
+    const [time, modifier] = timeString.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
+
+    if (modifier === "PM" && hours !== 12) hours += 12;
+    if (modifier === "AM" && hours === 12) hours = 0;
+
+    return { hours, minutes };
+  };
+
+  const colorNameToRGB = {
+    Red: [255, 0, 0],
+    Green: [0, 128, 0],
+    Blue: [0, 0, 255],
+    Purple: [128, 0, 128],
+    // Add more color mappings as needed
+  };
+
+
+  const getRGBAColor = (colorName, opacity = 0.5) => {
+    const rgb = colorNameToRGB[colorName];
+    if (rgb) {
+      return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${opacity})`;
+    }
+    // Fallback to a default color if the name isn't found
+    return `rgba(0, 0, 0, ${opacity})`;
+  };
+
+  const getBookingData = async () => {
+    dispatch(ShowLoading());
+    try {
+      const response = await bookingService.getBookingsByUserId(user?._id);
+      const formattedEvents = response.map((booking) => {
+        const startDate = new Date(booking.startDate);
+        const startTime = parseTime(booking.startTime);
+        const endTime = parseTime(booking.endTime);
+
+        return {
+          id: booking._id,
+          title: booking.service_id.name,
+          start: new Date(startDate.setHours(startTime.hours, startTime.minutes)),
+          end: new Date(startDate.setHours(endTime.hours, endTime.minutes)),
+          color: booking?.service_id?.calendarColor,
+          status: booking.status,
+        };
+      });
+
+      setEvents(formattedEvents);
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
+    } finally {
+      dispatch(HideLoading());
+    }
+  };
+
+
+  useEffect(() => {
+    getBookingData();
+  }, [user?._id]);
 
   return (
     <div>
@@ -245,7 +280,7 @@ const UserBooking = () => {
 
         <div className="flex space-x-4 items-center">
 
-          <div className='flex items-center space-x-2 border border-[#858FAD] rounded-[12px] px-4 py-2'>
+          {/* <div className='flex items-center space-x-2 border border-[#858FAD] rounded-[12px] px-4 py-2'>
             <IoLocationOutline fontSize={24} className='p-0 m-0' />
 
             <div className='flex flex-col pl-3 sm:pl-6'>
@@ -257,7 +292,7 @@ const UserBooking = () => {
                 Brooklyn
               </span>
             </div>
-          </div>
+          </div> */}
 
           <div className='bg-white rounded-full h-[50px] w-[50px] flex items-center justify-center shadow'>
             <CiBellOn fontSize={24} />
@@ -267,17 +302,17 @@ const UserBooking = () => {
             <img
               src={`http://localhost:5777/static/images/${user.image}` || profile}
               alt="Profile"
-              className="w-[60px] min-h-[60px] object-cover rounded-full border-[2px] border-[#858FAD] cursor-pointer"
+              className="w-[60px] h-[60px] object-cover rounded-full border-[2px] border-[#858FAD] cursor-pointer"
               onClick={toggleProfileDropdown}
             />
             {isProfileOpen && (
               <div className="absolute right-0 mt-2 w-[200px] bg-white border border-gray-200 rounded shadow-lg p-4 z-50">
                 <p className="font-bold mb-2">My Account</p>
                 <ul>
-                  <li className="py-1 text-sm cursor-pointer flex items-center"><CgProfile className='mr-2' /> Profile</li>
-                  <li className="py-1 text-sm cursor-pointer flex items-center"><IoMdCard className='mr-2' />                                        Billing</li>
-                  <li className="py-1 text-sm cursor-pointer flex items-center"><CiSettings className='mr-2' />                                        Settings</li>
-                  <li onClick={handleLogout} className="py-1 text-sm cursor-pointer flex items-center text-red-500">
+                  <li className="py-1 text-sm cursor-pointer flex items-center  hover:bg-[#F3F2F8]"><CgProfile className='mr-2' /> Profile</li>
+                  <li className="py-1 text-sm cursor-pointer flex items-center hover:bg-[#F3F2F8]"><IoMdCard className='mr-2' />Billing</li>
+                  <li className="py-1 text-sm cursor-pointer flex items-center hover:bg-[#F3F2F8]"><CiSettings className='mr-2' />Settings</li>
+                  <li onClick={handleLogout} className="py-1 text-sm cursor-pointer flex items-center hover:bg-[#F3F2F8] text-red-500">
                     <MdOutlineLogout className='mr-2' />
                     Log out
                   </li>
@@ -297,15 +332,30 @@ const UserBooking = () => {
           endAccessor="end"
           style={{ height: 700, border: "none" }}
           className="border rounded-md"
-          eventPropGetter={(event) => ({
-            style: {
-              backgroundColor: event.color || "#5E50BF",
-              color: "#fff",
-              borderRadius: "8px",
-              border: "none",
-              padding: "5px",
-            },
-          })}
+          eventPropGetter={(event) => {
+            const isPending = event.status === "Pending";
+
+            if (event.color) {
+              return {
+                style: {
+                  backgroundColor: `${getRGBAColor(event.color, 0.5)}`,
+                  color: "black",
+                  borderTop: '0px',
+                  borderRight: '0px',
+                  borderBottom: '0px',
+                  borderRadius: "10px",
+                  borderLeft: `10px solid ${event.color}`,
+                  padding: "5px",
+                  opacity: isPending ? 0.5 : 1,
+                },
+              };
+            }
+
+            // Return an empty style object for events without a color
+            return {};
+          }}
+
+
           date={currentDate}
           onNavigate={(newDate) => {
             // newDate is the date RBC wants to show after Next/Prev/Today

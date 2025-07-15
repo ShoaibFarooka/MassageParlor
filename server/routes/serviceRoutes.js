@@ -7,8 +7,8 @@ const serviceSchemas = require("../validationSchemas/serviceSchema");
 // CRUD routes
 router.post(
   "/",
-  // authMiddleware.authenticateRequest,
-  // validationMiddleware.validateRequest(serviceSchemas.createServiceSchema),
+  authMiddleware.authenticateRequest,
+  validationMiddleware.validateRequest(serviceSchemas.createServiceSchema),
   controller.createService
 );
 

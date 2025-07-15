@@ -9,8 +9,13 @@ const GallerySchema = new mongoose.Schema(
     },
     images: [
       {
-        type: String, 
-        required: true,
+        url: { type: String, required: true },
+        status: {
+          type: String,
+          enum: ["pending", "approved", "rejected"],
+          default: "pending",
+        },
+        uploadedAt: { type: Date, default: Date.now },
       },
     ],
   },

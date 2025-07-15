@@ -40,13 +40,25 @@ function ProviderSignUpForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     let errors = {};
     if (!user.name) errors.name = "Name is required";
     if (!user.surname) errors.surname = "Surname is required";
-    if (!user.email) errors.email = "Email is required";
+    if (!user.email) {
+      errors.email = "Email is required";
+    } else if (!emailRegex.test(user.email)) {
+      errors.email = "Please enter a valid email address";
+    }
     if (!user.number) errors.number = "Contact number is required";
     if (!user.password) errors.password = "Password is required";
     if (user.password && user.password !== confirmPassword) errors.confirmPassword = "Passwords do not match";
+
+    if (!user.ethnicity.trim()) errors.ethnicity = "Ethnicity is required";
+    if (!user.location.trim()) errors.location = "Location is required";
+    if (!user.height) errors.height = "Height is required";
+    if (!user.hairColor.trim()) errors.hairColor = "Hair color is required";
+    if (!user.callOutType.trim()) errors.callOutType = "Call-out type is required";
 
     if (Object.keys(errors).length > 0) {
       setError(errors);
@@ -79,13 +91,10 @@ function ProviderSignUpForm() {
       navigate("/login");
       toast.success('New Service Provider Registered');
     } catch (err) {
-      console.log(err,'qwqw')
       toast.error(err.response.data.error);
       setError({ form: "An error occurred. Please try again later." });
     }
   };
-
-
 
   return (
     <form onSubmit={handleSubmit} autoComplete="off" className="mt-6">
@@ -173,7 +182,7 @@ function ProviderSignUpForm() {
             name='email'
             id='email'
             autoComplete="off"
-            type="email"
+            type="text"
             placeholder="email@email.com"
             className="w-full input "
             value={user.email}
@@ -190,10 +199,15 @@ function ProviderSignUpForm() {
             name='num'
             id='num'
             autoComplete="off"
-            type="tel"
+            type="number"
             placeholder="0710000000"
             className="w-full input"
             value={user.number}
+            onKeyDown={(e) => {
+              if (["e", "E", "+", "-"].includes(e.key)) {
+                e.preventDefault();
+              }
+            }}
             onChange={(e) => setUser({ ...user, number: e.target.value })}
           />
           {error.number && <div className="text-red-500 text-sm">{error.number}</div>}
@@ -219,6 +233,7 @@ function ProviderSignUpForm() {
             <option value="Hispanic">Hispanic</option>
             <option value="Other">Other</option>
           </select>
+          {error.ethnicity && <div className="text-red-500 text-sm">{error.ethnicity}</div>}
         </div>
         <div className='mb-6'>
           <label htmlFor="loc" className=" label">
@@ -234,6 +249,7 @@ function ProviderSignUpForm() {
             value={user.location}
             onChange={(e) => setUser({ ...user, location: e.target.value })}
           />
+          {error.location && <div className="text-red-500 text-sm">{error.location}</div>}
         </div>
       </div>
 
@@ -252,6 +268,7 @@ function ProviderSignUpForm() {
             value={user.height}
             onChange={(e) => setUser({ ...user, height: e.target.value })}
           />
+          {error.height && <div className="text-red-500 text-sm">{error.height}</div>}
         </div>
         <div className='mb-6'>
           <label htmlFor="hc" className=" label">
@@ -270,6 +287,7 @@ function ProviderSignUpForm() {
             <option value="Black">Black</option>
             <option value="Red">Red</option>
           </select>
+          {error.hairColor && <div className="text-red-500 text-sm">{error.hairColor}</div>}
 
         </div>
       </div>
@@ -290,6 +308,7 @@ function ProviderSignUpForm() {
           <option value="Out-call">Out-call</option>
           <option value="Both">Both</option>
         </select>
+        {error.callOutType && <div className="text-red-500 text-sm">{error.callOutType}</div>}
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>

@@ -12,9 +12,9 @@ const serviceService = {
         }
     },
 
-    getAllServices: async () => {
+    getAllServices: async (data) => {
         try {
-            const response = await axiosInstance.get(`${BASE_URL}/`);
+            const response = await axiosInstance.get(`${BASE_URL}/${data}`);
             return response.data;
         } catch (error) {
             throw error;

@@ -155,7 +155,7 @@ const Login = () => {
                 </form>
 
                 {/* Sign Up Link */}
-                <p className="text-sm text-center text-[#858FAD] mt-[24px] flex flex-col">
+                <p className="text-sm text-center text-[#858FAD] !mt-[24px] flex flex-col">
                     Don’t have an account?{' '}
                     <span
                         onClick={() => navigate('/register')}

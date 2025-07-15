@@ -75,6 +75,80 @@ const createUser = async (userData, role) => {
   return user;
 };
 
+const updateUserFormData = async (userId, userData) => {
+  const {
+    name,
+    email,
+    number,
+    dateOfBirth,
+    location,
+    city,
+    zip,
+    image,
+    ethnicity,
+    hairColor,
+    height,
+    callOutType,
+    password,
+    isActive,
+  } = userData;
+
+  let user = await User.findById(userId);
+  if (!user) {
+    throw new Error("User not found!");
+  }
+
+  // Check for email duplication (if email is being updated)
+  if (email && email !== user.email) {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      const error = new Error("A user with that email already exists!");
+      error.code = 409;
+      throw error;
+    }
+  }
+
+  // Check for number duplication (if number is being updated)
+  if (number && number !== user.number) {
+    const existingUser = await User.findOne({ number });
+    if (existingUser) {
+      const error = new Error("A user with that number already exists!");
+      error.code = 409;
+      throw error;
+    }
+  }
+
+  // Hash password if it's being updated
+  let passwordDigest = user.password; // Keep the existing password
+  if (password) {
+    passwordDigest = await authUtils.hashPassword(password);
+  }
+
+  // Update user fields dynamically
+  user.name = name || user.name;
+  user.email = email || user.email;
+  user.number = number || user.number;
+  user.dateOfBirth = dateOfBirth || user.dateOfBirth;
+  user.city = city || user.city;
+  user.zip = zip || user.zip;
+  user.image = image || user.image;
+  user.password = passwordDigest;
+  user.isActive = isActive || user.isActive; // Set isActive to true by default
+
+  if (user.role !== "user") {
+    user.location = location || user.location;
+    user.ethnicity = ethnicity || user.ethnicity;
+    user.hairColor = hairColor || user.hairColor;
+    user.height = height || user.height;
+    user.callOutType = callOutType || user.callOutType;
+    user.isActive = isActive || user.isActive; // Set isActive to true by default
+  }
+
+  await user.save();
+  return user;
+};
+
+
 const loginUser = async (loginData) => {
   const { email, password } = loginData;
   const user = await User.findOne({ email });
@@ -179,12 +253,15 @@ const fetchUser = async (userId) => {
     number: 1,
     totalContacts: 1,
     dateOfBirth: 1,
-    Location: 1,
-    city: 1,
-    zip: 1,
+    location: 1,
+    height: 1,
+    hairColor: 1,
+    callOutType: 1,
+    ethnicity: 1,
     image: 1,
     role: 1,
-    _id: 0,
+    _id: 1,
+    isOnline: 1,
   };
   const user = await User.findById(userId, userProjection);
   if (!user) {
@@ -194,6 +271,66 @@ const fetchUser = async (userId) => {
   }
   return user;
 };
+
+// const searchUsers = async (pageIndex, limit, searchQuery, role) => {
+//   const skip = (pageIndex - 1) * limit;
+//   let query = {};
+//   if (searchQuery && searchQuery !== "") {
+//     query = {
+//       $or: [
+//         { name: { $regex: searchQuery, $options: "i" } },
+//         { email: { $regex: searchQuery, $options: "i" } },
+//         { phone: { $regex: searchQuery, $options: "i" } },
+//       ],
+//     };
+//   }
+//   if (role) {
+//     query = { ...query, role };
+//   }
+//   const totalCount = await User.countDocuments(query);
+//   const totalPages = Math.ceil(totalCount / limit);
+//   const userProjection = {
+//     name: 1,
+//     email: 1,
+//     number: 1,
+//     dateOfBirth: 1,
+//     Location: 1,
+//     city: 1,
+//     zip: 1,
+//     role: 1,
+//     notes: 1,
+//     createdAt: 1,
+//   };
+//   const users = await User.find(query, userProjection)
+//     .sort({ createdAt: -1 }) // Sort by createdAt descending (-1)
+//     .skip(skip)
+//     .limit(limit);
+
+//   if (!users || users.length <= 0) {
+//     const error = new Error("Users not found!");
+//     error.code = 404;
+//     throw error;
+//   }
+
+//   let usersWithSubscription = [];
+//   if (role === "user") {
+//     // Create an array of promises to fetch subscription info for each user
+//     const subscriptionPromises = users.map(async (user) => {
+//       const subscriptionInfo =
+//         await subscriptionService.getUserSubscriptionStatus(user._id);
+//       return { ...user.toObject(), ...subscriptionInfo }; // Merge user data with subscription info
+//     });
+
+//     // Await all promises and attach subscription info to users
+//     usersWithSubscription = await Promise.all(subscriptionPromises);
+//   }
+
+//   return {
+//     users: role === "user" ? usersWithSubscription : users,
+//     totalPages,
+//     totalCount,
+//   };
+// };
 
 const searchUsers = async (pageIndex, limit, searchQuery, role) => {
   const skip = (pageIndex - 1) * limit;
@@ -223,6 +360,8 @@ const searchUsers = async (pageIndex, limit, searchQuery, role) => {
     role: 1,
     notes: 1,
     createdAt: 1,
+    isActive: 1,
+    image: 1,
   };
   const users = await User.find(query, userProjection)
     .sort({ createdAt: -1 }) // Sort by createdAt descending (-1)
@@ -235,21 +374,21 @@ const searchUsers = async (pageIndex, limit, searchQuery, role) => {
     throw error;
   }
 
-  let usersWithSubscription = [];
-  if (role === "user") {
-    // Create an array of promises to fetch subscription info for each user
-    const subscriptionPromises = users.map(async (user) => {
-      const subscriptionInfo =
-        await subscriptionService.getUserSubscriptionStatus(user._id);
-      return { ...user.toObject(), ...subscriptionInfo }; // Merge user data with subscription info
-    });
+  // let usersWithSubscription = [];
+  // if (role === "user") {
+  //   // Create an array of promises to fetch subscription info for each user
+  //   const subscriptionPromises = users.map(async (user) => {
+  //     const subscriptionInfo =
+  //       await subscriptionService.getUserSubscriptionStatus(user._id);
+  //     return { ...user.toObject(), ...subscriptionInfo }; // Merge user data with subscription info
+  //   });
 
-    // Await all promises and attach subscription info to users
-    usersWithSubscription = await Promise.all(subscriptionPromises);
-  }
+  //   // Await all promises and attach subscription info to users
+  //   usersWithSubscription = await Promise.all(subscriptionPromises);
+  // }
 
   return {
-    users: role === "user" ? usersWithSubscription : users,
+    users: users,
     totalPages,
     totalCount,
   };
@@ -302,7 +441,7 @@ const searchServiceProviders = async (pageIndex, limit, filters) => {
   // Fetch users based on query
   const users = await User.find(query)
     .select(
-      "name email number location ethnicity hairColor height callOutType image createdAt isActive _id"
+      "name email number location ethnicity hairColor isOnline height callOutType image createdAt isActive _id"
     )
     .sort({ createdAt: -1 })
     .skip(skip)
@@ -462,6 +601,7 @@ module.exports = {
   fetchUser,
   searchUsers,
   updateUser,
+  updateUserFormData,
   deleteUser,
   changeUserPassword,
   fetchUserStripeCustomerId,

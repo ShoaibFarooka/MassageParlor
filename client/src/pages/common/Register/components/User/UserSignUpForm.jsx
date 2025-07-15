@@ -53,10 +53,15 @@ function UserSignUpForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         let errors = {};
         if (!user.name) errors.name = "Name is required";
         if (!user.surname) errors.surname = "Surname is required";
-        if (!user.email) errors.email = "Email is required";
+        if (!user.email) {
+            errors.email = "Email is required";
+        } else if (!emailRegex.test(user.email)) {
+            errors.email = "Please enter a valid email address";
+        }
         if (!user.number) errors.number = "Contact number is required";
         if (!user.password) errors.password = "Password is required";
         if (user.password && user.password !== confirmPassword) errors.confirmPassword = "Passwords do not match";
@@ -88,7 +93,7 @@ function UserSignUpForm() {
             navigate("/login");
             toast.success('New User Registered');
         } catch (err) {
-            toast.error("Registration error: " + err.message);
+            toast.error(err.response.data.error);
             setError({ form: "An error occurred. Please try again later." });
         }
     };
@@ -180,10 +185,31 @@ function UserSignUpForm() {
                 <div className="relative">
                     <DatePicker
                         selected={selectedDate}
-                        onChange={(date) => setSelectedDate(date)}
-                        customInput={<CustomDateInput />}
+                        onChange={(date) => {
+                            const utcDate = new Date(Date.UTC(
+                                date.getFullYear(),
+                                date.getMonth(),
+                                date.getDate()
+                            ));
+                            setSelectedDate(utcDate);
+                        }}
+                        customInput={
+                            <CustomDateInput
+                                value={
+                                    selectedDate
+                                        ? selectedDate.toLocaleDateString('en-GB', {
+                                            timeZone: 'UTC',
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: '2-digit',
+                                        })
+                                        : ''
+                                }
+                            />
+                        }
                         dateFormat="MMM, dd yyyy"
                     />
+
                 </div>
             </div>
 
@@ -195,7 +221,7 @@ function UserSignUpForm() {
                     <input
                         name='email'
                         id='email'
-                        type="email"
+                        type="text"
                         placeholder="john@email.com"
                         className="w-full input"
                         value={user.email}
@@ -209,14 +235,20 @@ function UserSignUpForm() {
                 <div className='mb-6'>
                     <label htmlFor="num" className="label">Contact Number</label>
                     <input
-                        name='num'
-                        id='num'
-                        type="text"
+                        name="num"
+                        id="num"
+                        type="number"
                         placeholder="0710000000"
                         className="w-full input"
                         value={user.number}
                         onChange={(e) => setUser({ ...user, number: e.target.value })}
+                        onKeyDown={(e) => {
+                            if (["e", "E", "+", "-"].includes(e.key)) {
+                                e.preventDefault();
+                            }
+                        }}
                     />
+
                     {error.number && <div className="text-red-500 text-sm">{error.number}</div>}
                 </div>
             </div>

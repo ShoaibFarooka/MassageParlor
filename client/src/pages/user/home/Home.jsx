@@ -14,13 +14,17 @@ import { setLoggedOut } from '../../../redux/logoutSlice';
 import { clearUser } from '../../../redux/userSlice';
 import Cookies from 'js-cookie';
 import { HideLoading, ShowLoading } from '../../../redux/loaderSlice';
+import CustomModal from '../../../components/CustomModal/CustomModal';
+import UserProfile from '../../../components/Profile/UserProfile';
+import ServiceProviderProfile from '../../../components/Profile/ServiceProviderProfile';
 
 
 const providers = [
-];  
+];
 
 const UserHome = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
     const dropdownRef = useRef(null);
     const [height, setHeight] = useState(165);
     const minVal = 100;
@@ -28,13 +32,15 @@ const UserHome = () => {
     const fillPercentage = ((height - minVal) / (maxVal - minVal)) * 100;
     const user = useSelector((state) => state.user.user);
 
-    console.log(user,'user123')
+    console.log(user, 'user123')
 
     // New dropdown state & ref for the profile image
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const profileDropdownRef = useRef(null);
     const dispatch = useDispatch();
     const [serviceProviders, setServiceProviders] = useState([]);
+    const debounceTimer = useRef(null);
+
     const [filters, setFilters] = useState({
         searchQuery: "",
         location: "",
@@ -79,8 +85,19 @@ const UserHome = () => {
     };
 
     useEffect(() => {
-        fetchServiceProviders();
-    }, [filters.searchQuery]); // Fetch data when search query changes
+        // Clear the previous timer if the user types again
+        if (debounceTimer.current) {
+            clearTimeout(debounceTimer.current);
+        }
+
+        // Set a new timer that runs the API call after 500ms of inactivity
+        debounceTimer.current = setTimeout(() => {
+            fetchServiceProviders();
+        }, 500);
+
+        // Cleanup timer on unmount or when searchQuery changes
+        return () => clearTimeout(debounceTimer.current);
+    }, [filters.searchQuery]);
 
 
     const handleFilterChange = (e) => {
@@ -148,6 +165,19 @@ const UserHome = () => {
         dispatch(HideLoading());
     };
 
+    const clearFilters = () => {
+        setFilters({
+            searchQuery: "",
+            location: "",
+            ethnicity: "",
+            hairColor: "",
+            minHeight: "",
+            maxHeight: "",
+            callOutType: "",
+        });
+        setHeight(165); // Reset height slider to default
+        fetchServiceProviders()
+    };
 
     return (
         <div>
@@ -182,24 +212,24 @@ const UserHome = () => {
 
                                     <div className='px-4'>
                                         <div className="mb-2">
-                                            <label className="block text-[10px] font-medium ">Location</label>
+                                            <label className="block text-[12px] font-medium ">Location</label>
                                             <input
                                                 type="text"
                                                 name="location"
                                                 value={filters.location}
                                                 onChange={handleFilterChange}
-                                                className="w-full h-[30px] text-[10px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]"
+                                                className="w-full h-[30px] text-[12px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]"
                                                 placeholder="Enter location"
                                             />
                                         </div>
 
                                         <div className="mb-2">
-                                            <label className="block text-[10px] font-medium ">Ethnicity</label>
+                                            <label className="block text-[12px] font-medium ">Ethnicity</label>
                                             <select
                                                 name="ethnicity"
                                                 value={filters.ethnicity}
                                                 onChange={handleFilterChange}
-                                                className="w-full h-[30px] text-[10px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]"
+                                                className="w-full h-[30px] text-[12px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]"
                                             >
                                                 <option value="">All</option>
                                                 <option value="Black">Black</option>
@@ -211,12 +241,12 @@ const UserHome = () => {
                                         </div>
 
                                         <div className="mb-2">
-                                            <label className="block text-[10px] font-medium">Hair Color</label>
+                                            <label className="block text-[12px] font-medium">Hair Color</label>
                                             <div className="flex mt-2">
                                                 {["Blonde", "Brown", "Black", "Red"].map((color, index) => (
                                                     <span
                                                         key={index}
-                                                        className={`w-4 h-4 rounded-full mr-[10px] cursor-pointer ${filters.hairColor === color ? "border-2 border-black" : ""}`}
+                                                        className={`w-5 h-5 rounded-full mr-[10px] cursor-pointer ${filters.hairColor === color ? "border-2 border-[#a3a0a0]" : ""}`}
                                                         style={{ backgroundColor: color }}
                                                         onClick={() => setFilters((prev) => ({ ...prev, hairColor: color }))}
                                                     ></span>
@@ -225,7 +255,7 @@ const UserHome = () => {
                                         </div>
 
                                         <div className="mb-2">
-                                            <label className="block text-[10px] font-medium">Height - ({height}cm)</label>
+                                            <label className="block text-[12px] font-medium">Height - ({height}cm)</label>
                                             <div className="mt-2">
                                                 <input
                                                     type="range"
@@ -247,7 +277,14 @@ const UserHome = () => {
 
                                     </div>
 
-                                    <button onClick={applyFilters} className='text-sm cursor-pointer font-semibold rounded-b-3xl mt-2 text-white bg-[#5E50BF] py-3 w-full'>
+                                    <button
+                                        onClick={clearFilters}
+                                        className="text-sm cursor-pointer font-semibold mt-2 text-[#5E50BF] bg-white py-3 w-full border-t border-gray-200"
+                                    >
+                                        Clear Filters
+                                    </button>
+
+                                    <button onClick={applyFilters} className='text-sm cursor-pointer font-semibold rounded-b-3xl text-white bg-[#5E50BF] py-3 w-full'>
                                         Filter
                                     </button>
                                 </div>
@@ -257,7 +294,7 @@ const UserHome = () => {
 
                     <div className="flex space-x-4 items-center">
 
-                        <div className='flex items-center space-x-2 border border-[#858FAD] rounded-[12px] px-4 py-2'>
+                        {/* <div className='flex items-center space-x-2 border border-[#858FAD] rounded-[12px] px-4 py-2'>
                             <IoLocationOutline fontSize={24} className='p-0 m-0' />
 
                             <div className='flex flex-col pl-3 sm:pl-6'>
@@ -269,7 +306,7 @@ const UserHome = () => {
                                     Brooklyn
                                 </span>
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className='bg-white rounded-full h-[50px] w-[50px] flex items-center justify-center shadow'>
                             <CiBellOn fontSize={24} />
@@ -277,19 +314,19 @@ const UserHome = () => {
 
                         <div className="relative" ref={profileDropdownRef}>
                             <img
-                                src={`http://localhost:5777/static/images/${user.image}` || profile}
+                                src={user?.image ? `http://localhost:5777/static/images/${user.image}` : profile}
                                 alt="Profile"
-                                className="w-[60px] min-h-[60px] object-cover rounded-full border-[2px] border-[#858FAD] cursor-pointer"
+                                className="w-[60px] h-[60px] object-cover rounded-full border-[2px] border-[#858FAD] cursor-pointer"
                                 onClick={toggleProfileDropdown}
                             />
                             {isProfileOpen && (
                                 <div className="absolute right-0 mt-2 w-[200px] bg-white border border-gray-200 rounded shadow-lg p-4 z-50">
                                     <p className="font-bold mb-2">My Account</p>
                                     <ul>
-                                        <li className="py-1 text-sm cursor-pointer flex items-center"><CgProfile className='mr-2' /> Profile</li>
-                                        <li className="py-1 text-sm cursor-pointer flex items-center"><IoMdCard className='mr-2' />                                        Billing</li>
-                                        <li className="py-1 text-sm cursor-pointer flex items-center"><CiSettings className='mr-2' />                                        Settings</li>
-                                        <li onClick={handleLogout} className="py-1 text-sm cursor-pointer flex items-center text-red-500">
+                                        <li onClick={() => { setIsEditProfileOpen(true); setIsProfileOpen(false) }} className="py-1 hover:bg-[#F3F2F8] text-sm cursor-pointer flex items-center"><CgProfile className='mr-2' /> Profile</li>
+                                        <li className="py-1 text-sm cursor-pointer flex items-center  hover:bg-[#F3F2F8]"><IoMdCard className='mr-2' />Billing</li>
+                                        <li className="py-1 text-sm cursor-pointer flex items-center hover:bg-[#F3F2F8]"><CiSettings className='mr-2' />Settings</li>
+                                        <li onClick={handleLogout} className="py-1 text-sm cursor-pointer flex items-center text-red-500 hover:bg-[#F3F2F8]">
                                             <MdOutlineLogout className='mr-2' />
                                             Log out
                                         </li>
@@ -301,10 +338,10 @@ const UserHome = () => {
                     </div>
                 </header>
 
-                <main className="py-16">
-                    <div className="grid grid-cols-1 justify-center md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <main className="flex justify-center items-center">
+                    <div className="flex flex-wrap justify-center p-4 max-w-full">
                         {serviceProviders.length > 0 ? (
-                            serviceProviders.map((provider) => (
+                            serviceProviders.filter(data => data.isActive === true).map((provider) => (
                                 <ServiceCard key={provider._id} provider={provider} />
                             ))
                         ) : (
@@ -314,6 +351,17 @@ const UserHome = () => {
                     </div>
                 </main>
             </div>
+
+            <CustomModal isOpen={isEditProfileOpen} width='500px' onRequestClose={() => setIsEditProfileOpen(false)}>
+                <div className=" p-8">
+                    <h1 className="text-[30px] font-bold text-center">Edit Profile</h1>
+                    <p className=" text-[12px] text-[#858FAD] text-center">
+                        Enter your details to continue
+                    </p>
+
+                    {user.role === 'user' ? <UserProfile setIsEditProfileOpen={setIsEditProfileOpen} /> : <ServiceProviderProfile />}
+                </div>
+            </CustomModal>
         </div>
     )
 }

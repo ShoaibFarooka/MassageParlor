@@ -26,6 +26,27 @@ const Register = async (req, res, next) => {
   }
 };
 
+const RegisterFormData = async (req, res, next) => {
+  try {
+    console.log("req.file", req.file);
+    const imagePath = req.file ? req.file.filename : null;
+
+    const data = { ...req.body, image: imagePath };
+    const { id } = req.params;
+
+    const user = await userService.updateUserFormData(id, data);
+    res.status(201).json({ message: "User registered successfully!", user });
+  } catch (error) {
+    console.error("Validation or Registration error:", error);
+
+    if (error.name === "ValidationError") {
+      return res.status(400).json({ error: error.errors });
+    }
+
+    next(error);
+  }
+};
+
 const Login = async (req, res, next) => {
   try {
     const data = { ...req.body };
@@ -162,6 +183,7 @@ const SearchEmployees = async (req, res, next) => {
   }
 };
 
+
 const SearchServiceProviders = async (req, res, next) => {
   try {
     const {
@@ -199,10 +221,6 @@ const SearchServiceProviders = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  SearchServiceProviders,
-};
-
 const SearchUsers = async (req, res, next) => {
   try {
     const { pageIndex, limit, searchQuery, status } = req.query;
@@ -223,6 +241,32 @@ const SearchUsers = async (req, res, next) => {
     }
     res.status(200).json({ result });
   } catch (error) {
+    console.log(error, "error in search users");
+    next(error);
+  }
+};
+
+const SearchServiceProvider = async (req, res, next) => {
+  try {
+    const { pageIndex, limit, searchQuery, status } = req.query;
+    const parsedPageIndex = parseInt(pageIndex);
+    const parsedLimit = parseInt(limit);
+    const result = await userService.searchUsers(
+      parsedPageIndex,
+      parsedLimit,
+      searchQuery,
+      "service-provider"
+    );
+    if (status && result.users && result.users.length > 0) {
+      result.users = result.users.filter((user) => {
+        const lowerCaseArr = user.status.map((status) => status.toLowerCase());
+        const lowerCaseStatus = status.toLowerCase();
+        return lowerCaseArr.includes(lowerCaseStatus);
+      });
+    }
+    res.status(200).json({ result });
+  } catch (error) {
+    console.log(error, "error in search users");
     next(error);
   }
 };
@@ -284,9 +328,11 @@ const DeleteEmployee = async (req, res, next) => {
 const DeleteUser = async (req, res, next) => {
   try {
     const { userId } = req.params;
+    console.log("userId", userId);
     await userService.deleteUser(userId, "user");
     res.status(200).json({ message: "User deleted successfully!" });
   } catch (error) {
+    console.log(error, "error in delete user");
     next(error);
   }
 };
@@ -310,4 +356,6 @@ module.exports = {
   DeleteEmployee,
   DeleteUser,
   SearchServiceProviders,
+  SearchServiceProvider,
+  RegisterFormData,
 };
