@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import galleryService from "../../../services/galleryService";
 import { useSelector } from "react-redux";
 import { FaTrash } from "react-icons/fa"; // Importing react icon
+import ServicesHeader from "../components/ServicesHeader";
 
 const Gallery = () => {
   const [images, setImages] = useState([]);
@@ -26,7 +27,7 @@ const Gallery = () => {
   const handleFileChange = async (e) => {
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
-    
+
     if (images.length >= 5) {
       alert("You can only upload up to 5 images.");
       return;
@@ -61,7 +62,9 @@ const Gallery = () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Gallery</h2>
+      <div className="mb-6">
+        <ServicesHeader title={'Gallery'} />
+      </div>
 
       {/* Upload Input */}
       {images.length < 5 && (
