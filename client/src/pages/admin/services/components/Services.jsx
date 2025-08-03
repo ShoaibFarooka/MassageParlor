@@ -202,7 +202,7 @@ const Services = ({ setIsOpen, isOpen, serviceData }) => {
                     <div className='mb-8 flex justify-center'>
                         <button
                             onClick={() => {
-                                handleUpdateStatus(selectedImageId._id, 'rejected');
+                                handleUpdateStatus(selectedImageId?._id, 'rejected');
                                 setStatusModal(false);
                             }}
                             className="cursor-pointer px-4 py-2 bg-red-500 w-[131px] h-[48px] text-white rounded-full rounded-tr-none mr-[12px]"
@@ -211,7 +211,7 @@ const Services = ({ setIsOpen, isOpen, serviceData }) => {
                         </button>
                         <button
                             onClick={() => {
-                                handleUpdateStatus(selectedImageId._id, 'approved');
+                                handleUpdateStatus(selectedImageId?._id, 'approved');
                                 setStatusModal(false);
                             }}
                             className="cursor-pointer px-4 py-2 bg-green-600 w-[131px] h-[48px] text-white rounded-full rounded-tl-none"
