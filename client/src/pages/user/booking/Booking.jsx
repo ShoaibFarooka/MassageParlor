@@ -19,6 +19,9 @@ import { HideLoading, ShowLoading } from '../../../redux/loaderSlice';
 import Cookies from 'js-cookie';
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import bookingService from '../../../services/bookingService';
+import CustomModal from '../../../components/CustomModal/CustomModal';
+import UserProfile from '../../../components/Profile/UserProfile';
+import ServiceProviderProfile from '../../../components/Profile/ServiceProviderProfile';
 
 const CustomToolbar = ({ label, onNavigate, onView, view }) => {
   return (
@@ -80,6 +83,7 @@ const UserBooking = () => {
   const profileDropdownRef = useRef(null);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -202,114 +206,40 @@ const UserBooking = () => {
       <header className="flex flex-col lg:flex-row justify-between items-center py-2">
 
         <div className="flex items-center pb-4 lg:pb-0 justify-center space-x-4 w-full md:w-auto">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search"
-              className="pl-6 pr-4 py-2 text-lg rounded-full h-[56px] w-[220px] sm:w-[400px] bg-white shadow outline-0"
-            />
-
-            <FaSearch className="absolute right-6 top-1/2 transform -translate-y-1/2 text-black " fontSize={24} />
-          </div>
-
-          <div className='relative'>
-            <button
-              onClick={toggleDropdown}
-              className="p-2 rounded-full bg-white h-[50px] w-[50px] flex justify-center items-center cursor-pointer shadow"
-            >
-              <FaSlidersH className="text-black" fontSize={24} />
-            </button>
-            {isOpen && (
-              <div ref={dropdownRef} className="absolute right-0 w-[234px] mt-2 rounded-2xl shadow-lg bg-white z-50">
-                <h2 className="text-base font-semibold mb-4 mt-4 text-center">Filters</h2>
-
-                <div className='px-4'>
-                  <div className="mb-2">
-                    <label className="block text-[10px] font-medium ">Location</label>
-                    <input
-                      type="text"
-                      className="w-full h-[30px] text-[10px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]"
-                      placeholder="Enter value"
-                    />
-                  </div>
-
-                  <div className="mb-2">
-                    <label className="block text-[10px] font-medium ">Ethnicity</label>
-                    <select className="w-full h-[30px] text-[10px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]">
-                      <option>Value 1</option>
-                      <option>Value 2</option>
-                      <option>Value 3</option>
-                    </select>
-                  </div>
-
-                  <div className="mb-2">
-                    <label className="block text-[10px] font-medium ">Location</label>
-                    <div className='flex mt-2'>
-                      <span className='w-4 h-4 bg-[#DCC792] rounded-full mr-[10px] cursor-pointer'></span>
-                      <span className='w-4 h-4 bg-[#824238] rounded-full mr-[10px] cursor-pointer'></span>
-                      <span className='w-4 h-4 bg-[#000000] rounded-full mr-[10px] cursor-pointer'></span>
-                      <span className='w-4 h-4 bg-[#80624E] rounded-full mr-[10px] cursor-pointer'></span>
-                    </div>
-                  </div>
-
-                  <div className="mb-2">
-                    <label className="block text-[10px] font-medium ">Height - ({height}cm)</label>
-                    <div className=' mt-2'>
-                      <input
-                        type="range"
-                        min={minVal}
-                        max={maxVal}
-                        value={height}
-                        onChange={(e) => setHeight(e.target.value)}
-                        className="range-slider w-full"
-                        style={{
-                          background: `linear-gradient(to right, #000 0%, #000 ${fillPercentage}%, #ddd ${fillPercentage}%, #ddd 100%)`
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <button className='text-sm font-semibold rounded-b-3xl mt-2 text-white bg-[#5E50BF] py-3 w-full'>
-                  Filter
-                </button>
-              </div>
-            )}
-          </div>
         </div>
 
         <div className="flex space-x-4 items-center">
-
-          {/* <div className='flex items-center space-x-2 border border-[#858FAD] rounded-[12px] px-4 py-2'>
-            <IoLocationOutline fontSize={24} className='p-0 m-0' />
-
-            <div className='flex flex-col pl-3 sm:pl-6'>
-              <span className='text-[11px] font-semibold'>
-                Location
-              </span>
-
-              <span className='text-sm font-semibold text-[#858FAD]'>
-                Brooklyn
-              </span>
-            </div>
-          </div> */}
-
           <div className='bg-white rounded-full h-[50px] w-[50px] flex items-center justify-center shadow'>
             <CiBellOn fontSize={24} />
           </div>
 
           <div className="relative" ref={profileDropdownRef}>
-            <img
-              src={`http://localhost:5777/static/images/${user.image}` || profile}
+            {user?.image ? <img
+              src={`http://localhost:5777/static/images/${user.image}`}
               alt="Profile"
               className="w-[60px] h-[60px] object-cover rounded-full border-[2px] border-[#858FAD] cursor-pointer"
               onClick={toggleProfileDropdown}
-            />
+            /> :
+              (
+                <div onClick={toggleProfileDropdown} className='bg-white rounded-full h-[60px] w-[60px] flex items-center justify-center shadow cursor-pointer'>
+                  <svg
+                    className="w-8 h-8 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2"
+                  >
+                    <path d="M12 12c2.21 0 4-1.79 4-4S14.21 4 12 4 8 5.79 8 8s1.79 4 4 4z" />
+                    <path d="M12 14c-4.42 0-8 1.79-8 4v1h16v-1c0-2.21-3.58-4-8-4z" />
+                  </svg>
+                </div>
+              )}
+
             {isProfileOpen && (
               <div className="absolute right-0 mt-2 w-[200px] bg-white border border-gray-200 rounded shadow-lg p-4 z-50">
                 <p className="font-bold mb-2">My Account</p>
                 <ul>
-                  <li className="py-1 text-sm cursor-pointer flex items-center  hover:bg-[#F3F2F8]"><CgProfile className='mr-2' /> Profile</li>
+                  <li onClick={() => { setIsEditProfileOpen(true); setIsProfileOpen(false) }} className="py-1 text-sm cursor-pointer flex items-center  hover:bg-[#F3F2F8]"><CgProfile className='mr-2' /> Profile</li>
                   <li className="py-1 text-sm cursor-pointer flex items-center hover:bg-[#F3F2F8]"><IoMdCard className='mr-2' />Billing</li>
                   <li className="py-1 text-sm cursor-pointer flex items-center hover:bg-[#F3F2F8]"><CiSettings className='mr-2' />Settings</li>
                   <li onClick={handleLogout} className="py-1 text-sm cursor-pointer flex items-center hover:bg-[#F3F2F8] text-red-500">
@@ -369,6 +299,17 @@ const UserBooking = () => {
         />
 
       </div>
+
+      <CustomModal isOpen={isEditProfileOpen} width='500px' onRequestClose={() => setIsEditProfileOpen(false)}>
+        <div className=" p-8">
+          <h1 className="text-[30px] font-bold text-center">Edit Profile</h1>
+          <p className=" text-[12px] text-[#858FAD] text-center">
+            Enter your details to continue
+          </p>
+
+          {user.role === 'user' ? <UserProfile setIsEditProfileOpen={setIsEditProfileOpen} /> : <ServiceProviderProfile />}
+        </div>
+      </CustomModal>
     </div>
   );
 };

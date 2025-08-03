@@ -39,3 +39,6 @@
   font-size: 13px;
 }
 
+.overlay {
+    z-index: 9999 !important;
+}

@@ -22,7 +22,7 @@ const ServicesHeader = ({ title }) => {
     const [isOpen, setIsOpen] = useState(false);
     const profileDropdownRef = useRef(null);
     const dispatch = useDispatch();
-    const navigate=useNavigate()
+    const navigate = useNavigate()
 
     const handleLogout = async () => {
         dispatch(ShowLoading());
@@ -100,12 +100,26 @@ const ServicesHeader = ({ title }) => {
                     </div>
 
                     <div className="relative" ref={profileDropdownRef}>
-                        <img
-                            src={user?.image ? `http://localhost:5777/static/images/${user.image}` : profile}
+                        {user?.image ? <img
+                            src={`http://localhost:5777/static/images/${user.image}`}
                             alt="Profile"
                             className="w-[60px] h-[60px] object-cover rounded-full border-[2px] border-[#858FAD] cursor-pointer"
                             onClick={toggleProfileDropdown}
-                        />
+                        /> :
+                            (
+                                <div onClick={toggleProfileDropdown} className='bg-white rounded-full h-[60px] w-[60px] flex items-center justify-center shadow cursor-pointer'>
+                                    <svg
+                                        className="w-8 h-8 text-gray-400"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth="2"
+                                    >
+                                        <path d="M12 12c2.21 0 4-1.79 4-4S14.21 4 12 4 8 5.79 8 8s1.79 4 4 4z" />
+                                        <path d="M12 14c-4.42 0-8 1.79-8 4v1h16v-1c0-2.21-3.58-4-8-4z" />
+                                    </svg>
+                                </div>
+                            )}
 
                         {isProfileOpen && (
                             <div className="absolute right-0 mt-2 w-[200px] bg-white border border-gray-200 rounded shadow-lg p-4 z-50">
