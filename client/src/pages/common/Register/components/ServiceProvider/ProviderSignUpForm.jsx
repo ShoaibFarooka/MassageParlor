@@ -47,7 +47,7 @@ function ProviderSignUpForm() {
     if (!user.surname) errors.surname = "Surname is required";
     if (!user.email) {
       errors.email = "Email is required";
-    } else if (!emailRegex.test(user.email)) {
+    } else if (!emailRegex.test(user.email.toLowerCase().trim())) {
       errors.email = "Please enter a valid email address";
     }
     if (!user.number) errors.number = "Contact number is required";
@@ -70,7 +70,7 @@ function ProviderSignUpForm() {
     const formData = new FormData();
     formData.append('name', `${user.name} ${user.surname}`);
     formData.append('number', user.number);
-    formData.append('email', user.email);
+    formData.append('email', user.email.toLowerCase().trim());
     formData.append('password', user.password);
     formData.append('ethnicity', user.ethnicity);
     formData.append('location', user.location);
