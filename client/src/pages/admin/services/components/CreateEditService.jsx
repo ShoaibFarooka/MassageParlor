@@ -235,7 +235,7 @@ function CreateEditService({ setSelectedImage, selectedImage, setUser, user, isO
                                 name='num'
                                 id='num'
                                 autoComplete="off"
-                                type="tel"
+                                type="number"
                                 placeholder="0710000000"
                                 className="w-full input"
                                 value={user.number}

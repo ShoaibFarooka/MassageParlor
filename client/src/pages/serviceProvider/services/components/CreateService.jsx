@@ -156,8 +156,10 @@ function CreateEditService({ isOpen, onClose, serviceId, onLoad }) {
                             <label htmlFor="duration" className="label">Duration</label>
                             <input
                                 id="duration"
-                                type="text"
-                                placeholder="e.g. 1h"
+                                type="number"
+                                placeholder="e.g. 1.5h"
+                                step="0.1"
+                                min="0"
                                 className="w-full input"
                                 value={service.duration}
                                 onChange={(e) => setService({ ...service, duration: e.target.value })}

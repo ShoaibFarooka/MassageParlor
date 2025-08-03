@@ -6,6 +6,7 @@ import userService from '../../../services/userService';
 import ServicesHeader from '../components/ServicesHeader';
 import ServicesTable from './components/ServicesTable';
 import ServicesModel from './components/Services';
+import profile from '../../../assets/images/profile.png';
 
 const Services = () => {
   const [isOpenFilter, setIsOpenFilter] = useState(false);
@@ -44,6 +45,8 @@ const Services = () => {
     callOutType: "",
   });
 
+  console.log("serviceProviders", serviceProviders);
+
   const fetchServiceProviders = async () => {
     dispatch(ShowLoading());
     try {
@@ -59,14 +62,16 @@ const Services = () => {
         );
       });
 
+      console.log("fetchedProviders", fetchedProviders);
+
       // Add static data if missing
       fetchedProviders = fetchedProviders.map((provider) => ({
         ...provider,
-        age: provider.age || 25,
-        years: provider.years || 3,
-        clients: provider.clients || 24,
-        specialization: provider.specialization || "Specializes in Hot Stone and Sports massage.",
-        image: provider.image ? `http://localhost:5777/static/images/${provider.image}` : profile,
+        age: provider?.age,
+        years: provider?.years,
+        clients: provider?.clients,
+        specialization: provider?.specialization,
+        image: provider?.image ? `http://localhost:5777/static/images/${provider?.image}` : profile,
       }));
 
       setServiceProviders(fetchedProviders);

@@ -118,7 +118,7 @@ function ServiceTable({ handleServicesModel, selectedImage, setSelectedImage, us
           </tr>
         </thead>
         <tbody>
-          {serviceProviders.map((service) => (
+          {serviceProviders?.map((service) => (
             <tr
               key={service.id}
               className="border-b border-[#E8E9EE] h-[79.96px] last:border-none bg-white"
