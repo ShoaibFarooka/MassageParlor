@@ -10,8 +10,8 @@ const Services = () => {
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false)
-    const [services, setServices] = useState([]);
-  
+  const [services, setServices] = useState([]);
+
   const loadServiceData = async () => {
     dispatch(ShowLoading());
     try {
@@ -28,7 +28,7 @@ const Services = () => {
     loadServiceData()
   }, [])
 
-  const onLoad=()=>{
+  const onLoad = () => {
     loadServiceData()
   }
 

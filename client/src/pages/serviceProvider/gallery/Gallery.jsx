@@ -66,6 +66,10 @@ const Gallery = () => {
         <ServicesHeader title={'Gallery'} />
       </div>
 
+      <p className="text-sm text-gray-600 mb-2">
+        You can upload a maximum of 5 images.
+      </p>
+
       {/* Upload Input */}
       {images.length < 5 && (
         <div className="mb-4">

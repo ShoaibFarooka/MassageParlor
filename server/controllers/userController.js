@@ -279,7 +279,6 @@ const SearchUsers = async (req, res, next) => {
     }
     res.status(200).json({ result });
   } catch (error) {
-    console.log(error, "error in search users");
     next(error);
   }
 };
@@ -304,7 +303,6 @@ const SearchServiceProvider = async (req, res, next) => {
     }
     res.status(200).json({ result });
   } catch (error) {
-    console.log(error, "error in search users");
     next(error);
   }
 };

@@ -1,4 +1,4 @@
-const serviceService = require("../services/galleryService");
+const galleryService = require("../services/galleryService");
 
 const addToGallery = async (req, res, next) => {
   try {
@@ -9,7 +9,7 @@ const addToGallery = async (req, res, next) => {
       return res.status(400).json({ message: "Missing image or user." });
     }
 
-    const gallery = await serviceService.addToGallery(userId, filePath);
+    const gallery = await galleryService.addToGallery(userId, filePath);
 
     res.status(201).json({ message: "Image added successfully!", gallery });
   } catch (error) {
@@ -20,7 +20,7 @@ const addToGallery = async (req, res, next) => {
 
 const updateStatus = async (req, res, next) => {
   try {
-    const updatedStatus = await serviceService.updateStatus(
+    const updatedStatus = await galleryService.updateStatus(
       req.params.imageId,
       req.body
     );
@@ -36,8 +36,8 @@ const updateStatus = async (req, res, next) => {
 
 const deleteFromGallery = async (req, res, next) => {
   try {
-    console.log( req.params.imageId,'bilal')
-    const deletedService = await serviceService.deleteFromGallery(
+    console.log(req.params.imageId, 'bilal')
+    const deletedService = await galleryService.deleteFromGallery(
       req.params.imageId
     );
     if (!deletedService)
@@ -51,7 +51,7 @@ const deleteFromGallery = async (req, res, next) => {
 const getGalleryByServiceProvider = async (req, res, next) => {
   try {
     const serviceProviderId = req.params.serviceProvider;
-    const gallery = await serviceService.getGalleryByServiceProvider(serviceProviderId);
+    const gallery = await galleryService.getGalleryByServiceProvider(serviceProviderId);
     if (!gallery) {
       return res.status(404).json({ message: "Gallery not found!" });
     }
@@ -70,7 +70,7 @@ const updateImageStatus = async (req, res, next) => {
       return res.status(400).json({ message: "Status is required" });
     }
 
-    const updatedGallery = await serviceService.updateStatus(imageId, { status });
+    const updatedGallery = await galleryService.updateStatus(imageId, { status });
 
     if (!updatedGallery) {
       return res.status(404).json({ message: "Image not found" });

@@ -13,32 +13,29 @@ const AdminUsers = () => {
     const [users, setUsers] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
 
-const loadUserData = async () => {
-    dispatch(ShowLoading());
-    try {
-        const response = await userService.searchUsers({
-            page: 1,
-            limit: 10,
-            searchQuery: searchQuery,
-            role: "user"
-        });
-        console.log(response)
-        setUsers(response?.result?.users);
-    } catch (error) {
-        console.error("Error fetching users:", error);
-    } finally {
-        dispatch(HideLoading());
-    }
-};
+    const loadUserData = async () => {
+        dispatch(ShowLoading());
+        try {
+            const response = await userService.searchUsers({
+                page: 1,
+                limit: 10,
+                searchQuery: searchQuery,
+                role: "user"
+            });
+            console.log(response)
+            setUsers(response?.result?.users);
+        } catch (error) {
+            console.error("Error fetching users:", error);
+            setUsers([]);
+        } finally {
+            dispatch(HideLoading());
+        }
+    };
 
 
     const onLoad = () => {
         loadUserData()
     }
-
-    useEffect(() => {
-        loadUserData()
-    }, [])
 
     const handleFilterChange = (e) => {
         setSearchQuery(e.target.value);

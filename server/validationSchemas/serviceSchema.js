@@ -2,7 +2,6 @@ const yup = require("yup");
 
 const createServiceSchema = yup.object().shape({
   serviceProvider: yup.string().trim().required(),
-  gallery: yup.string().trim().required(),
   name: yup.string().trim().required(),
   price: yup.number().min(0).required(),
   duration: yup.string().trim().required(),
@@ -15,7 +14,6 @@ const createServiceSchema = yup.object().shape({
 const updateServiceSchema = yup.object({
   isActive: yup.boolean(),
   serviceProvider: yup.string().trim(),
-  gallery: yup.string().trim(),
   name: yup.string().trim(),
   price: yup.number().min(0),
   duration: yup.string().trim(),

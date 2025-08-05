@@ -231,6 +231,11 @@ const refreshToken = async (refreshToken) => {
     throw error;
   }
   const payload = authUtils.verifyRefreshToken(refreshToken);
+  if (!payload || !payload.id) {
+    const error = new Error("Invalid refresh token!");
+    error.code = 401;
+    throw error;
+  }
   const user = await User.findById(payload.id);
   if (!user || user.refreshToken !== refreshToken) {
     const error = new Error("Invalid refresh token!");

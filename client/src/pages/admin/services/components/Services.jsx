@@ -40,7 +40,9 @@ const Services = ({ setIsOpen, isOpen, serviceData }) => {
     useEffect(() => {
         setGalleries([]);
         setServices([]);
-        fetchServicesForServiceProvider();
+        if (serviceData?._id) {
+            fetchServicesForServiceProvider();
+        }
     }, [serviceData?._id]);
 
 
