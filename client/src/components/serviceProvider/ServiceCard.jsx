@@ -246,25 +246,25 @@ const ServiceCard = ({ key, provider }) => {
 
             <h3 className='text-lg font-semibold items-start mt-10 sm:mt-0'>Gallery</h3>
             {galleries?.images?.length > 0 ? (
-             <div className="flex flex-wrap">
-             {galleries.images.map((image, index) => {
-               const isBlurred = !user && index >= 3;
-               return (
-                 <div
-                   key={index}
-                   className={`w-[100px] sm:w-[124px] h-[100px] sm:h-[124px] m-2 flex items-center justify-center 
+              <div className="flex flex-wrap">
+                {galleries.images.filter(image => image.status === 'approved').map((image, index) => {
+                  const isBlurred = !user && index >= 3;
+                  return (
+                    <div
+                      key={index}
+                      className={`w-[100px] sm:w-[124px] h-[100px] sm:h-[124px] m-2 flex items-center justify-center 
                      ${isBlurred ? "bg-gray-300 overflow-hidden" : ""}`}
-                 >
-                   <img
-                     src={`http://localhost:5777/static/images/${image.url}`}
-                     alt={`Gallery Image ${index + 1}`}
-                     className={`object-cover w-full h-full ${isBlurred ? "blur-xs" : ""}`}
-                   />
-                 </div>
-               );
-             })}
-           </div>
-           
+                    >
+                      <img
+                        src={`http://localhost:5777/static/images/${image.url}`}
+                        alt={`Gallery Image ${index + 1}`}
+                        className={`object-cover w-full h-full ${isBlurred ? "blur-xs" : ""}`}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+
             ) : (
               <p>No images available.</p>
             )}

@@ -72,6 +72,7 @@ router.get(
 );
 
 router.get("/search-service-providers", controller.SearchServiceProviders);
+router.get("/search-service-providers-admin", controller.SearchServiceProvidersAdmin);
 
 router.get(
   "/search-users",

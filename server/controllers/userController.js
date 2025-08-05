@@ -221,6 +221,44 @@ const SearchServiceProviders = async (req, res, next) => {
   }
 };
 
+const SearchServiceProvidersAdmin = async (req, res, next) => {
+  try {
+    const {
+      pageIndex,
+      limit,
+      searchQuery,
+      location,
+      ethnicity,
+      hairColor,
+      minHeight,
+      maxHeight,
+      callOutType,
+    } = req.query;
+
+    const parsedPageIndex = parseInt(pageIndex) || 1;
+    const parsedLimit = parseInt(limit) || 10;
+
+    const result = await userService.searchServiceProvidersAdmin(
+      parsedPageIndex,
+      parsedLimit,
+      {
+        searchQuery,
+        location,
+        ethnicity,
+        hairColor,
+        minHeight: 0,
+        maxHeight,
+        callOutType,
+      }
+    );
+
+    res.status(200).json({ result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 const SearchUsers = async (req, res, next) => {
   try {
     const { pageIndex, limit, searchQuery, status } = req.query;
@@ -358,4 +396,5 @@ module.exports = {
   SearchServiceProviders,
   SearchServiceProvider,
   RegisterFormData,
+  SearchServiceProvidersAdmin,
 };

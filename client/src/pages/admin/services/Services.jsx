@@ -50,7 +50,7 @@ const Services = () => {
   const fetchServiceProviders = async () => {
     dispatch(ShowLoading());
     try {
-      const response = await userService.searchServiceProviders(filters);
+      const response = await userService.searchServiceProvidersAdmin(filters);
       let fetchedProviders = response.result.users;
 
       // Apply local filtering in case the API doesn't support it
