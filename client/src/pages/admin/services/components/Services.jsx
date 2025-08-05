@@ -87,7 +87,7 @@ const Services = ({ setIsOpen, isOpen, serviceData }) => {
                             </div>
 
                             <p className="text-[#858FAD] text-[12.74px] mt-[8px]">
-                                Age {serviceData?.age} | Located in {serviceData?.location}
+                                Age {serviceData?.age} | Located in {serviceData?.city}
                             </p>
 
                             <div className="hidden sm:flex justify-center items-center space-x-2 mt-[19px] mb-[22px]">

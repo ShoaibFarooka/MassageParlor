@@ -10,7 +10,7 @@ const createUser = async (userData, role) => {
     email,
     number,
     dateOfBirth,
-    location,
+    suburb,
     city,
     zip,
     image,
@@ -61,7 +61,8 @@ const createUser = async (userData, role) => {
       name,
       email,
       number,
-      location,
+      suburb,
+      city,
       ethnicity,
       hairColor,
       image,
@@ -81,7 +82,7 @@ const updateUserFormData = async (userId, userData) => {
     email,
     number,
     dateOfBirth,
-    location,
+    suburb,
     city,
     zip,
     image,
@@ -136,7 +137,7 @@ const updateUserFormData = async (userId, userData) => {
   user.isActive = isActive || user.isActive; // Set isActive to true by default
 
   if (user.role !== "user") {
-    user.location = location || user.location;
+    user.suburb = suburb || user.suburb;
     user.ethnicity = ethnicity || user.ethnicity;
     user.hairColor = hairColor || user.hairColor;
     user.height = height || user.height;
@@ -253,7 +254,8 @@ const fetchUser = async (userId) => {
     number: 1,
     totalContacts: 1,
     dateOfBirth: 1,
-    location: 1,
+    suburb: 1,
+    city: 1,
     height: 1,
     hairColor: 1,
     callOutType: 1,
@@ -407,9 +409,13 @@ const searchServiceProviders = async (pageIndex, limit, filters) => {
     ];
   }
 
-  // Apply location filter
-  if (filters.location) {
-    query.location = { $regex: filters.location, $options: "i" };
+  // Apply suburb filter
+  if (filters.suburb) {
+    query.suburb = { $regex: filters.suburb, $options: "i" };
+  }
+
+  if (filters.city) {
+    query.city = { $regex: filters.city, $options: "i" };
   }
 
   // Apply ethnicity filter
@@ -441,7 +447,7 @@ const searchServiceProviders = async (pageIndex, limit, filters) => {
   // Fetch users based on query
   const users = await User.find(query)
     .select(
-      "name email number location ethnicity hairColor isOnline height callOutType image createdAt isActive _id"
+      "name email number suburb city ethnicity hairColor isOnline height callOutType image createdAt isActive _id"
     )
     .sort({ createdAt: -1 })
     .skip(skip)

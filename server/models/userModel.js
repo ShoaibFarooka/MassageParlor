@@ -48,7 +48,12 @@ const userSchema = new mongoose.Schema(
       required: false,
       trim: true,
     },
-    location: {
+    city: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    suburb: {
       type: String,
       required: false,
       trim: true,

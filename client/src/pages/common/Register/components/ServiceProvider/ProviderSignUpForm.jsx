@@ -18,7 +18,8 @@ function ProviderSignUpForm() {
     email: "",
     password: "",
     ethnicity: "",
-    location: "",
+    city: "",
+    suburb: "",
     height: "",
     hairColor: "",
     callOutType: ""
@@ -55,7 +56,8 @@ function ProviderSignUpForm() {
     if (user.password && user.password !== confirmPassword) errors.confirmPassword = "Passwords do not match";
 
     if (!user.ethnicity.trim()) errors.ethnicity = "Ethnicity is required";
-    if (!user.location.trim()) errors.location = "Location is required";
+    if (!user.city.trim()) errors.city = "City is required";
+    if (!user.suburb.trim()) errors.suburb = "Suburb is required";
     if (!user.height) errors.height = "Height is required";
     if (!user.hairColor.trim()) errors.hairColor = "Hair color is required";
     if (!user.callOutType.trim()) errors.callOutType = "Call-out type is required";
@@ -73,7 +75,8 @@ function ProviderSignUpForm() {
     formData.append('email', user.email.toLowerCase().trim());
     formData.append('password', user.password);
     formData.append('ethnicity', user.ethnicity);
-    formData.append('location', user.location);
+    formData.append('city', user.city);
+    formData.append('suburb', user.suburb);
     formData.append('height', user.height);
     formData.append('hairColor', user.hairColor);
     formData.append('callOutType', user.callOutType);
@@ -236,24 +239,40 @@ function ProviderSignUpForm() {
           {error.ethnicity && <div className="text-red-500 text-sm">{error.ethnicity}</div>}
         </div>
         <div className='mb-6'>
-          <label htmlFor="loc" className=" label">
-            Location
+          <label htmlFor="city" className=" label">
+            City
           </label>
           <input
-            id='loc'
-            name='loc'
+            id='city'
+            name='city'
             autoComplete="off"
             type="text"
-            placeholder="Bramley"
+            placeholder="Johannesburg"
             className="w-full input"
-            value={user.location}
-            onChange={(e) => setUser({ ...user, location: e.target.value })}
+            value={user.city}
+            onChange={(e) => setUser({ ...user, city: e.target.value })}
           />
-          {error.location && <div className="text-red-500 text-sm">{error.location}</div>}
+          {error.city && <div className="text-red-500 text-sm">{error.city}</div>}
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
+        <div className='mb-6'>
+          <label htmlFor="suburb" className=" label">
+            Suburb
+          </label>
+          <input
+            id='suburb'
+            name='suburb'
+            autoComplete="off"
+            type="text"
+            placeholder="Bramley"
+            className="w-full input"
+            value={user.suburb}
+            onChange={(e) => setUser({ ...user, suburb: e.target.value })}
+          />
+          {error.suburb && <div className="text-red-500 text-sm">{error.suburb}</div>}
+        </div>
         <div className='mb-6'>
           <label htmlFor="height" className="label">
             Height (cm)
@@ -270,6 +289,9 @@ function ProviderSignUpForm() {
           />
           {error.height && <div className="text-red-500 text-sm">{error.height}</div>}
         </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
         <div className='mb-6'>
           <label htmlFor="hc" className=" label">
             Hair color
@@ -288,27 +310,26 @@ function ProviderSignUpForm() {
             <option value="Red">Red</option>
           </select>
           {error.hairColor && <div className="text-red-500 text-sm">{error.hairColor}</div>}
-
         </div>
-      </div>
 
-      <div className='mb-6'>
-        <label htmlFor="cot" className=" label">
-          Call-out Type
-        </label>
-        <select
-          id="callOutType"
-          name="callOutType"
-          className="w-full input"
-          value={user.callOutType}
-          onChange={(e) => setUser({ ...user, callOutType: e.target.value })}
-        >
-          <option disabled value="">Select One</option>
-          <option value="In-call">In-call</option>
-          <option value="Out-call">Out-call</option>
-          <option value="Both">Both</option>
-        </select>
-        {error.callOutType && <div className="text-red-500 text-sm">{error.callOutType}</div>}
+        <div className='mb-6'>
+          <label htmlFor="cot" className=" label">
+            Call-out Type
+          </label>
+          <select
+            id="callOutType"
+            name="callOutType"
+            className="w-full input"
+            value={user.callOutType}
+            onChange={(e) => setUser({ ...user, callOutType: e.target.value })}
+          >
+            <option disabled value="">Select One</option>
+            <option value="In-call">In-call</option>
+            <option value="Out-call">Out-call</option>
+            <option value="Both">Both</option>
+          </select>
+          {error.callOutType && <div className="text-red-500 text-sm">{error.callOutType}</div>}
+        </div>
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>

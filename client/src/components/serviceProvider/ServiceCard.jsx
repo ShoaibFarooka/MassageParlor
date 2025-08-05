@@ -158,7 +158,7 @@ const ServiceCard = ({ key, provider }) => {
         <h2 className="text-[22px] font-semibold">{provider?.name}</h2>
 
         <p className="text-[#858FAD] text-[10px] mt-[5px]">
-          Age {provider?.age} | Located in {provider?.location}
+          Age {provider?.age} | Located in {provider?.city}
         </p>
 
         <div className="flex justify-center items-center space-x-2 mt-[19px] mb-[22px]">
@@ -213,7 +213,7 @@ const ServiceCard = ({ key, provider }) => {
               </div>
 
               <p className="text-[#858FAD] text-[12.74px] mt-[8px]">
-                Age {provider?.age} | Located in {provider?.location}
+                Age {provider?.age} | Located in {provider?.city}
               </p>
 
               <div className="hidden sm:flex justify-center items-center space-x-2 mt-[19px] mb-[22px]">
@@ -314,7 +314,7 @@ const ServiceCard = ({ key, provider }) => {
                 <h2 className="text-[22px] font-semibold">{provider?.name}</h2>
               </div>
               <p className="text-[#858FAD] text-[12.74px] mt-[8px]">
-                Age {provider?.age} | Located in {provider?.location}
+                Age {provider?.age} | Located in {provider?.city}
               </p>
             </div>
           </div>
