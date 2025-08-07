@@ -43,7 +43,8 @@ const UserHome = () => {
 
     const [filters, setFilters] = useState({
         searchQuery: "",
-        location: "",
+        city: "",
+        suburb: "",
         ethnicity: "",
         hairColor: "",
         minHeight: "",
@@ -62,7 +63,8 @@ const UserHome = () => {
                 const searchQuery = filters.searchQuery.toLowerCase();
                 return (
                     provider.name.toLowerCase().includes(searchQuery) ||
-                    provider.location.toLowerCase().includes(searchQuery)
+                    (provider.city && provider.city.toLowerCase().includes(searchQuery)) ||
+                    (provider.suburb && provider.suburb.toLowerCase().includes(searchQuery))
                 );
             });
 
@@ -85,19 +87,9 @@ const UserHome = () => {
     };
 
     useEffect(() => {
-        // Clear the previous timer if the user types again
-        if (debounceTimer.current) {
-            clearTimeout(debounceTimer.current);
-        }
-
-        // Set a new timer that runs the API call after 500ms of inactivity
-        debounceTimer.current = setTimeout(() => {
-            fetchServiceProviders();
-        }, 500);
-
-        // Cleanup timer on unmount or when searchQuery changes
-        return () => clearTimeout(debounceTimer.current);
-    }, [filters.searchQuery]);
+        // Only fetch on initial load with empty filters
+        fetchServiceProviders();
+    }, []); // Only run once on mount
 
 
     const handleFilterChange = (e) => {
@@ -109,7 +101,13 @@ const UserHome = () => {
 
 
     const applyFilters = async () => {
-        fetchServiceProviders()
+        // Clear any existing debounce timer
+        if (debounceTimer.current) {
+            clearTimeout(debounceTimer.current);
+        }
+        
+        // Apply filters immediately when button is clicked
+        await fetchServiceProviders();
     };
 
 
@@ -165,18 +163,48 @@ const UserHome = () => {
         dispatch(HideLoading());
     };
 
-    const clearFilters = () => {
-        setFilters({
+    const clearFilters = async () => {
+        const resetFilters = {
             searchQuery: "",
-            location: "",
+            city: "",
+            suburb: "",
             ethnicity: "",
             hairColor: "",
             minHeight: "",
             maxHeight: "",
             callOutType: "",
-        });
+        };
+        
+        // Clear the debounce timer to prevent conflicts
+        if (debounceTimer.current) {
+            clearTimeout(debounceTimer.current);
+        }
+        
+        setFilters(resetFilters);
         setHeight(165); // Reset height slider to default
-        fetchServiceProviders()
+        
+        // Immediately call API with cleared filters to avoid race condition
+        dispatch(ShowLoading());
+        try {
+            const response = await userService.searchServiceProviders(resetFilters);
+            let fetchedProviders = response.result.users;
+
+            // Add static data if missing
+            fetchedProviders = fetchedProviders.map((provider) => ({
+                ...provider,
+                age: provider.age || 25,
+                years: provider.years || 3,
+                clients: provider.clients || 24,
+                specialization: provider.specialization || "Specializes in Hot Stone and Sports massage.",
+                image: provider.image ? `http://localhost:5777/static/images/${provider.image}` : profile,
+            }));
+
+            setServiceProviders(fetchedProviders);
+        } catch (error) {
+            console.error("Error fetching service providers:", error);
+            setServiceProviders([]);
+        }
+        dispatch(HideLoading());
     };
 
     return (
@@ -212,14 +240,26 @@ const UserHome = () => {
 
                                     <div className='px-4'>
                                         <div className="mb-2">
-                                            <label className="block text-[12px] font-medium ">Location</label>
+                                            <label className="block text-[12px] font-medium ">City</label>
                                             <input
                                                 type="text"
-                                                name="location"
-                                                value={filters.location}
+                                                name="city"
+                                                value={filters.city}
                                                 onChange={handleFilterChange}
                                                 className="w-full h-[30px] text-[12px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]"
-                                                placeholder="Enter location"
+                                                placeholder="Enter city"
+                                            />
+                                        </div>
+
+                                        <div className="mb-2">
+                                            <label className="block text-[12px] font-medium ">Suburb</label>
+                                            <input
+                                                type="text"
+                                                name="suburb"
+                                                value={filters.suburb}
+                                                onChange={handleFilterChange}
+                                                className="w-full h-[30px] text-[12px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]"
+                                                placeholder="Enter suburb"
                                             />
                                         </div>
 

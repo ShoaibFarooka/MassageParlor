@@ -190,12 +190,13 @@ const SearchServiceProviders = async (req, res, next) => {
       pageIndex,
       limit,
       searchQuery,
-      location,
       ethnicity,
       hairColor,
       minHeight,
       maxHeight,
       callOutType,
+      city,
+      suburb,
     } = req.query;
 
     const parsedPageIndex = parseInt(pageIndex) || 1;
@@ -206,12 +207,13 @@ const SearchServiceProviders = async (req, res, next) => {
       parsedLimit,
       {
         searchQuery,
-        location,
         ethnicity,
         hairColor,
         minHeight: 0,
         maxHeight,
         callOutType,
+        city,
+        suburb,
       }
     );
 
@@ -233,6 +235,8 @@ const SearchServiceProvidersAdmin = async (req, res, next) => {
       minHeight,
       maxHeight,
       callOutType,
+       city,
+      suburb,
     } = req.query;
 
     const parsedPageIndex = parseInt(pageIndex) || 1;
@@ -249,6 +253,8 @@ const SearchServiceProvidersAdmin = async (req, res, next) => {
         minHeight: 0,
         maxHeight,
         callOutType,
+         city,
+      suburb,
       }
     );
 
