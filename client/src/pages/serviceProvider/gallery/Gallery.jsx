@@ -66,7 +66,7 @@ const Gallery = () => {
         <ServicesHeader title={'Gallery'} />
       </div>
 
-      <p className="text-sm text-gray-600 mb-2">
+      <p className="pb-4 font-medium text-gray-600 mb-2">
         You can upload a maximum of 5 images.
       </p>
 
@@ -83,7 +83,7 @@ const Gallery = () => {
           <button
             onClick={() => document.getElementById("hiddenFileInput").click()}
             disabled={loading}
-            className="bg-[#5E50BF] cursor-pointer text-white font-medium px-4 py-2 rounded transition duration-150 ease-in-out disabled:opacity-50"
+            className="bg-[#5E50BF] cursor-pointer mt-4 text-white font-medium px-4 py-2 rounded transition duration-150 ease-in-out disabled:opacity-50"
           >
             {loading ? "Uploading..." : "Upload"}
           </button>
