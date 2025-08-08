@@ -6,11 +6,11 @@ const createService = async (serviceData) => {
 };
 
 const getServices = async () => {
-  return await Service.find().populate("serviceProvider gallery");
+  return await Service.find().populate("serviceProvider");
 };
 
 const getServiceById = async (serviceId) => {
-  return await Service.findById(serviceId).populate("serviceProvider gallery");
+  return await Service.findById(serviceId).populate("serviceProvider");
 };
 
 const getServicesByProviderId = async (providerId) => {
@@ -18,9 +18,9 @@ const getServicesByProviderId = async (providerId) => {
 };
 
 const getGallery = async (providerId) => {
+  console.log("Get Gallery Called....");
   return await galleryModel.find({ serviceProvider: providerId });
 };
-
 
 const updateService = async (serviceId, updatedData) => {
   return await Service.findByIdAndUpdate(serviceId, updatedData, { new: true });

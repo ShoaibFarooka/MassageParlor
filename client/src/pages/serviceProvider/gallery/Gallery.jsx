@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import galleryService from "../../../services/galleryService";
 import { useSelector } from "react-redux";
 import { FaTrash } from "react-icons/fa"; // Importing react icon
+import ServicesHeader from "../components/ServicesHeader";
 
 const Gallery = () => {
   const [images, setImages] = useState([]);
@@ -26,7 +27,7 @@ const Gallery = () => {
   const handleFileChange = async (e) => {
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
-    
+
     if (images.length >= 5) {
       alert("You can only upload up to 5 images.");
       return;
@@ -61,7 +62,13 @@ const Gallery = () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Gallery</h2>
+      <div className="mb-6">
+        <ServicesHeader title={'Gallery'} />
+      </div>
+
+      <p className="pb-4 font-medium text-gray-600 mb-2">
+        You can upload a maximum of 5 images.
+      </p>
 
       {/* Upload Input */}
       {images.length < 5 && (
@@ -76,7 +83,7 @@ const Gallery = () => {
           <button
             onClick={() => document.getElementById("hiddenFileInput").click()}
             disabled={loading}
-            className="bg-[#5E50BF] cursor-pointer text-white font-medium px-4 py-2 rounded transition duration-150 ease-in-out disabled:opacity-50"
+            className="bg-[#5E50BF] cursor-pointer mt-4 text-white font-medium px-4 py-2 rounded transition duration-150 ease-in-out disabled:opacity-50"
           >
             {loading ? "Uploading..." : "Upload"}
           </button>

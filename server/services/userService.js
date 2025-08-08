@@ -10,7 +10,7 @@ const createUser = async (userData, role) => {
     email,
     number,
     dateOfBirth,
-    location,
+    suburb,
     city,
     zip,
     image,
@@ -61,7 +61,8 @@ const createUser = async (userData, role) => {
       name,
       email,
       number,
-      location,
+      suburb,
+      city,
       ethnicity,
       hairColor,
       image,
@@ -81,7 +82,7 @@ const updateUserFormData = async (userId, userData) => {
     email,
     number,
     dateOfBirth,
-    location,
+    suburb,
     city,
     zip,
     image,
@@ -135,8 +136,13 @@ const updateUserFormData = async (userId, userData) => {
   user.password = passwordDigest;
   user.isActive = isActive || user.isActive; // Set isActive to true by default
 
+  // Check if user is being suspended (isActive set to false) and clear refresh token
+  if (isActive === "false") {
+    user.refreshToken = null;
+  }
+
   if (user.role !== "user") {
-    user.location = location || user.location;
+    user.suburb = suburb || user.suburb;
     user.ethnicity = ethnicity || user.ethnicity;
     user.hairColor = hairColor || user.hairColor;
     user.height = height || user.height;
@@ -157,6 +163,14 @@ const loginUser = async (loginData) => {
     error.code = 404;
     throw error;
   }
+
+  // Check if user is active
+  if (user.isActive === false) {
+    const error = new Error("User is suspended!");
+    error.code = 403;
+    throw error;
+  }
+
   let passwordMatched = await authUtils.comparePassword(
     user.password,
     password
@@ -217,6 +231,11 @@ const refreshToken = async (refreshToken) => {
     throw error;
   }
   const payload = authUtils.verifyRefreshToken(refreshToken);
+  if (!payload || !payload.id) {
+    const error = new Error("Invalid refresh token!");
+    error.code = 401;
+    throw error;
+  }
   const user = await User.findById(payload.id);
   if (!user || user.refreshToken !== refreshToken) {
     const error = new Error("Invalid refresh token!");
@@ -253,7 +272,8 @@ const fetchUser = async (userId) => {
     number: 1,
     totalContacts: 1,
     dateOfBirth: 1,
-    location: 1,
+    suburb: 1,
+    city: 1,
     height: 1,
     hairColor: 1,
     callOutType: 1,
@@ -396,7 +416,7 @@ const searchUsers = async (pageIndex, limit, searchQuery, role) => {
 
 const searchServiceProviders = async (pageIndex, limit, filters) => {
   const skip = (pageIndex - 1) * limit;
-  let query = { role: "service-provider" }; // Fetch only service providers
+  let query = { role: "service-provider", isActive: true }; // Fetch only active service providers
 
   // Apply search query (name, email, phone)
   if (filters.searchQuery) {
@@ -407,9 +427,13 @@ const searchServiceProviders = async (pageIndex, limit, filters) => {
     ];
   }
 
-  // Apply location filter
-  if (filters.location) {
-    query.location = { $regex: filters.location, $options: "i" };
+  // Apply suburb filter
+  if (filters.suburb) {
+    query.suburb = { $regex: filters.suburb, $options: "i" };
+  }
+
+  if (filters.city) {
+    query.city = { $regex: filters.city, $options: "i" };
   }
 
   // Apply ethnicity filter
@@ -441,7 +465,77 @@ const searchServiceProviders = async (pageIndex, limit, filters) => {
   // Fetch users based on query
   const users = await User.find(query)
     .select(
-      "name email number location ethnicity hairColor isOnline height callOutType image createdAt isActive _id"
+      "name email number suburb city ethnicity hairColor isOnline height callOutType image createdAt isActive _id"
+    )
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  if (!users || users.length === 0) {
+    const error = new Error("No service providers found!");
+    error.code = 404;
+    throw error;
+  }
+
+  return {
+    users,
+    totalPages,
+    totalCount,
+  };
+};
+
+const searchServiceProvidersAdmin = async (pageIndex, limit, filters) => {
+  const skip = (pageIndex - 1) * limit;
+  let query = { role: "service-provider" }; // Fetch only active service providers
+
+  // Apply search query (name, email, phone)
+  if (filters.searchQuery) {
+    query.$or = [
+      { name: { $regex: filters.searchQuery, $options: "i" } },
+      { email: { $regex: filters.searchQuery, $options: "i" } },
+      { number: { $regex: filters.searchQuery, $options: "i" } },
+    ];
+  }
+
+  // Apply suburb filter
+  if (filters.suburb) {
+    query.suburb = { $regex: filters.suburb, $options: "i" };
+  }
+
+  if (filters.city) {
+    query.city = { $regex: filters.city, $options: "i" };
+  }
+
+  // Apply ethnicity filter
+  if (filters.ethnicity) {
+    query.ethnicity = filters.ethnicity;
+  }
+
+  // Apply hair color filter
+  if (filters.hairColor) {
+    query.hairColor = filters.hairColor;
+  }
+
+  // Apply height range filter
+  if (filters.minHeight || filters.maxHeight) {
+    query.height = {};
+    if (filters.minHeight) query.height.$gte = parseInt(filters.minHeight);
+    if (filters.maxHeight) query.height.$lte = parseInt(filters.maxHeight);
+  }
+
+  // Apply call out type filter
+  if (filters.callOutType) {
+    query.callOutType = filters.callOutType;
+  }
+
+  // Get total count for pagination
+  const totalCount = await User.countDocuments(query);
+  const totalPages = Math.ceil(totalCount / limit);
+
+  // Fetch users based on query
+  const users = await User.find(query)
+    .select(
+      "name email number suburb city ethnicity hairColor isOnline height callOutType image createdAt isActive _id"
     )
     .sort({ createdAt: -1 })
     .skip(skip)
@@ -606,5 +700,6 @@ module.exports = {
   changeUserPassword,
   fetchUserStripeCustomerId,
   searchServiceProviders,
+  searchServiceProvidersAdmin,
   // fetchUserId
 };

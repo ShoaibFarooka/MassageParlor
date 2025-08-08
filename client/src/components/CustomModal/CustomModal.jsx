@@ -35,7 +35,8 @@ const CustomModal = ({ isOpen, onRequestClose, contentLabel, children, width = '
         <Modal
             isOpen={isOpen}
             onRequestClose={onRequestClose}
-            className="modal relative outline-none border-none"
+            className="modal relative outline-none border-none "
+
             style={modalStyle}
             contentLabel={contentLabel}
             overlayClassName="overlay"

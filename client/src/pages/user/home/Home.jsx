@@ -43,7 +43,8 @@ const UserHome = () => {
 
     const [filters, setFilters] = useState({
         searchQuery: "",
-        location: "",
+        city: "",
+        suburb: "",
         ethnicity: "",
         hairColor: "",
         minHeight: "",
@@ -62,7 +63,8 @@ const UserHome = () => {
                 const searchQuery = filters.searchQuery.toLowerCase();
                 return (
                     provider.name.toLowerCase().includes(searchQuery) ||
-                    provider.location.toLowerCase().includes(searchQuery)
+                    (provider.city && provider.city.toLowerCase().includes(searchQuery)) ||
+                    (provider.suburb && provider.suburb.toLowerCase().includes(searchQuery))
                 );
             });
 
@@ -85,19 +87,9 @@ const UserHome = () => {
     };
 
     useEffect(() => {
-        // Clear the previous timer if the user types again
-        if (debounceTimer.current) {
-            clearTimeout(debounceTimer.current);
-        }
-
-        // Set a new timer that runs the API call after 500ms of inactivity
-        debounceTimer.current = setTimeout(() => {
-            fetchServiceProviders();
-        }, 500);
-
-        // Cleanup timer on unmount or when searchQuery changes
-        return () => clearTimeout(debounceTimer.current);
-    }, [filters.searchQuery]);
+        // Only fetch on initial load with empty filters
+        fetchServiceProviders();
+    }, []); // Only run once on mount
 
 
     const handleFilterChange = (e) => {
@@ -109,7 +101,13 @@ const UserHome = () => {
 
 
     const applyFilters = async () => {
-        fetchServiceProviders()
+        // Clear any existing debounce timer
+        if (debounceTimer.current) {
+            clearTimeout(debounceTimer.current);
+        }
+        
+        // Apply filters immediately when button is clicked
+        await fetchServiceProviders();
     };
 
 
@@ -165,18 +163,48 @@ const UserHome = () => {
         dispatch(HideLoading());
     };
 
-    const clearFilters = () => {
-        setFilters({
+    const clearFilters = async () => {
+        const resetFilters = {
             searchQuery: "",
-            location: "",
+            city: "",
+            suburb: "",
             ethnicity: "",
             hairColor: "",
             minHeight: "",
             maxHeight: "",
             callOutType: "",
-        });
+        };
+        
+        // Clear the debounce timer to prevent conflicts
+        if (debounceTimer.current) {
+            clearTimeout(debounceTimer.current);
+        }
+        
+        setFilters(resetFilters);
         setHeight(165); // Reset height slider to default
-        fetchServiceProviders()
+        
+        // Immediately call API with cleared filters to avoid race condition
+        dispatch(ShowLoading());
+        try {
+            const response = await userService.searchServiceProviders(resetFilters);
+            let fetchedProviders = response.result.users;
+
+            // Add static data if missing
+            fetchedProviders = fetchedProviders.map((provider) => ({
+                ...provider,
+                age: provider.age || 25,
+                years: provider.years || 3,
+                clients: provider.clients || 24,
+                specialization: provider.specialization || "Specializes in Hot Stone and Sports massage.",
+                image: provider.image ? `http://localhost:5777/static/images/${provider.image}` : profile,
+            }));
+
+            setServiceProviders(fetchedProviders);
+        } catch (error) {
+            console.error("Error fetching service providers:", error);
+            setServiceProviders([]);
+        }
+        dispatch(HideLoading());
     };
 
     return (
@@ -212,14 +240,26 @@ const UserHome = () => {
 
                                     <div className='px-4'>
                                         <div className="mb-2">
-                                            <label className="block text-[12px] font-medium ">Location</label>
+                                            <label className="block text-[12px] font-medium ">City</label>
                                             <input
                                                 type="text"
-                                                name="location"
-                                                value={filters.location}
+                                                name="city"
+                                                value={filters.city}
                                                 onChange={handleFilterChange}
                                                 className="w-full h-[30px] text-[12px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]"
-                                                placeholder="Enter location"
+                                                placeholder="Enter city"
+                                            />
+                                        </div>
+
+                                        <div className="mb-2">
+                                            <label className="block text-[12px] font-medium ">Suburb</label>
+                                            <input
+                                                type="text"
+                                                name="suburb"
+                                                value={filters.suburb}
+                                                onChange={handleFilterChange}
+                                                className="w-full h-[30px] text-[12px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]"
+                                                placeholder="Enter suburb"
                                             />
                                         </div>
 
@@ -294,31 +334,31 @@ const UserHome = () => {
 
                     <div className="flex space-x-4 items-center">
 
-                        {/* <div className='flex items-center space-x-2 border border-[#858FAD] rounded-[12px] px-4 py-2'>
-                            <IoLocationOutline fontSize={24} className='p-0 m-0' />
-
-                            <div className='flex flex-col pl-3 sm:pl-6'>
-                                <span className='text-[11px] font-semibold'>
-                                    Location
-                                </span>
-
-                                <span className='text-sm font-semibold text-[#858FAD]'>
-                                    Brooklyn
-                                </span>
-                            </div>
-                        </div> */}
-
                         <div className='bg-white rounded-full h-[50px] w-[50px] flex items-center justify-center shadow'>
                             <CiBellOn fontSize={24} />
                         </div>
 
                         <div className="relative" ref={profileDropdownRef}>
-                            <img
-                                src={user?.image ? `http://localhost:5777/static/images/${user.image}` : profile}
+                            {user?.image ? <img
+                                src={`http://localhost:5777/static/images/${user.image}`}
                                 alt="Profile"
                                 className="w-[60px] h-[60px] object-cover rounded-full border-[2px] border-[#858FAD] cursor-pointer"
                                 onClick={toggleProfileDropdown}
-                            />
+                            /> :
+                                (
+                                    <div onClick={toggleProfileDropdown} className='bg-white rounded-full h-[60px] w-[60px] flex items-center justify-center shadow cursor-pointer'>
+                                        <svg
+                                            className="w-8 h-8 text-gray-400"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth="2"
+                                        >
+                                            <path d="M12 12c2.21 0 4-1.79 4-4S14.21 4 12 4 8 5.79 8 8s1.79 4 4 4z" />
+                                            <path d="M12 14c-4.42 0-8 1.79-8 4v1h16v-1c0-2.21-3.58-4-8-4z" />
+                                        </svg>
+                                    </div>
+                                )}
                             {isProfileOpen && (
                                 <div className="absolute right-0 mt-2 w-[200px] bg-white border border-gray-200 rounded shadow-lg p-4 z-50">
                                     <p className="font-bold mb-2">My Account</p>

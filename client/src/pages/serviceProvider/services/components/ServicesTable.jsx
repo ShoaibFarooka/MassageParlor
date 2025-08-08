@@ -97,7 +97,7 @@ function ServiceTable({ services, setServices, onLoad }) {
         <tbody>
           {services.map((service) => (
             <tr
-              key={service.id}
+              key={service._id}
               className="border-b border-[#E8E9EE] h-[79.96px] last:border-none bg-white"
             >
               <td className="text-center text-[12px] pl-6">

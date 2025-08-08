@@ -190,12 +190,13 @@ const SearchServiceProviders = async (req, res, next) => {
       pageIndex,
       limit,
       searchQuery,
-      location,
       ethnicity,
       hairColor,
       minHeight,
       maxHeight,
       callOutType,
+      city,
+      suburb,
     } = req.query;
 
     const parsedPageIndex = parseInt(pageIndex) || 1;
@@ -206,12 +207,13 @@ const SearchServiceProviders = async (req, res, next) => {
       parsedLimit,
       {
         searchQuery,
-        location,
         ethnicity,
         hairColor,
         minHeight: 0,
         maxHeight,
         callOutType,
+        city,
+        suburb,
       }
     );
 
@@ -220,6 +222,48 @@ const SearchServiceProviders = async (req, res, next) => {
     next(error);
   }
 };
+
+const SearchServiceProvidersAdmin = async (req, res, next) => {
+  try {
+    const {
+      pageIndex,
+      limit,
+      searchQuery,
+      location,
+      ethnicity,
+      hairColor,
+      minHeight,
+      maxHeight,
+      callOutType,
+       city,
+      suburb,
+    } = req.query;
+
+    const parsedPageIndex = parseInt(pageIndex) || 1;
+    const parsedLimit = parseInt(limit) || 10;
+
+    const result = await userService.searchServiceProvidersAdmin(
+      parsedPageIndex,
+      parsedLimit,
+      {
+        searchQuery,
+        location,
+        ethnicity,
+        hairColor,
+        minHeight: 0,
+        maxHeight,
+        callOutType,
+         city,
+      suburb,
+      }
+    );
+
+    res.status(200).json({ result });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 const SearchUsers = async (req, res, next) => {
   try {
@@ -241,7 +285,6 @@ const SearchUsers = async (req, res, next) => {
     }
     res.status(200).json({ result });
   } catch (error) {
-    console.log(error, "error in search users");
     next(error);
   }
 };
@@ -266,7 +309,6 @@ const SearchServiceProvider = async (req, res, next) => {
     }
     res.status(200).json({ result });
   } catch (error) {
-    console.log(error, "error in search users");
     next(error);
   }
 };
@@ -358,4 +400,5 @@ module.exports = {
   SearchServiceProviders,
   SearchServiceProvider,
   RegisterFormData,
+  SearchServiceProvidersAdmin,
 };

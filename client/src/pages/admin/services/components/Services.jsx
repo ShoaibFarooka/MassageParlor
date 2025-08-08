@@ -40,7 +40,9 @@ const Services = ({ setIsOpen, isOpen, serviceData }) => {
     useEffect(() => {
         setGalleries([]);
         setServices([]);
-        fetchServicesForServiceProvider();
+        if (serviceData?._id) {
+            fetchServicesForServiceProvider();
+        }
     }, [serviceData?._id]);
 
 
@@ -87,7 +89,7 @@ const Services = ({ setIsOpen, isOpen, serviceData }) => {
                             </div>
 
                             <p className="text-[#858FAD] text-[12.74px] mt-[8px]">
-                                Age {serviceData?.age} | Located in {serviceData?.location}
+                                Age {serviceData?.age} | Located in {serviceData?.city}
                             </p>
 
                             <div className="hidden sm:flex justify-center items-center space-x-2 mt-[19px] mb-[22px]">
@@ -135,17 +137,17 @@ const Services = ({ setIsOpen, isOpen, serviceData }) => {
                                                 className={`object-cover w-full h-full ${isBlurred ? "blur-xs" : ""}`}
                                             />
 
-                                            {index >= 3 && <div className='absolute bottom-0 left-0 right-0 top-0 w-[100px] sm:w-[124px] h-[100px] sm:h-[124px]  flex justify-center items-center'>
+                                            <div className='absolute bottom-0 left-0 right-0 top-0 w-[100px] sm:w-[124px] h-[100px] sm:h-[124px]  flex justify-center items-center'>
                                                 <button
                                                     onClick={() => {
-                                                        setSelectedImageId(image._id);
+                                                        setSelectedImageId(image);
                                                         setStatusModal(true);
                                                     }}
-                                                    className={`${image.status === 'pending' ? 'bg-[#5E50BF]' : image.status=== 'approved' ?'bg-green-500' : 'bg-red-500'} px-4 py-2 rounded-full cursor-pointer rounded-tr-none text-white text-[10px] capitalize`}
+                                                    className={`${image.status === 'pending' ? 'bg-[#5E50BF]' : image.status === 'approved' ? 'bg-green-500' : 'bg-red-500'} px-4 py-2 rounded-full cursor-pointer rounded-tr-none text-white text-[10px] capitalize`}
                                                 >
                                                     {image.status === 'pending' ? 'Review' : image.status}
                                                 </button>
-                                            </div>}
+                                            </div>
                                         </div>
                                     );
                                 })}
@@ -187,18 +189,22 @@ const Services = ({ setIsOpen, isOpen, serviceData }) => {
                 </div>
             </CustomModal>
 
-            <CustomModal isOpen={statusModal} onRequestClose={() => setStatusModal(false)} width={'436px'} contentLabel="Status Confirmation">
+            <CustomModal isOpen={statusModal} onRequestClose={() => setStatusModal(false)} width={'600px'} contentLabel="Status Confirmation">
                 <div className="text-center flex justify-center items-center flex-col">
                     <div className='mt-10'>
                         <h2 className="text-[30px] font-bold">Update Status</h2>
                     </div>
                     <div className='py-4'>
-                        <p className="">Are you sure you want to update the status of this image?</p>
+                        <img
+                            src={`http://localhost:5777/static/images/${selectedImageId?.url}`}
+                            alt={`Gallery Image`}
+                            className={`object-cover w-[90%] mx-auto h-auto rounded-lg`}
+                        />
                     </div>
                     <div className='mb-8 flex justify-center'>
                         <button
                             onClick={() => {
-                                handleUpdateStatus(selectedImageId, 'rejected');
+                                handleUpdateStatus(selectedImageId?._id, 'rejected');
                                 setStatusModal(false);
                             }}
                             className="cursor-pointer px-4 py-2 bg-red-500 w-[131px] h-[48px] text-white rounded-full rounded-tr-none mr-[12px]"
@@ -207,7 +213,7 @@ const Services = ({ setIsOpen, isOpen, serviceData }) => {
                         </button>
                         <button
                             onClick={() => {
-                                handleUpdateStatus(selectedImageId, 'approved');
+                                handleUpdateStatus(selectedImageId?._id, 'approved');
                                 setStatusModal(false);
                             }}
                             className="cursor-pointer px-4 py-2 bg-green-600 w-[131px] h-[48px] text-white rounded-full rounded-tl-none"

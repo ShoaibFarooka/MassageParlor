@@ -2,40 +2,23 @@ import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import CustomModal from '../../../../components/CustomModal/CustomModal';
 import serviceService from '../../../../services/serviceService';
-import { useDispatch, useSelector } from 'react-redux';
-import galleryService from '../../../../services/galleryService';
+import { useSelector } from 'react-redux';
 
 function CreateEditService({ isOpen, onClose, serviceId, onLoad }) {
     const isEditMode = Boolean(serviceId);
     const user = useSelector((state) => state.user.user);
-    const [galleryData, setGalleryData] = useState()
 
     const [service, setService] = useState({
         serviceProvider: user?._id || '', // Ensure it always has a value
-        gallery: galleryData?._id, // Ensure gallery is always set
         name: '',
         price: '',
         duration: '',
         calendarColor: '',
-        isActive: false, // Default to boolean instead of empty string
+        isActive: true, // Default to boolean instead of empty string
         description: '',
     });
 
     const [error, setError] = useState({});
-
-    const fetchGallery = async () => {
-        try {
-            const res = await galleryService.getGalleryByServiceProvider(user?._id);
-            setGalleryData(res?.gallery || []);
-            console.log(res, 'res123');
-        } catch (error) {
-            console.error("Failed to fetch gallery:", error);
-        }
-    };
-
-    useEffect(() => {
-        if (user._id) fetchGallery();
-    }, [user._id]);
 
     useEffect(() => {
         if (isEditMode && isOpen) {
@@ -43,12 +26,11 @@ function CreateEditService({ isOpen, onClose, serviceId, onLoad }) {
         } else {
             setService({
                 serviceProvider: user?._id || '',
-                gallery: galleryData?._id,
                 name: '',
                 price: '',
                 duration: '',
                 calendarColor: '',
-                isActive: false,
+                isActive: true,
                 description: '',
             });
             setError({});
@@ -60,7 +42,6 @@ function CreateEditService({ isOpen, onClose, serviceId, onLoad }) {
             const data = await serviceService.getServiceById(serviceId);
             setService({
                 serviceProvider: data.serviceProvider._id || user?._id,
-                gallery: data.gallery._id || galleryData?._id,
                 name: data.name,
                 price: data.price,
                 duration: data.duration,
@@ -153,11 +134,13 @@ function CreateEditService({ isOpen, onClose, serviceId, onLoad }) {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                         <div>
-                            <label htmlFor="duration" className="label">Duration</label>
+                            <label htmlFor="duration" className="label">Duration (h)</label>
                             <input
                                 id="duration"
-                                type="text"
-                                placeholder="e.g. 1h"
+                                type="number"
+                                placeholder="e.g. 1.5"
+                                step="0.1"
+                                min="0"
                                 className="w-full input"
                                 value={service.duration}
                                 onChange={(e) => setService({ ...service, duration: e.target.value })}

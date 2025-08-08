@@ -27,7 +27,8 @@ function Home() {
     const [serviceProviders, setServiceProviders] = useState([]);
     const [filters, setFilters] = useState({
         searchQuery: "",
-        location: "",
+        city: "",
+        suburb: "",
         ethnicity: "",
         hairColor: "",
         minHeight: "",
@@ -46,7 +47,8 @@ function Home() {
                 const searchQuery = filters.searchQuery.toLowerCase();
                 return (
                     provider.name.toLowerCase().includes(searchQuery) ||
-                    provider.location.toLowerCase().includes(searchQuery)
+                    (provider.city && provider.city.toLowerCase().includes(searchQuery)) ||
+                    (provider.suburb && provider.suburb.toLowerCase().includes(searchQuery))
                 );
             });
 
@@ -109,18 +111,42 @@ function Home() {
         setIsOpenFilter((prev) => !prev);
     };
 
-    const clearFilters = () => {
-        setFilters({
+    const clearFilters = async () => {
+        const resetFilters = {
             searchQuery: "",
-            location: "",
+            city: "",
+            suburb: "",
             ethnicity: "",
             hairColor: "",
             minHeight: "",
             maxHeight: "",
             callOutType: "",
-        });
+        };
+        setFilters(resetFilters);
         setHeight(165); // Reset height slider to default
-        fetchServiceProviders()
+        
+        // Call API directly with reset filters to avoid race condition
+        dispatch(ShowLoading());
+        try {
+            const response = await userService.searchServiceProviders(resetFilters);
+            let fetchedProviders = response.result.users;
+
+            // Add static data if missing
+            fetchedProviders = fetchedProviders.map((provider) => ({
+                ...provider,
+                age: provider.age || 25,
+                years: provider.years || 3,
+                clients: provider.clients || 24,
+                specialization: provider.specialization || "Specializes in Hot Stone and Sports massage.",
+                image: provider.image ? `http://localhost:5777/static/images/${provider.image}` : profile,
+            }));
+
+            setServiceProviders(fetchedProviders);
+        } catch (error) {
+            console.error("Error fetching service providers:", error);
+            setServiceProviders([]);
+        }
+        dispatch(HideLoading());
     };
 
     return (
@@ -160,14 +186,26 @@ function Home() {
 
                                     <div className='px-4'>
                                         <div className="mb-2">
-                                            <label className="block text-[12px] font-medium ">Location</label>
+                                            <label className="block text-[12px] font-medium ">City</label>
                                             <input
                                                 type="text"
-                                                name="location"
-                                                value={filters.location}
+                                                name="city"
+                                                value={filters.city}
                                                 onChange={handleFilterChange}
                                                 className="w-full h-[30px] text-[12px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]"
-                                                placeholder="Enter location"
+                                                placeholder="Enter city"
+                                            />
+                                        </div>
+
+                                        <div className="mb-2">
+                                            <label className="block text-[12px] font-medium ">Suburb</label>
+                                            <input
+                                                type="text"
+                                                name="suburb"
+                                                value={filters.suburb}
+                                                onChange={handleFilterChange}
+                                                className="w-full h-[30px] text-[12px] border-none outline-0 rounded-lg mt-2 p-2 bg-[#F3F2F8]"
+                                                placeholder="Enter suburb"
                                             />
                                         </div>
 

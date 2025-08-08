@@ -59,12 +59,28 @@ function UserSignUpForm() {
         if (!user.surname) errors.surname = "Surname is required";
         if (!user.email) {
             errors.email = "Email is required";
-        } else if (!emailRegex.test(user.email)) {
+        } else if (!emailRegex.test(user.email.toLowerCase().trim())) {
             errors.email = "Please enter a valid email address";
         }
         if (!user.number) errors.number = "Contact number is required";
         if (!user.password) errors.password = "Password is required";
         if (user.password && user.password !== confirmPassword) errors.confirmPassword = "Passwords do not match";
+        
+        // Age validation - must be at least 18 years old
+        if (selectedDate) {
+            const today = new Date();
+            const birthDate = new Date(selectedDate);
+            const age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            if (age < 18) {
+                errors.dateOfBirth = "You must be at least 18 years old to register";
+            }
+        }
 
         if (Object.keys(errors).length > 0) {
             setError(errors);
@@ -77,7 +93,7 @@ function UserSignUpForm() {
         formData.append('name', `${user.name} ${user.surname}`);
         formData.append('dateOfBirth', selectedDate ? selectedDate.toISOString().split('T')[0] : "");
         formData.append('number', user.number);
-        formData.append('email', user.email);
+        formData.append('email', user.email.toLowerCase().trim()); // Convert to lowercase and trim
         formData.append('password', user.password);
         if (imageFile) formData.append('file', imageFile); // ✅ Append Image
 
@@ -208,9 +224,14 @@ function UserSignUpForm() {
                             />
                         }
                         dateFormat="MMM, dd yyyy"
+                        showYearDropdown
+                        showMonthDropdown
+                        dropdownMode="select"
+                        yearDropdownItemNumber={100}
+                        maxDate={new Date()}
                     />
-
                 </div>
+                {error.dateOfBirth && <div className="text-red-500 text-sm">{error.dateOfBirth}</div>}
             </div>
 
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>

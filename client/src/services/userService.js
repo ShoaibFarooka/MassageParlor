@@ -218,6 +218,17 @@ const userService = {
       throw error;
     }
   },
+   searchServiceProvidersAdmin: async (query) => {
+    try {
+      const response = await axiosInstance.get(
+        `${BASE_URL}/search-service-providers-admin`,
+        { params: query }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default userService;

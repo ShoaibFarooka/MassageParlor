@@ -7,11 +7,6 @@ const ServiceSchema = new mongoose.Schema(
       ref: "user",
       required: true,
     },
-    gallery: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "gallery",
-      required: false,
-    },
     name: {
       type: String,
       required: true,
