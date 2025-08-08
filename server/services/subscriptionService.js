@@ -1,4 +1,4 @@
-const { loadDBModel } = require('../utils/modelUtils');
+// const { loadDBModel } = require('../utils/modelUtils');
 const moment = require("moment");
 
 const addSubscription = async (connectionId, data) => {

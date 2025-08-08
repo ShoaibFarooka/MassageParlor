@@ -137,7 +137,7 @@ const updateUserFormData = async (userId, userData) => {
   user.isActive = isActive || user.isActive; // Set isActive to true by default
 
   // Check if user is being suspended (isActive set to false) and clear refresh token
-  if (isActive === false) {
+  if (isActive === "false") {
     user.refreshToken = null;
   }
 

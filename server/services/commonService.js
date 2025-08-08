@@ -1,4 +1,4 @@
-const { loadDBModel } = require('../utils/modelUtils');
+// const { loadDBModel } = require('../utils/modelUtils');
 
 const fetchUserId = async (connectionId, filter) => {
     const User = loadDBModel(connectionId, 'user');
