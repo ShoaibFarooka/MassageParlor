@@ -100,7 +100,7 @@ server/         # Backend Node.js/Express API
 This project is licensed under the MIT License.
 
 ## Contact
-For questions or support, please contact [Shoaib Farooka](mailto:your-email@example.com).
+For questions or support, please contact [Shoaib Farooka](mailto:shoaibfarooka@gmail.com).
 
 ---
 **Massage Parlor Management System** streamlines business operations, enhances customer experience, and provides robust tools for service providers and administrators.
