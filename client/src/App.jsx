@@ -28,7 +28,16 @@ function App() {
     <div className="App">
       {loading && <Loader />}
       <Router />
-      <Toaster />
+      <Toaster
+        position="top-center"
+        containerStyle={{
+          position: 'fixed',
+          zIndex: 99999,
+        }}
+        toastOptions={{
+          style: { zIndex: 99999 },
+        }}
+      />
 
       <CustomModal isOpen={isOpen} width={'436px'} contentLabel="Modal">
         <div className="text-center flex justify-center items-center flex-col z-[99999] bg-white">

@@ -83,6 +83,8 @@ const ServiceCard = ({ key, provider }) => {
 
   const handleBooking = (data) => {
     setBooking(data)
+    setSelectedDate(new Date());
+    setSelectedTime(new Date());
     setBookingOpen(true)
   }
 
@@ -334,6 +336,7 @@ const ServiceCard = ({ key, provider }) => {
                 selected={selectedDate}
                 // Store the selected date as-is (local)
                 onChange={(date) => setSelectedDate(date)}
+                minDate={new Date()}
                 customInput={
                   <CustomDateInput
                     placeholder="Feb, 28 2025"

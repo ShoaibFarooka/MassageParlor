@@ -96,6 +96,14 @@ function Home() {
         fetchServiceProviders()
     };
 
+    const handleSearchClick = () => {
+        if (searchQuery.trim() === "") {
+            console.warn("Search query is empty.");
+            return;
+        }
+        fetchServiceProviders();
+    };
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -124,7 +132,7 @@ function Home() {
         };
         setFilters(resetFilters);
         setHeight(165); // Reset height slider to default
-        
+
         // Call API directly with reset filters to avoid race condition
         dispatch(ShowLoading());
         try {
@@ -170,7 +178,8 @@ function Home() {
                                 className="pl-6 pr-4 py-2 text-lg rounded-full h-[56px] w-[220px] sm:w-[400px] bg-white shadow outline-0"
                             />
 
-                            <FaSearch className="absolute right-6 top-1/2 transform -translate-y-1/2 text-black " fontSize={24} />
+                            <FaSearch className="absolute right-6 top-1/2 transform -translate-y-1/2 text-black cursor-pointer" fontSize={24}
+                                onClick={handleSearchClick} />
                         </div>
 
                         <div className='relative'>

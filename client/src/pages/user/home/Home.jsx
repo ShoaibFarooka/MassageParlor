@@ -105,7 +105,7 @@ const UserHome = () => {
         if (debounceTimer.current) {
             clearTimeout(debounceTimer.current);
         }
-        
+
         // Apply filters immediately when button is clicked
         await fetchServiceProviders();
     };
@@ -174,15 +174,15 @@ const UserHome = () => {
             maxHeight: "",
             callOutType: "",
         };
-        
+
         // Clear the debounce timer to prevent conflicts
         if (debounceTimer.current) {
             clearTimeout(debounceTimer.current);
         }
-        
+
         setFilters(resetFilters);
         setHeight(165); // Reset height slider to default
-        
+
         // Immediately call API with cleared filters to avoid race condition
         dispatch(ShowLoading());
         try {
@@ -224,7 +224,8 @@ const UserHome = () => {
                             />
 
 
-                            <FaSearch className="absolute right-6 top-1/2 transform -translate-y-1/2 text-black " fontSize={24} />
+                            <FaSearch className="absolute right-6 top-1/2 transform -translate-y-1/2 text-black cursor-pointer" fontSize={24}
+                                onClick={applyFilters} />
                         </div>
 
                         <div className='relative'>

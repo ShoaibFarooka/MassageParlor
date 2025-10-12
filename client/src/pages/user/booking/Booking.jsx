@@ -180,7 +180,7 @@ const UserBooking = () => {
 
         return {
           id: booking._id,
-          title: booking.service_id.name,
+          title: booking.service_id?.name,
           start: new Date(startDate.setHours(startTime.hours, startTime.minutes)),
           end: new Date(startDate.setHours(endTime.hours, endTime.minutes)),
           color: booking?.service_id?.calendarColor,
