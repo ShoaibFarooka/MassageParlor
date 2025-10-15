@@ -65,18 +65,18 @@ function UserSignUpForm() {
         if (!user.number) errors.number = "Contact number is required";
         if (!user.password) errors.password = "Password is required";
         if (user.password && user.password !== confirmPassword) errors.confirmPassword = "Passwords do not match";
-        
+
         // Age validation - must be at least 18 years old
         if (selectedDate) {
             const today = new Date();
             const birthDate = new Date(selectedDate);
-            const age = today.getFullYear() - birthDate.getFullYear();
+            let age = today.getFullYear() - birthDate.getFullYear();
             const monthDiff = today.getMonth() - birthDate.getMonth();
-            
+
             if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
                 age--;
             }
-            
+
             if (age < 18) {
                 errors.dateOfBirth = "You must be at least 18 years old to register";
             }

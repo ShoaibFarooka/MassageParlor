@@ -10,6 +10,7 @@ const createUser = async (userData, role) => {
     email,
     number,
     dateOfBirth,
+    gender,
     suburb,
     city,
     zip,
@@ -60,6 +61,8 @@ const createUser = async (userData, role) => {
     user = await User.create({
       name,
       email,
+      gender,
+      dateOfBirth,
       number,
       suburb,
       city,
@@ -82,6 +85,7 @@ const updateUserFormData = async (userId, userData) => {
     email,
     number,
     dateOfBirth,
+    gender,
     suburb,
     city,
     zip,
@@ -130,6 +134,7 @@ const updateUserFormData = async (userId, userData) => {
   user.email = email || user.email;
   user.number = number || user.number;
   user.dateOfBirth = dateOfBirth || user.dateOfBirth;
+  user.gender = gender || user.gender;
   user.city = city || user.city;
   user.zip = zip || user.zip;
   user.image = image || user.image;
@@ -272,6 +277,7 @@ const fetchUser = async (userId) => {
     number: 1,
     totalContacts: 1,
     dateOfBirth: 1,
+    gender: 1,
     suburb: 1,
     city: 1,
     height: 1,

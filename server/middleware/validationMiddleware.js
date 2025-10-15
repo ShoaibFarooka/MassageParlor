@@ -9,6 +9,7 @@ const formatYupError = (error) => {
 };
 
 const validateRequest = (schema) => async (req, res, next) => {
+
   try {
     await schema.validate(req.body, { abortEarly: false, stripUnknown: false });
     const schemaKeys = Object.keys(schema.fields);
