@@ -22,6 +22,8 @@ import bookingService from '../../../services/bookingService';
 import CustomModal from '../../../components/CustomModal/CustomModal';
 import UserProfile from '../../../components/Profile/UserProfile';
 import ServiceProviderProfile from '../../../components/Profile/ServiceProviderProfile';
+import TodayBooking from './components/TodayBooking';
+
 
 const CustomToolbar = ({ label, onNavigate, onView, view }) => {
   return (
@@ -173,6 +175,7 @@ const UserBooking = () => {
     dispatch(ShowLoading());
     try {
       const response = await bookingService.getBookingsByUserId(user?._id);
+
       const formattedEvents = response.map((booking) => {
         const startDate = new Date(booking.startDate);
         const startTime = parseTime(booking.startTime);
@@ -185,6 +188,8 @@ const UserBooking = () => {
           end: new Date(startDate.setHours(endTime.hours, endTime.minutes)),
           color: booking?.service_id?.calendarColor,
           status: booking.status,
+          service_id: booking.service_id,
+          serviceProvider: booking.serviceProvider,
         };
       });
 
@@ -196,6 +201,8 @@ const UserBooking = () => {
     }
   };
 
+
+  console.log("events", events);
 
   useEffect(() => {
     getBookingData();
@@ -254,51 +261,50 @@ const UserBooking = () => {
         </div>
       </header>
 
-      <div className="bg-white shadow-md rounded-md my-6 p-6">
-        <Calendar
-          localizer={localizer}
-          events={events}
-          startAccessor="start"
-          endAccessor="end"
-          style={{ height: 700, border: "none" }}
-          className="border rounded-md"
-          eventPropGetter={(event) => {
-            const isPending = event.status === "Pending";
+      <div className="flex flex-col lg:flex-row gap-4">
+        <TodayBooking events={events} />
 
-            if (event.color) {
-              return {
-                style: {
-                  backgroundColor: `${getRGBAColor(event.color, 0.5)}`,
-                  color: "black",
-                  borderTop: '0px',
-                  borderRight: '0px',
-                  borderBottom: '0px',
-                  borderRadius: "10px",
-                  borderLeft: `10px solid ${event.color}`,
-                  padding: "5px",
-                  opacity: isPending ? 0.5 : 1,
-                },
-              };
-            }
+        {/* Calendar */}
+        <div className="flex-1">
+          <Calendar
+            localizer={localizer}
+            events={events}
+            startAccessor="start"
+            endAccessor="end"
+            style={{ height: 700, border: "none" }}
+            className="border rounded-md"
+            eventPropGetter={(event) => {
+              const isPending = event.status === "Pending";
 
-            // Return an empty style object for events without a color
-            return {};
-          }}
+              if (event.color) {
+                return {
+                  style: {
+                    backgroundColor: `${getRGBAColor(event.color, 0.5)}`,
+                    color: "black",
+                    borderTop: '0px',
+                    borderRight: '0px',
+                    borderBottom: '0px',
+                    borderRadius: "10px",
+                    borderLeft: `10px solid ${event.color}`,
+                    padding: "5px",
+                    opacity: isPending ? 0.5 : 1,
+                  },
+                };
+              }
 
-
-          date={currentDate}
-          onNavigate={(newDate) => {
-            // newDate is the date RBC wants to show after Next/Prev/Today
-            setCurrentDate(newDate);
-          }}
-          view={currentView}
-          onView={(view) => setCurrentView(view)}
-          components={{
-            toolbar: (props) => <CustomToolbar {...props} view={currentView} />,
-          }}
-        />
-
+              return {};
+            }}
+            date={currentDate}
+            onNavigate={(newDate) => setCurrentDate(newDate)}
+            view={currentView}
+            onView={(view) => setCurrentView(view)}
+            components={{
+              toolbar: (props) => <CustomToolbar {...props} view={currentView} />,
+            }}
+          />
+        </div>
       </div>
+
 
       <CustomModal isOpen={isEditProfileOpen} width='500px' onRequestClose={() => setIsEditProfileOpen(false)}>
         <div className=" p-8">

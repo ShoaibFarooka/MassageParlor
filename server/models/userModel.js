@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema(
     gender: {
       type: String,
       required: function () {
-        return this.role === "service-provider";
+        return this.isNew && this.role === "service-provider";
       },
       trim: true,
       enum: ["Male", "Female", 'Other'],

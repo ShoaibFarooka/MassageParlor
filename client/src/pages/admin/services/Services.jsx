@@ -84,10 +84,20 @@ const Services = () => {
     dispatch(HideLoading());
   };
 
+
   useEffect(() => {
-    // Only fetch on initial load
-    fetchServiceProviders();
-  }, []); // Only run once on mount
+    // Clear the previous timer if the user types again
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    // Set a new timer that runs the API call after 500ms of inactivity
+    debounceTimer.current = setTimeout(() => {
+      fetchServiceProviders();
+    }, 500);
+
+    return () => clearTimeout(debounceTimer.current);
+  }, [filters.searchQuery]);
 
   const handleFilterChange = (e) => {
     setFilters((prevFilters) => ({
@@ -102,7 +112,7 @@ const Services = () => {
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
     }
-    
+
     // Apply filters immediately when button is clicked
     await fetchServiceProviders();
   };
@@ -133,15 +143,15 @@ const Services = () => {
       maxHeight: "",
       callOutType: "",
     };
-    
+
     // Clear the debounce timer to prevent conflicts
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
     }
-    
+
     setFilters(resetFilters);
     setHeight(165); // Reset height slider to default
-    
+
     // Immediately call API with cleared filters to avoid race condition
     dispatch(ShowLoading());
     try {
@@ -191,8 +201,6 @@ const Services = () => {
                 placeholder="Search"
                 className="pl-6 pr-4 py-2 text-lg rounded-full h-[56px] w-[220px] sm:w-[400px] bg-white shadow outline-0"
               />
-
-              <FaSearch className="absolute right-6 top-1/2 transform -translate-y-1/2 text-black " fontSize={24} />
             </div>
 
             <div className='relative'>

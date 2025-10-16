@@ -87,10 +87,18 @@ const UserHome = () => {
     };
 
     useEffect(() => {
-        // Only fetch on initial load with empty filters
-        fetchServiceProviders();
-    }, []); // Only run once on mount
+        // Clear the previous timer if the user types again
+        if (debounceTimer.current) {
+            clearTimeout(debounceTimer.current);
+        }
 
+        // Set a new timer that runs the API call after 500ms of inactivity
+        debounceTimer.current = setTimeout(() => {
+            fetchServiceProviders();
+        }, 500);
+
+        return () => clearTimeout(debounceTimer.current);
+    }, [filters.searchQuery]);
 
     const handleFilterChange = (e) => {
         setFilters((prevFilters) => ({
@@ -99,17 +107,9 @@ const UserHome = () => {
         }));
     };
 
-
     const applyFilters = async () => {
-        // Clear any existing debounce timer
-        if (debounceTimer.current) {
-            clearTimeout(debounceTimer.current);
-        }
-
-        // Apply filters immediately when button is clicked
-        await fetchServiceProviders();
+        fetchServiceProviders()
     };
-
 
 
     // Close dropdown when clicking outside
@@ -222,10 +222,6 @@ const UserHome = () => {
                                 placeholder="Search"
                                 className="pl-6 pr-4 py-2 text-lg rounded-full h-[56px] w-[220px] sm:w-[400px] bg-white shadow outline-0"
                             />
-
-
-                            <FaSearch className="absolute right-6 top-1/2 transform -translate-y-1/2 text-black cursor-pointer" fontSize={24}
-                                onClick={applyFilters} />
                         </div>
 
                         <div className='relative'>
