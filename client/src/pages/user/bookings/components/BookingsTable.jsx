@@ -4,35 +4,47 @@ import { FaEye } from "react-icons/fa";
 const BookingsTable = ({ bookings, onView }) => {
     return (
         <div className="bg-white rounded-lg shadow overflow-x-auto">
-            <table className="min-w-full">
+            <table className="min-w-full border-collapse">
                 <thead>
-                    <tr className="bg-[#E8E9EE] h-[64px]">
-                        <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal pl-6">Name</th>
-                        <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal">Date</th>
-                        <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal">Service Provider</th>
-                        <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal">Status</th>
-                        <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal pr-6">Actions</th>
+                    <tr className="bg-[#E8E9EE] h-[64px] text-left">
+                        <th className="text-sm font-bold text-center px-6 py-3">Service Provider</th>
+                        <th className="text-sm font-bold text-center px-6 py-3">Service</th>
+                        <th className="text-sm font-bold text-center px-6 py-3">Date</th>
+                        <th className="text-sm font-bold text-center px-6 py-3">Status</th>
+                        <th className="text-sm font-bold text-center px-6 py-3">Actions</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     {bookings.map((booking) => (
-                        <tr key={booking._id} className="border-b border-[#E8E9EE] h-[79.96px] last:border-none bg-white">
-                            <td className="text-start text-[12px] pl-6">{booking?.user_id?.name}</td>
-                            <td className="text-center text-[12px]">{booking?.startDate}</td>
-                            <td className="text-center text-[12px]">{booking?.serviceProvider?.name}</td>
-                            <td className="text-center text-[12px]">
-                                <span className={`p-[6px] px-5 text-white w-fit mx-auto rounded-4xl ${booking?.status === "Approved"
-                                    ? "bg-[#02A847]"
-                                    : booking?.status === "Pending"
-                                        ? "bg-[#FF9E58]"
-                                        : booking?.status === "Rejected"
-                                            ? "bg-[#EF3826]"
-                                            : "bg-gray-400"
-                                    }`}>
-                                    {booking?.status}
+                        <tr
+                            key={booking._id}
+                            className="border-b border-[#E8E9EE] h-[80px] last:border-none bg-white"
+                        >
+                            <td className="text-center text-[13px] px-6 py-2">
+                                {booking?.serviceProvider?.name || "N/A"}
+                            </td>
+                            <td className="text-center text-[13px] px-6 py-2">
+                                {booking?.service_id?.name || "N/A"}
+                            </td>
+                            <td className="text-center text-[13px] px-6 py-2">
+                                {booking?.startDate || "N/A"}
+                            </td>
+                            <td className="text-center text-[13px] px-6 py-2">
+                                <span
+                                    className={`p-[6px] px-5 text-white rounded-4xl ${booking?.status === "Approved"
+                                        ? "bg-[#02A847]"
+                                        : booking?.status === "Pending"
+                                            ? "bg-[#FF9E58]"
+                                            : booking?.status === "Rejected"
+                                                ? "bg-[#EF3826]"
+                                                : "bg-gray-400"
+                                        }`}
+                                >
+                                    {booking?.status || "N/A"}
                                 </span>
                             </td>
-                            <td className="flex justify-center items-center h-[79.96px] pr-6">
+                            <td className="text-center px-6 py-2">
                                 <button
                                     onClick={() => onView(booking)}
                                     className="border cursor-pointer border-[#D5D5D5] px-[15.8px] py-[8.17px] rounded-[7.69px]"

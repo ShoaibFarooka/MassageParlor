@@ -6,40 +6,35 @@ const TodayBooking = ({ events }) => {
         const birthDate = new Date(dob);
         const ageDifMs = Date.now() - birthDate.getTime();
         const ageDate = new Date(ageDifMs);
-        return Math.abs(ageDate.getUTCFullYear() - 1970);
+        const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+        return age === 0 ? 'N/A' : age;
     };
 
+    const today = new Date().toLocaleDateString('en-CA');
+
     const todaysEvents = events.filter(event => {
-        const eventDate = new Date(event.start);
-        const today = new Date();
-        return (
-            eventDate.getFullYear() === today.getFullYear() &&
-            eventDate.getMonth() === today.getMonth() &&
-            eventDate.getDate() === today.getDate() &&
-            event.status === 'Approved'
-        );
+        const eventDate = new Date(event.start).toISOString().split('T')[0];
+        return eventDate === today && event.status === 'Approved';
     });
 
     return (
         <div className="md:w-[287px] w-full max-h-[80vh] overflow-y-auto relative bg-white p-2.5 rounded-[9.35px] min-h-[80vh] mb-8">
             <h3 className="text-[18px] text-[#202224] font-bold p-3">Today</h3>
-            <div className='border-[#E0E0E0] border-t'>
+            <div className="border-[#E0E0E0] border-t">
                 {todaysEvents.length === 0 && (
                     <p className="text-center text-gray-500 py-4">No bookings for today</p>
                 )}
 
-                {todaysEvents.map(event => {
+                {todaysEvents.map((event) => {
                     const provider = event.serviceProvider;
-                    const age = provider?.
-                        dateOfBirth ? calculateAge(provider.
-                            dateOfBirth) : null;
+                    const age = provider?.dateOfBirth ? calculateAge(provider.dateOfBirth) : 'N/A';
 
                     return (
                         <div key={event.id} className="pt-[26px]">
                             <div className="relative w-full rounded-br-none mb-[24px] rounded-[24px] bg-pink-200 shadow flex items-center">
                                 <span className="absolute top-2 left-10 text-xs text-gray-800">
                                     {provider
-                                        ? `${provider.name || 'N/A'} | ${age ? `${age} yrs` : 'N/A'} | ${provider.gender || 'N/A'}`
+                                        ? `${provider.name || 'N/A'} | ${age !== 'N/A' ? `${age} yrs` : 'N/A'} | ${provider.gender || 'N/A'}`
                                         : 'Loading...'}
                                 </span>
 

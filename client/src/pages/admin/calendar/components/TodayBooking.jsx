@@ -1,23 +1,26 @@
 import React from 'react';
 
-const calculateAge = (dob) => {
-    if (!dob) return null;
-    const birthDate = new Date(dob);
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-    }
-    return age;
-};
-
 const TodayBooking = ({ events }) => {
-    const today = new Date().toISOString().split('T')[0];
+
+    const calculateAge = (dob) => {
+        if (!dob) return null;
+        const birthDate = new Date(dob);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    };
+
+    const today = new Date().toLocaleDateString('en-CA');
 
     const todaysEvents = events.filter(
         event => event.startDate?.split('T')[0] === today && event.status === 'Approved'
     );
+
+
 
     return (
         <div className="md:w-[287px] w-full max-h-[80vh] overflow-y-auto relative bg-white p-2.5 rounded-[9.35px] min-h-[80vh] mb-8">
@@ -29,8 +32,9 @@ const TodayBooking = ({ events }) => {
 
                 {todaysEvents.map(event => {
                     const provider = event.serviceProvider;
-                    const age = calculateAge(provider?.
-                        dateOfBirth);
+                    const age = provider?.
+                        dateOfBirth ? calculateAge(provider.
+                            dateOfBirth) : null;
 
                     return (
                         <div key={event._id} className="pt-[26px]">

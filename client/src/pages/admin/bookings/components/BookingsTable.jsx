@@ -8,9 +8,9 @@ const BookingsTable = ({ bookings, onView, onDelete }) => {
             <table className="min-w-full">
                 <thead>
                     <tr className="bg-[#E8E9EE] h-[64px]">
-                        <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal pl-6">Name</th>
-                        <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal">Date</th>
+                        <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal pl-6">Service</th>
                         <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal">Service Provider</th>
+                        <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal">Date</th>
                         <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal">Status</th>
                         <th className="text-sm font-bold text-center md:whitespace-nowrap whitespace-normal pr-6">Actions</th>
                     </tr>
@@ -18,9 +18,9 @@ const BookingsTable = ({ bookings, onView, onDelete }) => {
                 <tbody>
                     {bookings.map((booking) => (
                         <tr key={booking._id} className="border-b border-[#E8E9EE] h-[79.96px] last:border-none bg-white">
-                            <td className="text-start text-[12px] pl-6">{booking?.user_id?.name}</td>
-                            <td className="text-center text-[12px]">{booking?.startDate}</td>
+                            <td className="text-start text-[12px] pl-6">{booking?.service_id?.name}</td>
                             <td className="text-center text-[12px]">{booking?.serviceProvider?.name}</td>
+                            <td className="text-center text-[12px]">{booking?.startDate}</td>
                             <td className="text-center text-[12px]">
                                 <span className={`p-[6px] px-5 text-white w-fit mx-auto rounded-4xl ${booking?.status === "Approved"
                                     ? "bg-[#02A847]"

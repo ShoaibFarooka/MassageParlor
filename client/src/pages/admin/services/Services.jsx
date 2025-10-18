@@ -46,7 +46,8 @@ const Services = () => {
     callOutType: "",
   });
 
-  console.log("serviceProviders", serviceProviders);
+  const [skipEffect, setSkipEffect] = useState(false);
+
 
   const fetchServiceProviders = async () => {
     dispatch(ShowLoading());
@@ -86,18 +87,22 @@ const Services = () => {
 
 
   useEffect(() => {
-    // Clear the previous timer if the user types again
+    if (skipEffect) {
+      setSkipEffect(false); // reset flag after skipping
+      return;
+    }
+
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
     }
 
-    // Set a new timer that runs the API call after 500ms of inactivity
     debounceTimer.current = setTimeout(() => {
       fetchServiceProviders();
     }, 500);
 
     return () => clearTimeout(debounceTimer.current);
   }, [filters.searchQuery]);
+
 
   const handleFilterChange = (e) => {
     setFilters((prevFilters) => ({
@@ -144,28 +149,26 @@ const Services = () => {
       callOutType: "",
     };
 
-    // Clear the debounce timer to prevent conflicts
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
     }
 
+    setSkipEffect(true);
     setFilters(resetFilters);
-    setHeight(165); // Reset height slider to default
+    setHeight(165);
 
-    // Immediately call API with cleared filters to avoid race condition
     dispatch(ShowLoading());
     try {
-      const response = await userService.searchServiceProvidersAdmin(resetFilters);
+      const response = await userService.searchServiceProviders(resetFilters);
       let fetchedProviders = response.result.users;
 
-      // Add static data if missing
       fetchedProviders = fetchedProviders.map((provider) => ({
         ...provider,
-        age: provider?.age,
-        years: provider?.years,
-        clients: provider?.clients,
-        specialization: provider?.specialization,
-        image: provider?.image ? `http://localhost:5777/static/images/${provider?.image}` : profile,
+        age: provider.age || 25,
+        years: provider.years || 3,
+        clients: provider.clients || 24,
+        specialization: provider.specialization || "Specializes in Hot Stone and Sports massage.",
+        image: provider.image ? `http://localhost:5777/static/images/${provider.image}` : profile,
       }));
 
       setServiceProviders(fetchedProviders);
@@ -175,6 +178,7 @@ const Services = () => {
     }
     dispatch(HideLoading());
   };
+
 
   const onLoad = () => {
     fetchServiceProviders()
