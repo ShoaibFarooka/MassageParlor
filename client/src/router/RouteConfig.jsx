@@ -19,6 +19,8 @@ import AdminUsers from '../pages/admin/users/AdminUsers.jsx';
 import Bookings from '../pages/admin/bookings/bookings.jsx';
 import ServiceProviderBookings from '../pages/serviceProvider/bookings/ServiceProviderBookings.jsx';
 import UserBookings from '../pages/user/bookings/UserBookings.jsx';
+import Plans from '../pages/serviceProvider/Plans/Plans.jsx';
+import Success from '../pages/serviceProvider/Success/Success.jsx';
 
 const routes = [
 
@@ -32,6 +34,8 @@ const routes = [
   { path: "/service/services", element: <Services />, protected: true, authRedirect: false, showSidebar: true },
   { path: "/service/gallery", element: <Gallery />, protected: true, authRedirect: false, showSidebar: true },
   { path: "/service/bookings", element: <ServiceProviderBookings />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/service/plans", element: <Plans />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/success", element: <Success />, protected: true, authRedirect: false, showSidebar: false },
 
   //admin
   { path: "/admin/dashboard", element: <AdminDashboard />, protected: true, authRedirect: false, showSidebar: true },

@@ -9,6 +9,7 @@ const routes = require('./routes/index');
 const trimMiddleware = require('./middleware/trimMiddleware');
 const errorHandlerMiddleware = require('./middleware/errorHandlerMiddleware');
 const handlebarsHelpers = require('./helpers/handlebarsHelpers');
+const stripeController = require("./controllers/stripeController");
 
 //Express Server Setup
 const app = express();
@@ -21,6 +22,14 @@ const corsOptions = {
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
 };
+
+
+
+app.post(
+    "/api/stripe/webhooks",
+    express.raw({ type: "application/json" }),
+    stripeController.StripeHooks
+);
 
 //Express Middlewares
 app.use(express.json())

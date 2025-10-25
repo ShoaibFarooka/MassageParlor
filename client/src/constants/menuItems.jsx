@@ -15,6 +15,8 @@ export const menuItems = {
         { path: '/service/services', label: 'Services', icon: <CampaignsIcon />, disabled: false },
         { path: '/service/gallery', label: 'Gallery', icon: <CampaignsIcon />, disabled: false },
         { path: '/service/bookings', label: 'Bookings', icon: <CampaignsIcon />, disabled: false },
+        { path: '/service/plans', label: 'Plans', icon: <CampaignsIcon />, disabled: false },
+        { path: '/success' },
     ],
     user: [
         { path: '/user/home', label: 'Home', icon: <DashboardIcon />, disabled: false },
