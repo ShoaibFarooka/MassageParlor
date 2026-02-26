@@ -106,14 +106,16 @@ const Plans = () => {
 
 
     return (
-        <div className="min-h-screen bg-gray-100 py-12">
-            <ServicesHeader />
+        <div className="min-h-screen bg-gray-100">
+            <div className="mb-[30px]">
+                <ServicesHeader title={'Plans'} />
+            </div>
 
-            <div className="text-3xl font-bold text-center mt-10 mb-3 text-gray-800">
+            <div className="text-3xl font-bold text-center mb-3 text-gray-800">
                 Choose Your Plan
             </div>
 
-            <div className="flex flex-wrap justify-center gap-6">
+            {/* <div className="flex flex-wrap justify-center gap-6">
                 {plans.map((plan) => (
                     <div
                         key={plan.id}
@@ -126,13 +128,52 @@ const Plans = () => {
                                 <li key={index}>• {feature}</li>
                             ))}
                         </ul>
-                        <button
-                            onClick={() => handleChoosePlan(plan)}
-                            disabled={loading}
-                            className={`w-full py-2 rounded-lg font-medium text-white transition-all duration-300 ${activePlan === plan.id ? "bg-[#5E50BF]" : "bg-gray-500 hover:bg-[#5E50BF]"}`}
-                        >
-                            {loading ? "Processing..." : "Choose Plan"}
-                        </button>
+                        {activePlan !== plan.id &&
+                            <button
+                                onClick={() => handleChoosePlan(plan)}
+                                disabled={loading}
+                                className={`w-full py-2 rounded-lg font-medium text-white transition-all duration-300 bg-[#5E50BF] hover:bg-gray-500 cursor-pointer`}
+                            >
+                                {loading ? "Processing..." : "Choose Plan"}
+                            </button>
+                        }
+                    </div>
+                ))}
+            </div> */}
+
+            <div className="flex flex-wrap justify-center gap-6">
+                {plans.map((plan) => (
+                    <div
+                        key={plan.id}
+                        className={`relative w-72 bg-white p-6 pt-9 rounded-2xl shadow-md transition-all duration-300 border-2 cursor-pointer 
+        ${activePlan === plan.id ? "border-[#5E50BF] shadow-lg" : "border-gray-300"} 
+        hover:scale-105`}
+                    >
+                        {/* ✅ Visible "Current Plan" badge */}
+                        {activePlan === plan.id && (
+                            <div className="absolute top-3 right-3 bg-[#5E50BF] text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
+                                Current Plan
+                            </div>
+                        )}
+
+                        <h2 className="text-xl font-semibold text-gray-800 mb-2">{plan.name}</h2>
+                        <p className="text-lg text-gray-600 mb-4">{plan.price}</p>
+
+                        <ul className="text-gray-600 space-y-1 mb-6">
+                            {plan.features.map((feature, index) => (
+                                <li key={index}>• {feature}</li>
+                            ))}
+                        </ul>
+
+                        {activePlan !== plan.id && (
+                            <button
+                                onClick={() => handleChoosePlan(plan)}
+                                disabled={loading}
+                                className={`w-full py-2 rounded-lg font-medium text-white transition-all duration-300 bg-[#5E50BF] hover:bg-gray-500 cursor-pointer`}
+                            >
+                                {loading ? "Processing..." : "Choose Plan"}
+                            </button>
+                        )}
                     </div>
                 ))}
             </div>
