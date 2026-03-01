@@ -9,6 +9,7 @@ const routes = require('./routes/index');
 const trimMiddleware = require('./middleware/trimMiddleware');
 const errorHandlerMiddleware = require('./middleware/errorHandlerMiddleware');
 const handlebarsHelpers = require('./helpers/handlebarsHelpers');
+const stripeController = require("./controllers/stripeController");
 
 //Express Server Setup
 const app = express();
@@ -22,6 +23,14 @@ const corsOptions = {
     credentials: true,
 };
 
+
+
+app.post(
+    "/api/stripe/webhooks",
+    express.raw({ type: "application/json" }),
+    stripeController.StripeHooks
+);
+
 //Express Middlewares
 app.use(express.json())
 app.use(cookieParser());
@@ -34,7 +43,7 @@ connectDB(DB);
 
 //Server status endpoint
 app.get('/', (req, res) => {
-    res.send('AdStatixx Server is up!');
+    res.send('Massage Parlor Server is up!');
 });
 
 // Routes

@@ -24,7 +24,7 @@ const Calendar = () => {
   };
 
 
-  
+
   useEffect(() => {
     if (user?._id) {
       getBookingData()
@@ -38,7 +38,6 @@ const Calendar = () => {
       <div className='mt-[30px] flex w-full'>
         <div>
           <TodayBooking events={events} />
-
         </div>
         <div className='mt-[30px] md:mt-[0px] md:ml-[30px] w-full'>
           <AllEvents events={events} />

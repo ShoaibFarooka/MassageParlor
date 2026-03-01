@@ -6,7 +6,7 @@ const userSchemas = require("../validationSchemas/userSchemas");
 
 const Register = async (req, res, next) => {
   try {
-    await userSchemas.registerSchema.validate(req.body, { abortEarly: false });
+    await userSchemas.registerSchema.validate(req.body, { abortEarly: false, context: { userType: req.params.userType } });
 
     const imagePath = req.file ? req.file.filename : null;
 
@@ -235,7 +235,7 @@ const SearchServiceProvidersAdmin = async (req, res, next) => {
       minHeight,
       maxHeight,
       callOutType,
-       city,
+      city,
       suburb,
     } = req.query;
 
@@ -253,8 +253,8 @@ const SearchServiceProvidersAdmin = async (req, res, next) => {
         minHeight: 0,
         maxHeight,
         callOutType,
-         city,
-      suburb,
+        city,
+        suburb,
       }
     );
 

@@ -14,6 +14,15 @@ const registerSchema = yup.object().shape({
     .trim()
     .email("Invalid email address")
     .required("Email is required"),
+  gender: yup
+    .string()
+    .trim()
+    .oneOf(["Male", "Female", "Others"], "Invalid gender selection")
+    .when("$userType", {
+      is: "service-provider",
+      then: (schema) => schema.required("Gender is required"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   number: yup.string().trim().required("Number is required"),
   dateOfBirth: yup.string().trim(),
   ethnicity: yup.string().trim(),
@@ -24,7 +33,6 @@ const registerSchema = yup.object().shape({
   callOutType: yup.string().trim(),
   file: yup.mixed().optional(),
   password: yup.string().trim().required("Password is required"),
-
 });
 
 const loginSchema = yup.object().shape({
@@ -79,6 +87,10 @@ const updateUserSchema = yup.object().shape({
   email: yup.string().trim().email("Invalid email address"),
   number: yup.string().trim(),
   dateOfBirth: yup.string().trim(),
+  gender: yup
+    .string()
+    .trim()
+    .oneOf(["Male", "Female", "Others"], "Invalid gender selection"),
   ethnicity: yup.string().trim(),
   city: yup.string().trim(),
   suburb: yup.string().trim(),

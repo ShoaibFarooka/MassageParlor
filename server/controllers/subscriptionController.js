@@ -1,38 +1,110 @@
 const subscriptionService = require('../services/subscriptionService');
 
+
 const GetUserSubscriptionInfo = async (req, res, next) => {
     try {
         const userId = req.user?.id;
-        const info = await subscriptionService.getUserSubscriptionInfo(req.dbConnectionId, userId);
-        res.status(200).json({ info });
+        if (!userId) return res.status(401).json({ success: false, message: "Unauthorized" });
+
+        const result = await subscriptionService.getUserSubscriptionInfo(userId);
+        res.status(200).json(result);
     } catch (error) {
+        console.error("GetUserSubscriptionInfoControllerError:", error);
         next(error);
     }
 };
-
-const GetDashboardData = async (req, res, next) => {
+const AddSubscription = async (req, res, next) => {
     try {
-        const { year, view } = req.query;
-        const parsedYear = parseInt(year);
-        const turnover = await subscriptionService.getTurnoverData(req.dbConnectionId, parsedYear, view);
-        const activeMembersCount = await subscriptionService.getActiveMembersCount(req.dbConnectionId);
-        const newMembersCount = await subscriptionService.getNewMembersCount(req.dbConnectionId);
-        const lostMembersCount = await subscriptionService.getLostMembersCount(req.dbConnectionId);
-        const growthRate = await subscriptionService.getGrowthRateData(turnover);
-        const data = {
-            turnover,
-            activeMembersCount,
-            newMembersCount,
-            lostMembersCount,
-            growthRate
-        };
-        res.status(200).json({ data });
+        const { customerId, subscriptionInfo } = req.body;
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized: User not found in request",
+            });
+        }
+
+        await subscriptionService.addSubscription({
+            user: userId,
+            customerId,
+            subscriptionInfo,
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "Subscription added or updated successfully",
+        });
     } catch (error) {
-        next(error);
+        console.error("AddSubscriptionControllerError:", error);
+        res.status(error.code || 500).json({
+            success: false,
+            message: error.message || "Unable to add or update subscription",
+        });
+    }
+};
+
+const UpdateSubscription = async (req, res, next) => {
+    try {
+        const { customerId, subscriptionInfo } = req.body;
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized: User not found in request",
+            });
+        }
+
+        await subscriptionService.updateSubscription({
+            user: userId,
+            customerId,
+            subscriptionInfo,
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "Subscription updated successfully",
+        });
+    } catch (error) {
+        console.error("UpdateSubscriptionControllerError:", error);
+        res.status(error.code || 500).json({
+            success: false,
+            message: error.message || "Unable to update subscription",
+        });
+    }
+};
+
+const CheckPaymentStatus = async (req, res, next) => {
+    try {
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized: User not found in request",
+            });
+        }
+
+        const result = await subscriptionService.checkPaymentStatus(userId);
+
+        res.status(200).json({
+            success: true,
+            message: "Payment status retrieved successfully",
+            data: result,
+        });
+    } catch (error) {
+        console.error("CheckPaymentStatusControllerError:", error);
+        res.status(error.code || 500).json({
+            success: false,
+            message: error.message || "Unable to check payment status",
+        });
     }
 };
 
 module.exports = {
+    AddSubscription,
+    UpdateSubscription,
+    CheckPaymentStatus,
     GetUserSubscriptionInfo,
-    GetDashboardData
 };

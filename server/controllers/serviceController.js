@@ -52,7 +52,7 @@ const getGalleryById = async (req, res, next) => {
     let gallery = null;
     try {
       gallery = await serviceService.getGallery(req.params.providerId);
-      console.log(gallery,'gallery123')
+      console.log(gallery, 'gallery123')
     } catch (error) {
       console.error("Error fetching gallery:", error.message);
     }

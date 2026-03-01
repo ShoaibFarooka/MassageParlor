@@ -8,26 +8,26 @@ import bookingService from '../../../services/bookingService';
 import { HideLoading, ShowLoading } from '../../../redux/loaderSlice';
 
 const Dashboard = () => {
-  const [events, setEvents] = useState([  ]);
+  const [events, setEvents] = useState([]);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
 
-    const getBookingData = async () => {
-      dispatch(ShowLoading());
-      try {
-        const response = await bookingService.getBookings();
-        setEvents(response);
-      } catch (error) {
-        console.error("Error fetching bookings:", error);
-      } finally {
-        dispatch(HideLoading());
-      }
-    };
-    
-  
-    useEffect(() => {
-      getBookingData();
-    }, [user?._id]);
+  const getBookingData = async () => {
+    dispatch(ShowLoading());
+    try {
+      const response = await bookingService.getBookings();
+      setEvents(response);
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
+    } finally {
+      dispatch(HideLoading());
+    }
+  };
+
+
+  useEffect(() => {
+    getBookingData();
+  }, [user?._id]);
 
   return (
     <div >
@@ -36,11 +36,11 @@ const Dashboard = () => {
       <div className='flex flex-col md:flex-row w-full mt-[35px] '>
         <div className='md:pr-[35px] w-full'>
           <div className=''>
-            <TotalRevenue events={events}  />
+            <TotalRevenue events={events} />
           </div>
 
           <div className=''>
-            <TodayBookings  events={events} />
+            <TodayBookings events={events} />
           </div>
         </div>
 

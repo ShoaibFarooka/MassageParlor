@@ -7,3 +7,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.react-hot-toast,
+[data-sonner-toast],
+#toast-container,
+.react-hot-toast-container {
+    z-index: 99999 !important;
+    position: fixed !important;
+}

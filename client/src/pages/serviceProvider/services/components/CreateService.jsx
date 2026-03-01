@@ -62,6 +62,9 @@ function CreateEditService({ isOpen, onClose, serviceId, onLoad }) {
         if (!service.name.trim()) errors.name = 'Name is required';
         if (!service.price) errors.price = 'Price is required';
         if (!service.duration.trim()) errors.duration = 'Duration is required';
+        if (!/^(\d+(\.5)?)$/.test(service.duration)) {
+            errors.duration = 'Duration must be in whole or half hours (e.g., 1, 1.5, 2, 2.5)';
+        }
         if (!service.calendarColor.trim()) errors.calendarColor = 'Calendar Color is required';
         if (service.isActive === '') errors.isActive = 'Active status is required';
         if (!service.description.trim()) errors.description = 'Description is required';
@@ -143,7 +146,18 @@ function CreateEditService({ isOpen, onClose, serviceId, onLoad }) {
                                 min="0"
                                 className="w-full input"
                                 value={service.duration}
-                                onChange={(e) => setService({ ...service, duration: e.target.value })}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    const regex = /^(\d+(\.5)?)?$/;
+
+                                    if (value === "" || regex.test(value)) {
+                                        setService({ ...service, duration: value });
+                                    } else {
+                                        toast.error("❌ Duration must be whole or half hours (e.g. 1, 1.5, 2, 2.5)", {
+                                            id: "invalid-duration",
+                                        });
+                                    }
+                                }}
                             />
                             {error.duration && <div className="text-red-500 text-sm">{error.duration}</div>}
                         </div>

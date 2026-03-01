@@ -12,10 +12,10 @@ const createBooking = async (bookingData) => {
     // Parse booking times for comparison
     const newStartDateTime = moment.utc(`${startDate} ${startTime}`, "YYYY-MM-DD hh:mm A");
     const newEndDateTime = moment.utc(`${startDate} ${endTime}`, "YYYY-MM-DD hh:mm A");
-    
+
     // If end time is not after start (crossing midnight case)
-    const adjustedNewEndDateTime = newEndDateTime.isAfter(newStartDateTime) 
-      ? newEndDateTime 
+    const adjustedNewEndDateTime = newEndDateTime.isAfter(newStartDateTime)
+      ? newEndDateTime
       : newEndDateTime.add(1, 'day');
 
     console.log("New booking start:", newStartDateTime.toString());
@@ -35,12 +35,12 @@ const createBooking = async (bookingData) => {
       // Parse the existing booking's times
       const existingStartDateTime = moment.utc(`${booking.startDate} ${booking.startTime}`, "YYYY-MM-DD hh:mm A");
       const existingEndDateTime = moment.utc(`${booking.startDate} ${booking.endTime}`, "YYYY-MM-DD hh:mm A");
-      
+
       // Handle midnight crossing for existing booking
-      const adjustedExistingEndDateTime = existingEndDateTime.isAfter(existingStartDateTime) 
-        ? existingEndDateTime 
+      const adjustedExistingEndDateTime = existingEndDateTime.isAfter(existingStartDateTime)
+        ? existingEndDateTime
         : existingEndDateTime.add(1, 'day');
-      
+
       // Check for overlap
       const hasOverlap = (
         // New booking starts during existing booking
@@ -87,23 +87,23 @@ const createBooking = async (bookingData) => {
 
 
 const getBookings = async () => {
-  return await Booking.find().populate("service_id user_id");
+  return await Booking.find().populate("service_id user_id serviceProvider");
 };
 
 const getBookingById = async (bookingId) => {
-  return await Booking.findById(bookingId).populate("service_id user_id");
+  return await Booking.findById(bookingId).populate("service_id user_id serviceProvider");
 };
 
 const getBookingsByUserId = async (userId) => {
-  return await Booking.find({ user_id: userId }).populate("service_id user_id");
+  return await Booking.find({ user_id: userId }).populate("service_id user_id serviceProvider");
 };
 
 const getBookingsByServiceId = async (serviceId) => {
-  return await Booking.find({ serviceId }).populate("service_id user_id");
+  return await Booking.find({ serviceId }).populate("service_id user_id serviceProvider");
 };
 
 const getBookingsByServiceProvider = async (serviceProvider) => {
-  return await Booking.find({ serviceProvider }).populate("service_id user_id");
+  return await Booking.find({ serviceProvider }).populate("service_id user_id serviceProvider");
 };
 
 const updateBooking = async (bookingId, updatedData) => {

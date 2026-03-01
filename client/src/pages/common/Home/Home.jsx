@@ -35,11 +35,13 @@ function Home() {
         maxHeight: "",
         callOutType: "",
     });
+    const [skipEffect, setSkipEffect] = useState(false);
 
     const fetchServiceProviders = async () => {
         dispatch(ShowLoading());
         try {
             const response = await userService.searchServiceProviders(filters);
+            console.log("Response", response);
             let fetchedProviders = response.result.users;
 
             // Apply local filtering in case the API doesn't support it
@@ -52,11 +54,21 @@ function Home() {
                 );
             });
 
+            const calculateAge = (dob) => {
+                if (!dob) return null;
+                const birthDate = new Date(dob);
+                const ageDifMs = Date.now() - birthDate.getTime();
+                const ageDate = new Date(ageDifMs);
+                const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+                return age === 0 ? 'N/A' : age;
+            };
+
             // Add static data if missing
             fetchedProviders = fetchedProviders.map((provider) => ({
                 ...provider,
-                age: provider.age || 25,
+                age: calculateAge(provider?.dateOfBirth) || "N/A",
                 years: provider.years || 3,
+                gender: provider?.gender || "N/A",
                 clients: provider.clients || 24,
                 specialization: provider.specialization || "Specializes in Hot Stone and Sports massage.",
                 image: provider.image ? `http://localhost:5777/static/images/${provider.image}` : profile,
@@ -70,13 +82,18 @@ function Home() {
         dispatch(HideLoading());
     };
 
+    console.log("Service providers", serviceProviders);
+
     useEffect(() => {
-        // Clear the previous timer if the user types again
+        if (skipEffect) {
+            setSkipEffect(false);
+            return;
+        }
+
         if (debounceTimer.current) {
             clearTimeout(debounceTimer.current);
         }
 
-        // Set a new timer that runs the API call after 500ms of inactivity
         debounceTimer.current = setTimeout(() => {
             fetchServiceProviders();
         }, 500);
@@ -95,6 +112,7 @@ function Home() {
     const applyFilters = async () => {
         fetchServiceProviders()
     };
+
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -122,16 +140,20 @@ function Home() {
             maxHeight: "",
             callOutType: "",
         };
+
+        if (debounceTimer.current) {
+            clearTimeout(debounceTimer.current);
+        }
+
+        setSkipEffect(true);
         setFilters(resetFilters);
-        setHeight(165); // Reset height slider to default
-        
-        // Call API directly with reset filters to avoid race condition
+        setHeight(165);
+
         dispatch(ShowLoading());
         try {
             const response = await userService.searchServiceProviders(resetFilters);
             let fetchedProviders = response.result.users;
 
-            // Add static data if missing
             fetchedProviders = fetchedProviders.map((provider) => ({
                 ...provider,
                 age: provider.age || 25,
@@ -148,6 +170,7 @@ function Home() {
         }
         dispatch(HideLoading());
     };
+
 
     return (
         <div className=" min-h-screen">
@@ -169,8 +192,6 @@ function Home() {
                                 placeholder="Search"
                                 className="pl-6 pr-4 py-2 text-lg rounded-full h-[56px] w-[220px] sm:w-[400px] bg-white shadow outline-0"
                             />
-
-                            <FaSearch className="absolute right-6 top-1/2 transform -translate-y-1/2 text-black " fontSize={24} />
                         </div>
 
                         <div className='relative'>
