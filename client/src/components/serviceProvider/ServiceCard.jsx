@@ -83,6 +83,8 @@ const ServiceCard = ({ key, provider }) => {
 
   const handleBooking = (data) => {
     setBooking(data)
+    setSelectedDate(new Date());
+    setSelectedTime(new Date());
     setBookingOpen(true)
   }
 
@@ -158,7 +160,7 @@ const ServiceCard = ({ key, provider }) => {
         <h2 className="text-[22px] font-semibold">{provider?.name}</h2>
 
         <p className="text-[#858FAD] text-[10px] mt-[5px]">
-          Age {provider?.age} | Located in {provider?.city}
+          Gender {provider?.gender} | Age {provider?.age} | Located in {provider?.city}
         </p>
 
         <div className="flex justify-center items-center space-x-2 mt-[19px] mb-[22px]">
@@ -213,7 +215,7 @@ const ServiceCard = ({ key, provider }) => {
               </div>
 
               <p className="text-[#858FAD] text-[12.74px] mt-[8px]">
-                Age {provider?.age} | Located in {provider?.city}
+                Gender {provider.gender} | Age {provider?.age} | Located in {provider?.city}
               </p>
 
               <div className="hidden sm:flex justify-center items-center space-x-2 mt-[19px] mb-[22px]">
@@ -284,6 +286,8 @@ const ServiceCard = ({ key, provider }) => {
             <div className='pt-[48px] relative'>
               <h3 className='text-lg font-semibold items-start'>Available services</h3>
               {!provider?.isActive && <p className='text-sm text-red-500'>This Service Provider is not Active</p>}
+              {!provider?.isOnline && <p className='text-sm text-red-500'>This Service Provider is not available for any booking.</p>}
+
               {services.filter(item => item.isActive)?.map((data, index) => (
                 <div key={index} className='relative mb-10' >
                   <div className='bg-white rounded-3xl px-[21px] pt-[17px] mt-5 pb-[41px]'>
@@ -334,6 +338,7 @@ const ServiceCard = ({ key, provider }) => {
                 selected={selectedDate}
                 // Store the selected date as-is (local)
                 onChange={(date) => setSelectedDate(date)}
+                minDate={new Date()}
                 customInput={
                   <CustomDateInput
                     placeholder="Feb, 28 2025"

@@ -16,23 +16,33 @@ import AdminDashboard from '../pages/admin/dashboard/Dashboard.jsx';
 import AdminCalendar from '../pages/admin/calendar/Calendar.jsx';
 import AdminServices from '../pages/admin/services/Services.jsx';
 import AdminUsers from '../pages/admin/users/AdminUsers.jsx';
+import Bookings from '../pages/admin/bookings/bookings.jsx';
+import ServiceProviderBookings from '../pages/serviceProvider/bookings/ServiceProviderBookings.jsx';
+import UserBookings from '../pages/user/bookings/UserBookings.jsx';
+import Plans from '../pages/serviceProvider/Plans/Plans.jsx';
+import Success from '../pages/serviceProvider/Success/Success.jsx';
 
 const routes = [
 
   { path: "/user/home", element: <UserHome />, protected: true, authRedirect: false, showSidebar: true },
   { path: "/user/booking", element: <UserBooking />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/user/bookings", element: <UserBookings />, protected: true, authRedirect: false, showSidebar: true },
 
   //service Provider
   { path: "/service/dashboard", element: <Dashboard />, protected: true, authRedirect: false, showSidebar: true },
   { path: "/service/calendar", element: <Calendar />, protected: true, authRedirect: false, showSidebar: true },
   { path: "/service/services", element: <Services />, protected: true, authRedirect: false, showSidebar: true },
   { path: "/service/gallery", element: <Gallery />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/service/bookings", element: <ServiceProviderBookings />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/service/plans", element: <Plans />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/success", element: <Success />, protected: true, authRedirect: false, showSidebar: false },
 
   //admin
   { path: "/admin/dashboard", element: <AdminDashboard />, protected: true, authRedirect: false, showSidebar: true },
   { path: "/admin/calendar", element: <AdminCalendar />, protected: true, authRedirect: false, showSidebar: true },
   { path: "/admin/users", element: <AdminUsers />, protected: true, authRedirect: false, showSidebar: true },
   { path: "/admin/service-providers", element: <AdminServices />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/admin/bookings", element: <Bookings />, protected: true, authRedirect: false, showSidebar: true },
 
   //common
   { path: "/", element: <Redirect />, protected: true, authRedirect: false, showSidebar: false },

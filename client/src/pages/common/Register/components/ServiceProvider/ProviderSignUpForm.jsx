@@ -1,11 +1,30 @@
-import React, { useRef, useState } from 'react';
+import React, { forwardRef, useRef, useState } from 'react';
 import { FaCalendarCheck, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import userService from '../../../../../services/userService';
 import toast from 'react-hot-toast';
+import DatePicker from 'react-datepicker';
+
+
+const CustomDateInput = forwardRef(({ value, onClick }, ref) => (
+  <div className="relative" onClick={onClick}>
+    <input
+      type="text"
+      value={value}
+      placeholder={'Feb, 28 2025'}
+      readOnly
+      className="w-full input"
+      ref={ref}
+    />
+    <div className="absolute right-4 top-4 text-[#858FAD] pointer-events-none">
+      <FaCalendarCheck />
+    </div>
+  </div>
+));
 
 
 function ProviderSignUpForm() {
+  const [selectedDate, setSelectedDate] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -14,6 +33,8 @@ function ProviderSignUpForm() {
   const [user, setUser] = useState({
     name: "",
     surname: "",
+    dateOfBirth: "",
+    gender: "",
     number: "",
     email: "",
     password: "",
@@ -46,10 +67,27 @@ function ProviderSignUpForm() {
     let errors = {};
     if (!user.name) errors.name = "Name is required";
     if (!user.surname) errors.surname = "Surname is required";
+    if (!user.gender) errors.gender = "Gender is required";
     if (!user.email) {
       errors.email = "Email is required";
     } else if (!emailRegex.test(user.email.toLowerCase().trim())) {
       errors.email = "Please enter a valid email address";
+    }
+    if (selectedDate) {
+      const today = new Date();
+      const birthDate = new Date(selectedDate);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+
+      if (age < 18) {
+        errors.dateOfBirth = "You must be at least 18 years old to register";
+      }
+    } else {
+      errors.dateOfBirth = "Date of birth is required";
     }
     if (!user.number) errors.number = "Contact number is required";
     if (!user.password) errors.password = "Password is required";
@@ -73,6 +111,8 @@ function ProviderSignUpForm() {
     formData.append('name', `${user.name} ${user.surname}`);
     formData.append('number', user.number);
     formData.append('email', user.email.toLowerCase().trim());
+    formData.append('dateOfBirth', selectedDate ? selectedDate.toISOString().split('T')[0] : "");
+    formData.append('gender', user.gender);
     formData.append('password', user.password);
     formData.append('ethnicity', user.ethnicity);
     formData.append('city', user.city);
@@ -175,6 +215,80 @@ function ProviderSignUpForm() {
           {error.surname && <div className="text-red-500 text-sm">{error.surname}</div>}
         </div>
       </div>
+
+      {/* Date of Birth */}
+      <div className="mb-6">
+        <label htmlFor="dob" className="label">Date of Birth</label>
+        <div className="relative">
+          <DatePicker
+            selected={selectedDate}
+            onChange={(date) => {
+              const utcDate = new Date(Date.UTC(
+                date.getFullYear(),
+                date.getMonth(),
+                date.getDate()
+              ));
+              setSelectedDate(utcDate);
+            }}
+            customInput={
+              <CustomDateInput
+                value={
+                  selectedDate
+                    ? selectedDate.toLocaleDateString('en-GB', {
+                      timeZone: 'UTC',
+                      year: 'numeric',
+                      month: 'short',
+                      day: '2-digit',
+                    })
+                    : ''
+                }
+              />
+            }
+            dateFormat="MMM, dd yyyy"
+            showYearDropdown
+            showMonthDropdown
+            dropdownMode="select"
+            yearDropdownItemNumber={100}
+            maxDate={new Date()}
+          />
+        </div>
+        {error.dateOfBirth && <div className="text-red-500 text-sm">{error.dateOfBirth}</div>}
+      </div>
+
+      {/* Gender Field */}
+      <div className="mb-6">
+        <label htmlFor="gender" className="label">Gender</label>
+        <div className="relative">
+          <select
+            id="gender"
+            name="gender"
+            className="w-full input appearance-none pr-10 cursor-pointer"
+            value={user.gender || ""}
+            onChange={(e) => setUser({ ...user, gender: e.target.value })}
+          >
+            <option value="" disabled>Select gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Others">Others</option>
+          </select>
+
+          {/* Dropdown Icon */}
+          <div className="pointer-events-none absolute right-4 top-4 text-[#858FAD] z-10">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="w-5 h-5"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
+        {error.gender && <div className="text-red-500 text-sm">{error.gender}</div>}
+      </div>
+
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
         <div className='mb-6'>

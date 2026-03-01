@@ -7,6 +7,14 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    gender: {
+      type: String,
+      required: function () {
+        return this.isNew && this.role === "service-provider";
+      },
+      trim: true,
+      enum: ["Male", "Female", 'Other'],
+    },
     image: {
       type: String,
       required: false,
@@ -88,6 +96,10 @@ const userSchema = new mongoose.Schema(
     isOnline: {
       type: Boolean,
       default: true,
+    },
+    stripeCustomerId: {
+      type: String,
+      default: null
     },
   },
   { timestamps: true }
