@@ -3,7 +3,7 @@ const Gallery = require("../models/galleryModel"); // ✅ Ensure correct model i
 require("dotenv").config();
 
 async function seedGallery(serviceProviderId, images) {
-    // const DB = 'mongodb+srv://shoaibfarooka:Welcome5home.@cluster0.hrpczac.mongodb.net/MassageParlor?retryWrites=true&w=majority';
+    // const DB = process.env.DB_URI;
 
     if (!DB) {
         console.error("Error: MongoDB URI is undefined. Check your .env file.");
